@@ -57,7 +57,6 @@ public class FirstpageAdapter extends ArrayAdapter<ItemBean> {
                     holder0.time = (TextView) convertView.findViewById(R.id.fp_0pic_time);
                     holder0.content = (TextView)convertView.findViewById(R.id.fp_0pic_content);
                     holder0.oldTime = (TextView)convertView.findViewById(R.id.fp_0pic_oldTime);
-                    holder0.newTime = (TextView)convertView.findViewById(R.id.fp_0pic_newTime);
                     holder0.tag1 = (TextView)convertView.findViewById(R.id.fp_0pic_tag1);
                     holder0.tag2 = (TextView)convertView.findViewById(R.id.fp_0pic_tag2);
                     holder0.tag3 = (TextView)convertView.findViewById(R.id.fp_0pic_tag3);
@@ -68,12 +67,7 @@ public class FirstpageAdapter extends ArrayAdapter<ItemBean> {
                     holder0 = (Pic0ViewHolder) convertView.getTag();
                 }
                 //-----------------
-                //具体逻辑处理
-                if (itemBean.getIsMemo()) {
-                    holder0.tag1.setText("备忘");
-                } else {
-                    holder0.tag1.setText("日记");
-                }
+
                 if (itemBean.getTag2().equals("")){
                     holder0.tag2.setVisibility(View.GONE);
                 } else {
@@ -86,7 +80,6 @@ public class FirstpageAdapter extends ArrayAdapter<ItemBean> {
                 }
 
                 holder0.content.setText(itemBean.getContent());
-                holder0.oldTime.setText(itemBean.getOldTime());
                 holder0.weather.setText(itemBean.getWeather());
                 holder0.feelings.setText(itemBean.getFeelings());
                 Log.d("执行到","没有图片的adapter");
@@ -113,11 +106,7 @@ public class FirstpageAdapter extends ArrayAdapter<ItemBean> {
                 //-----------------
                 //具体逻辑处理
                 Log.d("执行到有图片的adapter","");
-                if (itemBean.getIsMemo()) {
-                    holder1.tag1.setText("备忘");
-                } else {
-                    holder1.tag1.setText("日记");
-                }
+
                 if (itemBean.getTag2().equals("")){
                     holder1.tag2.setVisibility(View.GONE);
                 } else {
@@ -130,7 +119,6 @@ public class FirstpageAdapter extends ArrayAdapter<ItemBean> {
                 }
 
                 holder1.content.setText(itemBean.getContent());
-                holder1.oldTime.setText(itemBean.getOldTime());
                 holder1.weather.setText(itemBean.getWeather());
                 holder1.feelings.setText(itemBean.getFeelings());
 //                Bitmap pic = GetImageUtils.getBMFromUri(getContext(),itemBean.getPicList().get(0));
@@ -162,11 +150,6 @@ public class FirstpageAdapter extends ArrayAdapter<ItemBean> {
                 }
                 //-----------------
                 //具体逻辑处理
-                if (itemBean.getIsMemo()) {
-                    holder2.tag1.setText("备忘");
-                } else {
-                    holder2.tag1.setText("日记");
-                }
                 if (itemBean.getTag2().equals("")){
                     holder2.tag2.setVisibility(View.GONE);
                 } else {
@@ -179,7 +162,6 @@ public class FirstpageAdapter extends ArrayAdapter<ItemBean> {
                 }
 
                 holder2.content.setText(itemBean.getContent());
-                holder2.oldTime.setText(itemBean.getOldTime());
                 holder2.weather.setText(itemBean.getWeather());
                 holder2.feelings.setText(itemBean.getFeelings());
                 Glide.with(getContext())

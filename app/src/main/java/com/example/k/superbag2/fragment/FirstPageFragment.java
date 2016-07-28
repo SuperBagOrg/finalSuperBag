@@ -24,6 +24,7 @@ import com.example.k.superbag2.others.ListItem;
 import org.litepal.crud.DataSupport;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -70,7 +71,8 @@ public class FirstPageFragment extends Fragment {
     }
 
     private void initListView(){
-        final List<ItemBean> itemBeanList = DataSupport.findAll(ItemBean.class);
+        final List<ItemBean> itemBeanList = DataSupport.findAll(ItemBean.class);//顺序列表
+        Collections.reverse(itemBeanList);//反转列表
         Log.d("列表长度：",itemBeanList.size()+"");
         FirstpageAdapter adapter = new FirstpageAdapter(context,R.layout.item_fp_1pic,itemBeanList);
         fPListView.setAdapter(adapter);
@@ -82,7 +84,7 @@ public class FirstPageFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 //得到数据库中的行号
-                int index = itemBeanList.size() - i - 1;
+                int index = i;
                 Log.d("索引是",index+"");
                 Intent intent = new Intent(context,EditActivity.class);
                 intent.putExtra("lineIndex",index);

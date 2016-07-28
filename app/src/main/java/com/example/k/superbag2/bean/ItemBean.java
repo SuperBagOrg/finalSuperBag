@@ -14,11 +14,8 @@ public class ItemBean extends DataSupport{
 
     private String tag1,tag2,tag3;
     private String content;
-    private String oldTime;
-    private String newTime;
     private List<Drawable> drawableList;
     private String dayTime;
-    private boolean isMemo;
     private String weather;
     private String feelings;
     private int importance;
@@ -33,10 +30,7 @@ public class ItemBean extends DataSupport{
         this.tag2 = tag2;
         this.tag3 = tag3;
         this.content = content;
-        this.isMemo = isMemo;
         this.importance = importance;
-        this.oldTime = oldTime;
-        this.newTime = newTime;
         this.picList = picList;
         this.weather = weather;
         this.feelings = feelings;
@@ -53,22 +47,6 @@ public class ItemBean extends DataSupport{
         this.content = content;
     }
 
-    public String getOldTime() {
-        return oldTime;
-    }
-
-    public void setOldTime(String oldTime) {
-        this.oldTime = oldTime;
-    }
-
-    public String getNewTime() {
-        return newTime;
-    }
-
-    public void setNewTime(String newTime) {
-        this.newTime = newTime;
-    }
-
     public List<Drawable> getDrawableList() {
         return drawableList;
     }
@@ -83,14 +61,6 @@ public class ItemBean extends DataSupport{
 
     public void setDayTime(String dayTime) {
         this.dayTime = dayTime;
-    }
-
-    public boolean getIsMemo() {
-        return isMemo;
-    }
-
-    public void setIsMemo(boolean isMemo) {
-        this.isMemo = isMemo;
     }
 
     public int getImportance() {

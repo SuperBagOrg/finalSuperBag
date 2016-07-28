@@ -214,16 +214,8 @@ public class EditActivity extends Activity implements
             ItemBean item = DataSupport.find(ItemBean.class,lineNum);
             saveBT.setBackground(getResources().getDrawable(R.drawable.edit));
             contentET.setFocusable(false);
-
             contentET.setText(item.getContent());
-            if(item.getIsMemo()){
-                editMemo.setChecked(true);
-                editDiary.setChecked(false);
-            }
-            if (!item.getNewTime().equals("-1")){
-                editAlarm.setBackground(getResources().getDrawable(R.drawable.alarm_blue));
-                clickable = true;
-            }
+
             if (!item.getTag2().equals("")){
                 tag2TV.setVisibility(View.VISIBLE);
                 tag2TV.setText(item.getTag2());
@@ -534,9 +526,6 @@ public class EditActivity extends Activity implements
         String content = contentET.getText().toString().trim();
         GetTime gt = new GetTime();
         //使用litepal库的数据库操作
-        newitem.setIsMemo(isMemo);
-        newitem.setNewTime(newTime);
-        newitem.setOldTime(oldtime);
         newitem.setTag1(tag1);
         newitem.setTag2(tag2);
         newitem.setTag3(tag3);
