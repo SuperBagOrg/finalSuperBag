@@ -23,6 +23,7 @@ public class ItemBean extends DataSupport{
     private String feelings;
     private int importance;
 
+    private String pic1,pic2,pic3,pic4;
     private List<Uri> picList;
 
     public ItemBean(String tag1, String tag2, String tag3, String content, boolean isMemo,
@@ -101,12 +102,23 @@ public class ItemBean extends DataSupport{
     }
 
     public int getPicNum() {
-
-        return 0;
+        if (pic1.equals(""))
+            return 0;
+        else if (pic2.equals(""))
+            return 1;
+        else if (pic3.equals(""))
+            return 2;
+        else if (pic4.equals(""))
+            return 3;
+        return 4;
     }
 
     public List<Uri> getPicList(){
         return picList;
+    }
+
+    public void setPicList(List<Uri> list){
+        picList = list;
     }
 
     public String getTag3() {
@@ -147,5 +159,37 @@ public class ItemBean extends DataSupport{
 
     public void setWeather(String weather) {
         this.weather = weather;
+    }
+
+    public String getPic4() {
+        return pic4;
+    }
+
+    public void setPic4(String pic4) {
+        this.pic4 = pic4;
+    }
+
+    public String getPic3() {
+        return pic3;
+    }
+
+    public void setPic3(String pic3) {
+        this.pic3 = pic3;
+    }
+
+    public String getPic2() {
+        return pic2;
+    }
+
+    public void setPic2(String pic2) {
+        this.pic2 = pic2;
+    }
+
+    public String getPic1() {
+        return pic1;
+    }
+
+    public void setPic1(String pic1) {
+        this.pic1 = pic1;
     }
 }

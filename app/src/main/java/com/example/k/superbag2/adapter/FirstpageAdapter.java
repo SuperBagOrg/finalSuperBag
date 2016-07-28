@@ -136,7 +136,7 @@ public class FirstpageAdapter extends ArrayAdapter<ItemBean> {
 //                Bitmap pic = GetImageUtils.getBMFromUri(getContext(),itemBean.getPicList().get(0));
 //                holder1.iv.setImageBitmap(pic);
                 Glide.with(getContext())
-                        .load(itemBean.getPicList().get(0))
+                        .load(itemBean.getPic1())
                         .asBitmap()
                         .into(holder1.iv);
                 break;
@@ -182,10 +182,14 @@ public class FirstpageAdapter extends ArrayAdapter<ItemBean> {
                 holder2.oldTime.setText(itemBean.getOldTime());
                 holder2.weather.setText(itemBean.getWeather());
                 holder2.feelings.setText(itemBean.getFeelings());
-                Bitmap pic1 = GetImageUtils.getBMFromUri(getContext(),itemBean.getPicList().get(0));
-                holder2.iv1.setImageBitmap(pic1);
-                Bitmap pic2 = GetImageUtils.getBMFromUri(getContext(),itemBean.getPicList().get(1));
-                holder2.iv2.setImageBitmap(pic2);
+                Glide.with(getContext())
+                        .load(itemBean.getPic1())
+                        .asBitmap()
+                        .into(holder2.iv1);
+                Glide.with(getContext())
+                        .load(itemBean.getPic2())
+                        .asBitmap()
+                        .into(holder2.iv2);
                 break;
 
         }
@@ -195,7 +199,6 @@ public class FirstpageAdapter extends ArrayAdapter<ItemBean> {
     @Override
     public int getItemViewType(int position) {
         //根据数据库中保存的图片uri数目来确定类型
-
         return getItem(position).getPicNum();
     }
 

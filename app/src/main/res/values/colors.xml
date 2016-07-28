@@ -12,4 +12,6 @@
     <color name="white">#ffffff</color>
     <color name="black">#000000</color>
     <color name="pink">#ffb1b1</color>
+    <color name="light">#e6e6e6</color>
+    <color name="light1">#dbdbdb</color>
 </resources>

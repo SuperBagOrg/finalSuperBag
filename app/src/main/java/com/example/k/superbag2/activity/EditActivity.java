@@ -89,8 +89,9 @@ public class EditActivity extends Activity implements
     private String tag1="",tag2="",tag3="";
     private int flag = 1;
     private String weather = "晴",feelings = "开心";
+    private int picNum = 0;
 
-    private List<Uri> uriList;
+    private List<String> uriList;
 
     private List<Integer> weatherCKIdList = new ArrayList<>(Arrays.asList(R.id.sunny_checkbox,
             R.id.cloudy_checkbox,R.id.rainy_checkbox,
@@ -194,11 +195,17 @@ public class EditActivity extends Activity implements
     }
 
     private void initData(){
+        //表示已选取的图片数量
+        picNum = 0;
         GetTime gt = new GetTime();
         oldtime = gt.getYear()+"-"+gt.getMonth()+"-"+gt.getDay();
         oldTime.setText(oldtime);
 
         uriList = new ArrayList<>();
+        for (int i = 0; i < 4; i++){
+            uriList.add("");
+        }
+
         //如果是从ListView点击进入活动，则初始化数据;
         //如何让editTExt无法点击编辑，还有问题
         Intent intent = getIntent();
@@ -536,35 +543,17 @@ public class EditActivity extends Activity implements
         newitem.setContent(content);
         newitem.setDayTime(gt.getSpecificTime());
         //图片这不知道存的是啥。。。
-//        newitem.setDrawableList();
+//        newitem.setDrawableList(uriList);
+//        newitem.setPicList(uriList);
+        newitem.setPic1(uriList.get(0));
+        newitem.setPic2(uriList.get(1));
+        newitem.setPic3(uriList.get(0));
+        newitem.setPic4(uriList.get(0));
         newitem.setFeelings(feelings);
         //貌似暂无数据，先写1吧
         newitem.setImportance(1);
         newitem.setWeather(weather);
         newitem.save();
-        //根据插入图片个数保存，有待完善
-//        switch (uriList.size()){
-//            case 0:
-//                dbHelper.insertToDB("",tag1,tag2,content,isMemo,2,gt.getSpecificTime(), newTime,
-//                        null,null,null,null,weather,feelings);
-//                break;
-//            case 1:
-//                dbHelper.insertToDB("",tag1,tag2,content,isMemo,2,gt.getSpecificTime(), newTime,
-//                        uriList.get(0).toString(),null,null,null,weather,feelings);
-//                break;
-//            case 2:
-//                dbHelper.insertToDB("",tag1,tag2,content,isMemo,2,gt.getSpecificTime(), newTime,
-//                        uriList.get(0).toString(),uriList.get(1).toString(),null,null,weather,feelings);
-//                break;
-//            case 3:
-//                dbHelper.insertToDB("",tag1,tag2,content,isMemo,2,gt.getSpecificTime(), newTime,
-//                        uriList.get(0).toString(),uriList.get(1).toString(),uriList.get(2).toString(),null,weather,feelings);
-//                break;
-//            case 4:
-//                dbHelper.insertToDB("",tag1,tag2,content,isMemo,2,gt.getSpecificTime(), newTime,
-//                        uriList.get(0).toString(),uriList.get(1).toString(),uriList.get(2).toString(),uriList.get(3).toString(),weather,feelings);
-//                break;
-//        }
         Log.d("已执行保存操作","");
     }
 
@@ -583,7 +572,11 @@ public class EditActivity extends Activity implements
             case 1:
                 if(resultCode == RESULT_OK){
                     imageUri = data.getData();
-                    uriList.add(imageUri);
+                    uriList.add(picNum,imageUri.toString());
+                    picNum++;
+                    if(picNum == 4){
+                        picBT.setClickable(false);
+                    }
                 }
                 break;
             default:

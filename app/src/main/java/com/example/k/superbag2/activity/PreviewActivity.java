@@ -100,9 +100,9 @@ public class PreviewActivity extends Activity implements View.OnClickListener{
                 Toast.makeText(this,"wei",Toast.LENGTH_SHORT).show();
                 return;
             }
-           /* if (item.getContent() != null) {
+            if (item.getContent() != null) {
                 preContent.setText(item.getContent());
-            }*/
+            }
             if (!item.getTag2().equals("")){
                 preTag1.setVisibility(View.VISIBLE);
                 preTag1.setText(item.getTag2());
