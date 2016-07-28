@@ -1,6 +1,10 @@
 package com.example.k.superbag2;
 
+import android.app.AlarmManager;
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
+import android.app.PendingIntent;
+import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
@@ -8,6 +12,9 @@ import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
@@ -20,6 +27,8 @@ import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -27,14 +36,20 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.TimePicker;
+import android.widget.Toast;
 
+import com.example.k.superbag2.activity.AlarmActivity;
 import com.example.k.superbag2.activity.EditActivity;
 import com.example.k.superbag2.activity.PreviewActivity;
 import com.example.k.superbag2.adapter.FirstpageAdapter;
 import com.example.k.superbag2.adapter.MainPagerAdapter;
+import com.example.k.superbag2.adapter.MemoRecyclerAdapter;
 import com.example.k.superbag2.bean.ItemBean;
+import com.example.k.superbag2.bean.MemoItem;
 import com.example.k.superbag2.others.Constant;
 import com.example.k.superbag2.utils.GetImageUtils;
+import com.example.k.superbag2.utils.GetTime;
 import com.nineoldandroids.view.ViewHelper;
 
 import org.litepal.crud.DataSupport;
@@ -42,6 +57,7 @@ import org.litepal.tablemanager.Connector;
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements ViewPager.OnPageChangeListener
@@ -57,10 +73,18 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     private ImageView fPBackgroundIV,fPHeadIconIV;
     private TextView fPSummaryTV;
     private ListView fPListView;
+    //memo
+    private RecyclerView recyclerView;
 
     private List<View> viewList = new ArrayList<>();
 
     private int currentIndex = 0;
+
+    //用于新建备忘时
+    private boolean isAlarm = false;
+    private boolean isSound = false;
+    private boolean isShake = false;
+    private String alarmTime = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -207,28 +231,125 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         });
     }
 
+    //缺少分割线
     private void setMemoView(){
-        View memoView = LayoutInflater.from(this).inflate(R.layout.test,null);
+        View memoView = LayoutInflater.from(this).inflate(R.layout.memo_list,null);
         viewList.add(memoView);
+        recyclerView = (RecyclerView) memoView.findViewById(R.id.memo_list_recyclerView);
+        //必须设置，设置为StaggeredGridL...即为瀑布流布局
+        recyclerView.setLayoutManager(new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL));
+
+        List<MemoItem> memoLists = DataSupport.findAll(MemoItem.class);
+        MemoRecyclerAdapter memoRecyclerAdapter = new MemoRecyclerAdapter(MainActivity.this,memoLists);
+
+        recyclerView.setAdapter(memoRecyclerAdapter);
+        //设置默认动画
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
     }
 
     //新建备忘录
     private void addMemo(){
-        AlertDialog addMemoDialog = new AlertDialog.Builder(MainActivity.this).create();
+        final AlertDialog addMemoDialog = new AlertDialog.Builder(MainActivity.this).create();
         View dialogView = LayoutInflater.from(MainActivity.this).inflate(R.layout.add_memo,null);
         addMemoDialog.setView(dialogView);
-        EditText titleET = (EditText)dialogView.findViewById(R.id.add_memo_title_et);
-        EditText contentET = (EditText)dialogView.findViewById(R.id.add_memo_content_et);
+        addMemoDialog.setCancelable(true);
+
+        final EditText titleET = (EditText)dialogView.findViewById(R.id.add_memo_title_et);
+        final EditText contentET = (EditText)dialogView.findViewById(R.id.add_memo_content_et);
         TextView dateTV = (TextView)dialogView.findViewById(R.id.add_memo_date_tv);
         CheckBox alarmCK = (CheckBox)dialogView.findViewById(R.id.add_memo_setAlarm_ck);
-
+        TextView alarmTimeTV = (TextView)dialogView.findViewById(R.id.add_memo_alarmTime_tv);
         Switch soundSC = (Switch)dialogView.findViewById(R.id.add_memo_sound_sc);
         Switch shakeSC = (Switch)dialogView.findViewById(R.id.add_memo_shake_sc);
+        Button OKBT = (Button)dialogView.findViewById(R.id.add_memo_ok_bt);
 
 
+        dateTV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+        alarmCK.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                switch (compoundButton.getId()){
+                    case R.id.add_memo_setAlarm_ck:
+                        isAlarm = b;
+                        break;
+                    case R.id.add_memo_sound_sc:
+                        isSound = b;
+                        break;
+                    case R.id.add_memo_shake_sc:
+                        isShake = b;
+                        break;
+                }
+            }
+        });
+        alarmTimeTV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                alarmTime = setTime();
+            }
+        });
+        OKBT.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (titleET.getText().toString().trim().equals("")){
+                    Toast.makeText(MainActivity.this,"不能为空呦",Toast.LENGTH_SHORT).show();
+                } else {
+                    MemoItem memoItem = new MemoItem();
+                    memoItem.setTitle(titleET.getText().toString());
+                    memoItem.setContent(contentET.getText().toString());
+                    memoItem.setAlarm(isAlarm);
+                    memoItem.setSound(isSound);
+                    memoItem.setShake(isShake);
+                    memoItem.setAlarmTime(alarmTime);
+                    memoItem.setEditTime(new GetTime().getSpecificTime());
+                    memoItem.save();
+                }
+                addMemoDialog.dismiss();
+            }
+        });
         addMemoDialog.show();
     }
 
+    //设置提醒时间
+    private String setTime(){
+        Calendar calendar = Calendar.getInstance();
+        final Calendar c = Calendar.getInstance();
+        c.setTimeInMillis(System.currentTimeMillis());
+        //要把timePicker写在前面，才会先显示datePicker,原因不知。。。
+        TimePickerDialog timePicker = new TimePickerDialog(this, 0,
+                new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker timePicker, int i, int i1) {
+
+                        c.set(Calendar.HOUR_OF_DAY,i);
+                        c.set(Calendar.MINUTE,i1);
+                        Intent intent = new Intent(MainActivity.this,AlarmActivity.class);
+                        PendingIntent pt = PendingIntent.getActivity(MainActivity.this,0,intent,0);
+                        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+                        alarmManager.set(AlarmManager.RTC_WAKEUP,c.getTimeInMillis(),pt);
+                        Toast.makeText(MainActivity.this,"提醒设置成功",Toast.LENGTH_SHORT).show();
+                    }
+                },calendar.get(Calendar.HOUR_OF_DAY),calendar.get(Calendar.MINUTE),false);
+        timePicker.show();
+
+        DatePickerDialog datePicker = new DatePickerDialog(this, 0,
+                new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
+                        c.set(i,i1,i2);
+                    }
+                }, calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+        datePicker.show();
+
+        return c.getTimeInMillis()+"";
+    }
+
+    //设置抽屉。。
     private void initEvents() {
         drawerLayout.setDrawerListener(new DrawerLayout.DrawerListener() {
             @Override
@@ -283,7 +404,6 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
 
     @Override
     public void onPageSelected(int position) {
-
         resetUI(position);
     }
 
@@ -313,13 +433,13 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         viewPager.setCurrentItem(index);
         if (index == 0){
             //设置toolbar的新建图标
-            toolbar.getMenu().getItem(1).setIcon(getResources().getDrawable(R.drawable.edit_black));
+//            toolbar.getMenu().getItem(1).setIcon(getResources().getDrawable(R.drawable.edit_black));
             mainDiaryBT.setBackground(getResources().getDrawable(R.drawable.diary_blue));
             mainDiaryTV.setTextColor(getResources().getColor(R.color.light_blue));
             mainMemoBT.setBackground(getResources().getDrawable(R.drawable.memo_black));
             mainMemoTV.setTextColor(getResources().getColor(R.color.gray));
         } else {
-            toolbar.getMenu().getItem(1).setIcon(getResources().getDrawable(R.drawable.add_black_round));
+//            toolbar.getMenu().getItem(1).setIcon(getResources().getDrawable(R.drawable.add_black_round));
             mainDiaryBT.setBackground(getResources().getDrawable(R.drawable.diary_black));
             mainDiaryTV.setTextColor(getResources().getColor(R.color.gray));
             mainMemoBT.setBackground(getResources().getDrawable(R.drawable.memo_blue));

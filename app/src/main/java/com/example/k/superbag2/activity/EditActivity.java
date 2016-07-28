@@ -1,17 +1,11 @@
 package com.example.k.superbag2.activity;
 
 import android.app.Activity;
-import android.app.AlarmManager;
 import android.app.AlertDialog;
-import android.app.DatePickerDialog;
-import android.app.PendingIntent;
-import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -26,7 +20,6 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -34,24 +27,20 @@ import android.widget.PopupWindow;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
-import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.example.k.superbag2.R;
-import com.example.k.superbag2.adapter.PopupPagerAdapter;
 import com.example.k.superbag2.bean.ItemBean;
 import com.example.k.superbag2.others.Constant;
 import com.example.k.superbag2.utils.GetImageUtils;
 import com.example.k.superbag2.utils.GetTime;
 
 import org.litepal.crud.DataSupport;
-import org.litepal.tablemanager.Connector;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -59,7 +48,7 @@ import java.util.List;
  */
 
 public class EditActivity extends Activity implements
-        View.OnClickListener,RadioGroup.OnCheckedChangeListener,ViewPager.OnPageChangeListener,
+        View.OnClickListener,RadioGroup.OnCheckedChangeListener,
         CheckBox.OnCheckedChangeListener{
 
     private Button backBT,saveBT,picBT,faceBT,weatherBT,locationBT,editAlarm,feelingsBT;
@@ -117,7 +106,6 @@ public class EditActivity extends Activity implements
         setContentView(R.layout.activity_edit);
 
         initView();
-        initPopup();
         initListener();
         initData();
     }
@@ -160,19 +148,6 @@ public class EditActivity extends Activity implements
         popupPic4 = (ImageView)v.findViewById(R.id.popup_pic4);
         popupViewList = new ArrayList<>();
         popupViewList.add(v);
-    }
-
-    private void initPopup(){
-        View view = LayoutInflater.from(this).inflate(R.layout.popup_window,null);
-        popupWindow = new PopupWindow(view, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        viewPager = (ViewPager) view.findViewById(R.id.popup_pager);
-        PopupPagerAdapter pagerAdapter = new PopupPagerAdapter(popupViewList);
-        viewPager.setAdapter(pagerAdapter);
-        viewPager.setOnPageChangeListener(this);
-        //设置点击外部，popup消失
-        popupWindow.setOutsideTouchable(true);
-        popupWindow.setBackgroundDrawable(new BitmapDrawable());
-
     }
 
     private void initListener(){
@@ -308,9 +283,6 @@ public class EditActivity extends Activity implements
                 break;
             case R.id.edit_alarm:
                 setAlarmPopup();
-                break;
-            case R.id.set_time_bt:
-                setTime();
                 break;
             case R.id.done_bt:
                 editAlarm.setBackground(getResources().getDrawable(R.drawable.alarm_black));
@@ -472,47 +444,6 @@ public class EditActivity extends Activity implements
         alarmPOpup.showAsDropDown(findViewById(R.id.edit_alarm));
     }
 
-    //设置提醒时间
-    private void setTime(){
-        Calendar calendar = Calendar.getInstance();
-        final Calendar c = Calendar.getInstance();
-        c.setTimeInMillis(System.currentTimeMillis());
-        //要把timePicker写在前面，才会先显示datePicker,原因不知。。。
-        TimePickerDialog timePicker = new TimePickerDialog(this, 0,
-                new TimePickerDialog.OnTimeSetListener() {
-                    @Override
-                    public void onTimeSet(TimePicker timePicker, int i, int i1) {
-
-                        c.set(Calendar.HOUR_OF_DAY,i);
-                        c.set(Calendar.MINUTE,i1);
-                        Intent intent = new Intent(EditActivity.this,AlarmActivity.class);
-                        PendingIntent pt = PendingIntent.getActivity(EditActivity.this,0,intent,0);
-                        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-                        alarmManager.set(AlarmManager.RTC_WAKEUP,c.getTimeInMillis(),pt);
-                        alarmPOpup.dismiss();
-                        Toast.makeText(EditActivity.this,"提醒设置成功",Toast.LENGTH_SHORT).show();
-
-                        editAlarm.setBackground(getResources().getDrawable(R.drawable.alarm_blue));
-                        clickable = true;
-                        cancelBT.setEnabled(clickable);
-                        doneBT.setEnabled(clickable);
-                    }
-                },calendar.get(Calendar.HOUR_OF_DAY),calendar.get(Calendar.MINUTE),false);
-        timePicker.show();
-
-        DatePickerDialog datePicker = new DatePickerDialog(this, 0,
-                new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
-                c.set(i,i1,i2);
-            }
-        }, calendar.get(Calendar.YEAR),
-                calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
-        datePicker.show();
-
-        newTime = c.getTimeInMillis()+"";
-    }
-
 
     //用于确定单选钮的选中情况
     @Override
@@ -529,7 +460,7 @@ public class EditActivity extends Activity implements
 
     //保存数据
     private void saveData(){
-        SQLiteDatabase myDatabase = Connector.getDatabase();
+//        SQLiteDatabase myDatabase = Connector.getDatabase();
         ItemBean newitem = new ItemBean();
         String content = contentET.getText().toString().trim();
         GetTime gt = new GetTime();
@@ -604,21 +535,6 @@ public class EditActivity extends Activity implements
             e.printStackTrace();
         }
         imageUri = Uri.fromFile(outputImage);
-    }
-
-    @Override
-    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-    }
-
-    @Override
-    public void onPageSelected(int position) {
-
-    }
-
-    @Override
-    public void onPageScrollStateChanged(int state) {
-
     }
 
 }

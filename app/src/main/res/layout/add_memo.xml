@@ -27,6 +27,7 @@
         <EditText
             android:layout_width="260dp"
             android:layout_height="wrap_content"
+            android:textSize="15sp"
             android:id="@+id/add_memo_title_et"/>
     </LinearLayout>
 
@@ -44,6 +45,7 @@
         <EditText
             android:layout_width="260dp"
             android:layout_height="wrap_content"
+            android:textSize="15sp"
             android:id="@+id/add_memo_content_et"/>
     </LinearLayout>
 
@@ -101,6 +103,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="21:32"
+                android:id="@+id/add_memo_alarmTime_tv"
                 android:padding="8dp"
                 android:background="@color/light"
                 android:gravity="center"
@@ -137,7 +140,7 @@
     <Button
         android:layout_width="80dp"
         android:layout_height="27dp"
-        android:layout_marginTop="3dp"
+        android:layout_marginTop="8dp"
         android:layout_gravity="center_horizontal"
         android:text="确定"
         android:id="@+id/add_memo_ok_bt"
