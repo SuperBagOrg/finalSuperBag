@@ -1,5 +1,6 @@
 package com.example.k.superbag2;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
@@ -18,10 +19,13 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import com.example.k.superbag2.activity.EditActivity;
@@ -35,6 +39,7 @@ import com.nineoldandroids.view.ViewHelper;
 
 import org.litepal.crud.DataSupport;
 import org.litepal.tablemanager.Connector;
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,7 +52,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     private Button mainDiaryBT,mainMemoBT;
     private TextView mainDiaryTV,mainMemoTV;
     private LinearLayout mainDiaryLL,mainMemoLL;
-
+    private Toolbar toolbar;
     //diary
     private ImageView fPBackgroundIV,fPHeadIconIV;
     private TextView fPSummaryTV;
@@ -84,6 +89,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         mainMemoBT = (Button)findViewById(R.id.main_memo_BT);
         mainMemoTV = (TextView)findViewById(R.id.main_memo_TV);
         mainMemoLL = (LinearLayout)findViewById(R.id.main_bottom_memo_LL);
+        toolbar = (Toolbar)findViewById(R.id.toolbar);
 
         Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
         toolbar.getBackground().setAlpha(50);
@@ -110,8 +116,12 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.action_edit:
-                Intent intent = new Intent(MainActivity.this, EditActivity.class);
-                startActivity(intent);
+                if (viewPager.getCurrentItem() == 0) {
+                    Intent intent = new Intent(MainActivity.this, EditActivity.class);
+                    startActivity(intent);
+                } else {
+                    addMemo();
+                }
                 break;
             case R.id.action_search:
 
@@ -196,38 +206,27 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
             }
         });
     }
-    /**
-     * 为了解决ListView在ScrollView中只能显示一行数据的问题
-     *
-     * @param listView
-     */
-    public static void setListViewHeightBasedOnChildren(ListView listView) {
-        // 获取ListView对应的Adapter
-        ListAdapter listAdapter = listView.getAdapter();
-        if (listAdapter == null) {
-            return;
-        }
-
-        int totalHeight = 0;
-        for (int i = 0, len = listAdapter.getCount(); i < len; i++) {
-            // listAdapter.getCount()返回数据项的数目
-            View listItem = listAdapter.getView(i, null, listView);
-            listItem.measure(0, 0); // 计算子项View 的宽高
-            totalHeight += listItem.getMeasuredHeight(); // 统计所有子项的总高度
-
-        }
-
-        ViewGroup.LayoutParams params = listView.getLayoutParams();
-        params.height = totalHeight
-                + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
-        // listView.getDividerHeight()获取子项间分隔符占用的高度
-        // params.height最后得到整个ListView完整显示需要的高度
-        listView.setLayoutParams(params);
-    }
 
     private void setMemoView(){
         View memoView = LayoutInflater.from(this).inflate(R.layout.test,null);
         viewList.add(memoView);
+    }
+
+    //新建备忘录
+    private void addMemo(){
+        AlertDialog addMemoDialog = new AlertDialog.Builder(MainActivity.this).create();
+        View dialogView = LayoutInflater.from(MainActivity.this).inflate(R.layout.add_memo,null);
+        addMemoDialog.setView(dialogView);
+        EditText titleET = (EditText)dialogView.findViewById(R.id.add_memo_title_et);
+        EditText contentET = (EditText)dialogView.findViewById(R.id.add_memo_content_et);
+        TextView dateTV = (TextView)dialogView.findViewById(R.id.add_memo_date_tv);
+        CheckBox alarmCK = (CheckBox)dialogView.findViewById(R.id.add_memo_setAlarm_ck);
+
+        Switch soundSC = (Switch)dialogView.findViewById(R.id.add_memo_sound_sc);
+        Switch shakeSC = (Switch)dialogView.findViewById(R.id.add_memo_shake_sc);
+
+
+        addMemoDialog.show();
     }
 
     private void initEvents() {
@@ -313,16 +312,48 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         currentIndex = index;
         viewPager.setCurrentItem(index);
         if (index == 0){
+            //设置toolbar的新建图标
+            toolbar.getMenu().getItem(1).setIcon(getResources().getDrawable(R.drawable.edit_black));
             mainDiaryBT.setBackground(getResources().getDrawable(R.drawable.diary_blue));
             mainDiaryTV.setTextColor(getResources().getColor(R.color.light_blue));
             mainMemoBT.setBackground(getResources().getDrawable(R.drawable.memo_black));
             mainMemoTV.setTextColor(getResources().getColor(R.color.gray));
         } else {
+            toolbar.getMenu().getItem(1).setIcon(getResources().getDrawable(R.drawable.add_black_round));
             mainDiaryBT.setBackground(getResources().getDrawable(R.drawable.diary_black));
             mainDiaryTV.setTextColor(getResources().getColor(R.color.gray));
             mainMemoBT.setBackground(getResources().getDrawable(R.drawable.memo_blue));
             mainMemoTV.setTextColor(getResources().getColor(R.color.light_blue));
         }
+    }
+
+    /**
+     * 为了解决ListView在ScrollView中只能显示一行数据的问题
+     *
+     * @param listView
+     */
+    public static void setListViewHeightBasedOnChildren(ListView listView) {
+        // 获取ListView对应的Adapter
+        ListAdapter listAdapter = listView.getAdapter();
+        if (listAdapter == null) {
+            return;
+        }
+
+        int totalHeight = 0;
+        for (int i = 0, len = listAdapter.getCount(); i < len; i++) {
+            // listAdapter.getCount()返回数据项的数目
+            View listItem = listAdapter.getView(i, null, listView);
+            listItem.measure(0, 0); // 计算子项View 的宽高
+            totalHeight += listItem.getMeasuredHeight(); // 统计所有子项的总高度
+
+        }
+
+        ViewGroup.LayoutParams params = listView.getLayoutParams();
+        params.height = totalHeight
+                + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
+        // listView.getDividerHeight()获取子项间分隔符占用的高度
+        // params.height最后得到整个ListView完整显示需要的高度
+        listView.setLayoutParams(params);
     }
 
     @Override

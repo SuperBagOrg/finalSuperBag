@@ -6,5 +6,8 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="33333"/>
+        android:paddingTop="40dp"
+        android:text="我是备忘啦啦啦"
+        android:textSize="20sp"/>
+
 </LinearLayout>
