@@ -119,14 +119,6 @@
                 android:text="2016-06-26 17:05"
                 android:textSize="10sp"/>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/fp_0pic_newTime"
-                android:layout_alignParentRight="true"
-                android:text="2016-07-01"
-                android:textColor="@color/red"
-                android:textSize="10sp"/>
 
         </RelativeLayout>
 

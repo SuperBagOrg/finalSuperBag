@@ -27,7 +27,7 @@ public class PreviewActivity extends Activity implements View.OnClickListener{
     private Button preBack,preEdit;
     private LinearLayout preBackLL,preEditLL;
     private ImageView preHeadIcon;
-    private TextView preMonth,preWeather,preFeelings,preTag1,preTag2,preContent,preMin;
+    private TextView preMonth,preWeather,preFeelings,preTag1,preTag2,preTag3,preContent,preMin;
     private ImageView prePic1,prePic2,prePic3,prePic4;
 
     private int lineNum = 0;
@@ -51,8 +51,9 @@ public class PreviewActivity extends Activity implements View.OnClickListener{
         preMonth = (TextView)findViewById(R.id.pre_month);
         preWeather = (TextView)findViewById(R.id.pre_weather_TV);
         preFeelings = (TextView)findViewById(R.id.pre_feelings_TV);
-        preTag1 = (TextView)findViewById(R.id.pre_tag2);
-        preTag2 = (TextView)findViewById(R.id.pre_tag3);
+        preTag1 = (TextView)findViewById(R.id.pre_tag1);
+        preTag2 = (TextView)findViewById(R.id.pre_tag2);
+        preTag3 = (TextView)findViewById(R.id.pre_tag3);
         preContent = (TextView)findViewById(R.id.pre_content);
         preMin = (TextView)findViewById(R.id.pre_min);
         prePic1 = (ImageView)findViewById(R.id.pre_iv1);
@@ -94,7 +95,8 @@ public class PreviewActivity extends Activity implements View.OnClickListener{
         Intent intent = getIntent();
         lineNum = intent.getIntExtra(Constant.LINE_INDEX,-1);
         if (lineNum != -1){
-            ItemBean item = DataSupport.find(ItemBean.class,lineNum);
+            int record_num = DataSupport.count(ItemBean.class);
+            ItemBean item = DataSupport.find(ItemBean.class,record_num-lineNum);
             if (item == null) {
                 Log.d("item为空", "");
                 Toast.makeText(this,"wei",Toast.LENGTH_SHORT).show();
@@ -111,10 +113,19 @@ public class PreviewActivity extends Activity implements View.OnClickListener{
                 preTag2.setVisibility(View.VISIBLE);
                 preTag2.setText(item.getTag3());
             }
-            String month = item.getOldTime().substring(0,10);
-            preMonth.setText(month);
+            String[] time = item.getDayTime().split("\\-");
+            String preMonth_str = time[0]+"-"+time[1]+"-"+time[2];
+            preMonth.setText(preMonth_str);
+            preFeelings.setText(item.getFeelings());
+            //图片暂时没有id：貌似id是整型的
+//            prePic1.setImageResource();
+//            prePic2.setImageResource();
+//            prePic3.setImageResource();
+//            prePic4.setImageResource();
+            preWeather.setText(item.getWeather());
+
             //
-            String min = item.getOldTime().substring(10,item.getOldTime().length());
+            String min = time[3];//hour and 分钟
 //            String min = item.getOldTime().substring(11,item.getOldTime().length());
             preMin.setText(min);
             //设置图片
