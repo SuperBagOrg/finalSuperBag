@@ -381,21 +381,6 @@ public class EditActivity extends Activity implements View.OnClickListener,
         builder.show();
     }
 
-    private void setAlarmPopup(){
-        View v = LayoutInflater.from(this).inflate(R.layout.popup_alarm,null);
-        alarmPOpup = new PopupWindow(v, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        //设置点击外部popup消失
-        alarmPOpup.setOutsideTouchable(true);
-        alarmPOpup.setBackgroundDrawable(new BitmapDrawable());
-
-        setTimeBT = (Button)v.findViewById(R.id.set_time_bt);
-        doneBT = (Button)v.findViewById(R.id.done_bt);
-        cancelBT = (Button)v.findViewById(R.id.cancel_bt);
-        setTimeBT.setOnClickListener(this);
-        doneBT.setOnClickListener(this);
-        cancelBT.setOnClickListener(this);
-    }
-
     //保存数据
     private void saveData(){
         if (lineNum!=-1){

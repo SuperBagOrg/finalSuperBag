@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -11,159 +11,186 @@
         android:padding="10dp">
 
         <LinearLayout
-            android:layout_width="50dp"
             android:id="@+id/pre_back_ll"
+            android:layout_width="50dp"
             android:layout_height="wrap_content">
+
             <Button
+                android:id="@+id/pre_back"
                 android:layout_width="25dp"
                 android:layout_height="25dp"
-                android:id="@+id/pre_back"
-                android:background="@drawable/back_white"/>
+                android:background="@drawable/back_white" />
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="50dp"
-            android:layout_alignParentRight="true"
-            android:orientation="horizontal"
             android:id="@+id/pre_edit_ll"
-            android:layout_height="wrap_content">
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:orientation="horizontal">
+
             <Button
+                android:id="@+id/pre_edit"
                 android:layout_width="25dp"
                 android:layout_height="25dp"
-                android:id="@+id/pre_edit"
                 android:layout_marginLeft="15dp"
-                android:background="@drawable/edit"/>
+                android:background="@drawable/edit" />
         </LinearLayout>
     </RelativeLayout>
 
-    <RelativeLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="10dp">
-        <ImageView
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:scaleType="centerCrop"
-            android:layout_centerVertical="true"
-            android:layout_alignParentLeft="true"
-            android:src="@drawable/pic4"
-            android:id="@+id/pre_head_icon"/>
-        <TextView
-            android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="2016-06-26  周日"
-            android:layout_toRightOf="@+id/pre_head_icon"
-            android:paddingLeft="5dp"
-            android:id="@+id/pre_month"
-            android:layout_centerVertical="true"
-            android:textColor="@color/light_green"/>
+            android:orientation="vertical">
 
-        <View
-            android:layout_width="2dp"
-            android:layout_height="40dp"
-            android:background="@color/gray"
-            android:layout_centerVertical="true"
-            android:layout_centerHorizontal="true"
-            android:id="@+id/edit_view"></View>
 
-        <TextView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:padding="8dp"
-            android:layout_centerVertical="true"
-            android:id="@+id/pre_weather_TV"
-            android:layout_toRightOf="@+id/edit_view"
-            android:text="晴"
-            android:layout_marginLeft="5dp"
-            android:textSize="12sp"
-            android:background="@drawable/weather_background"/>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="30dp"
-            android:padding="5dp"
-            android:layout_marginLeft="10dp"
-            android:textSize="12sp"
-            android:layout_centerVertical="true"
-            android:id="@+id/pre_feelings_TV"
-            android:background="@drawable/feelings_background"
-            android:layout_toRightOf="@+id/pre_weather_TV"
-            android:text="心情"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="30dp"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="20dp"
-            android:id="@+id/pre_tag1"
-            android:padding="5dp"
-            android:visibility="gone"
-            android:background="@drawable/edit_tag_background"
-            android:text="sss"
-            android:layout_toRightOf="@+id/pre_feelings_TV"
-            android:gravity="center_vertical"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="30dp"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="20dp"
-            android:id="@+id/pre_tag2"
-            android:padding="5dp"
-            android:visibility="gone"
-            android:background="@drawable/edit_tag_background"
-            android:text="sss"
-            android:layout_toRightOf="@+id/pre_tag1"
-            android:gravity="center_vertical"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="30dp"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="15dp"
-            android:background="@drawable/edit_tag_background"
-            android:id="@+id/pre_tag3"
-            android:padding="5dp"
-            android:text=""
-            android:visibility="gone"
-            android:layout_toRightOf="@+id/pre_tag2"
-            android:gravity="center_vertical"/>
-    </RelativeLayout>
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:background="@color/gray"></View>
+                <ImageView
+                    android:id="@+id/pre_head_icon"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/pic4" />
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="10dp"
-        android:text="这是测试内容"
-        android:id="@+id/pre_content"/>
+                <TextView
+                    android:id="@+id/pre_month"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_toRightOf="@+id/pre_head_icon"
+                    android:paddingLeft="5dp"
+                    android:text="2016-06-26  周日"
+                    android:textColor="@color/light_green" />
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:scaleType="centerCrop"
-        android:id="@+id/pre_iv1"/>
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:scaleType="centerCrop"
-        android:id="@+id/pre_iv2"/>
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:scaleType="centerCrop"
-        android:id="@+id/pre_iv3"/>
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:scaleType="centerCrop"
-        android:id="@+id/pre_iv4"/>
+                <View
+                    android:id="@+id/edit_view"
+                    android:layout_width="2dp"
+                    android:layout_height="40dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:background="@color/gray"></View>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/pre_min"
-        android:text="18:13"
-        android:padding="10dp"/>
+                <TextView
+                    android:id="@+id/pre_weather_TV"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="5dp"
+                    android:layout_toRightOf="@+id/edit_view"
+                    android:background="@drawable/weather_background"
+                    android:padding="8dp"
+                    android:text="晴"
+                    android:textSize="12sp" />
 
+                <TextView
+                    android:id="@+id/pre_feelings_TV"
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="10dp"
+                    android:layout_toRightOf="@+id/pre_weather_TV"
+                    android:background="@drawable/feelings_background"
+                    android:padding="5dp"
+                    android:text="心情"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/pre_tag1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="20dp"
+                    android:layout_toRightOf="@+id/pre_feelings_TV"
+                    android:background="@drawable/edit_tag_background"
+                    android:gravity="center_vertical"
+                    android:padding="5dp"
+                    android:text="sss"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/pre_tag2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="20dp"
+                    android:layout_toRightOf="@+id/pre_tag1"
+                    android:background="@drawable/edit_tag_background"
+                    android:gravity="center_vertical"
+                    android:padding="5dp"
+                    android:text="sss"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/pre_tag3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="15dp"
+                    android:layout_toRightOf="@+id/pre_tag2"
+                    android:background="@drawable/edit_tag_background"
+                    android:gravity="center_vertical"
+                    android:padding="5dp"
+                    android:text=""
+                    android:visibility="gone" />
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@color/gray"></View>
+
+            <TextView
+                android:id="@+id/pre_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:text="这是测试内容" />
+
+            <ImageView
+                android:id="@+id/pre_iv1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:scaleType="centerInside" />
+
+            <ImageView
+                android:id="@+id/pre_iv2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scaleType="centerInside" />
+
+            <ImageView
+                android:id="@+id/pre_iv3"
+                android:padding="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scaleType="centerInside" />
+
+            <ImageView
+                android:id="@+id/pre_iv4"
+                android:padding="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scaleType="centerInside" />
+
+            <TextView
+                android:id="@+id/pre_min"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:padding="10dp"
+                android:text="18:13" />
+        </LinearLayout>
+    </ScrollView>
 </LinearLayout>
