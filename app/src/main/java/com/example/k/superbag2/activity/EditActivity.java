@@ -32,6 +32,7 @@ import android.widget.Toast;
 import com.example.k.superbag2.R;
 import com.example.k.superbag2.bean.ItemBean;
 import com.example.k.superbag2.others.Constant;
+import com.example.k.superbag2.utils.DialogUtils;
 import com.example.k.superbag2.utils.GetImageUtils;
 import com.example.k.superbag2.utils.GetTime;
 
@@ -47,8 +48,8 @@ import java.util.List;
  * Created by K on 2016/6/26.
  */
 
-public class EditActivity extends Activity implements
-        View.OnClickListener, CheckBox.OnCheckedChangeListener{
+public class EditActivity extends Activity implements View.OnClickListener,
+    CheckBox.OnCheckedChangeListener{
 
     private Button backBT,saveBT,picBT,weatherBT,feelingsBT;
     private EditText contentET;
@@ -326,13 +327,7 @@ public class EditActivity extends Activity implements
             feelingsCKList.get(feelingsCKIdList.indexOf(feelingsIndex)).setChecked(true);
         }
         feelingsDialog.show();
-        int width = getWindowManager().getDefaultDisplay().getWidth();//得到当前显示设备的宽度，单位是像素
-        WindowManager.LayoutParams params = feelingsDialog.getWindow().getAttributes();//得到这个dialog界面的参数对象
-        params.width = 3*width/5;//设置dialog的界面宽度
-        params.height =  WindowManager.LayoutParams.WRAP_CONTENT;//设置dialog高度为包裹内容
-        params.gravity = Gravity.CENTER;//设置dialog的重心
-        //dialog.getWindow().setLayout(width-(width/6),  LayoutParams.WRAP_CONTENT);//用这个方法设置dialog大小也可以，但是这个方法不能设置重心之类的参数，推荐用Attributes设置
-        feelingsDialog.getWindow().setAttributes(params);//最后把这个参数对象设置进去，即与dialog绑定
+        DialogUtils.setDialog(EditActivity.this,feelingsDialog,3,5);
     }
 
     private void chooseWeather(){
@@ -360,13 +355,7 @@ public class EditActivity extends Activity implements
             weatherCKList.get(weatherCKIdList.indexOf(weatherIndex)).setChecked(true);
         }
         weatherDialog.show();
-        int width = getWindowManager().getDefaultDisplay().getWidth();//得到当前显示设备的宽度，单位是像素
-        WindowManager.LayoutParams params = weatherDialog.getWindow().getAttributes();//得到这个dialog界面的参数对象
-        params.width = width/2;//设置dialog的界面宽度
-        params.height =  WindowManager.LayoutParams.WRAP_CONTENT;//设置dialog高度为包裹内容
-        params.gravity = Gravity.CENTER;//设置dialog的重心
-        //dialog.getWindow().setLayout(width-(width/6),  LayoutParams.WRAP_CONTENT);//用这个方法设置dialog大小也可以，但是这个方法不能设置重心之类的参数，推荐用Attributes设置
-        weatherDialog.getWindow().setAttributes(params);//最后把这个参数对象设置进去，即与dialog绑定
+        DialogUtils.setDialog(EditActivity.this,weatherDialog,1,2);
     }
 
     private void addTag(){

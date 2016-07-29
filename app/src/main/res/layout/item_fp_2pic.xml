@@ -9,8 +9,8 @@
         android:layout_height="wrap_content"
         android:id="@+id/fp_2pic_time"
         android:text="26/06\n周日"
-        android:paddingTop="10dp"
-        android:paddingLeft="5dp"/>
+        android:paddingLeft="10dp"
+        android:paddingTop="12dp"/>
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -48,63 +48,64 @@
             android:layout_height="wrap_content"
             android:paddingBottom="5dp"
             android:orientation="horizontal">
-
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="记事"
-                android:id="@+id/fp_2pic_tag1"
-                android:padding="5dp"
-                android:textSize="12sp"
-                android:background="@drawable/tag_background"
-                />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="记事"
-                android:id="@+id/fp_2pic_tag2"
-                android:layout_marginLeft="18dp"
-                android:padding="5dp"
-                android:textSize="12sp"
-                android:background="@drawable/tag_background"
-                />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="记事"
-                android:id="@+id/fp_2pic_tag3"
-                android:layout_marginLeft="18dp"
-                android:padding="5dp"
-                android:textSize="12sp"
-                android:background="@drawable/tag_background"
-                />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
                 android:id="@+id/fp_2pic_weather"
                 android:text="晴"
-                android:padding="5dp"
-                android:textSize="12sp"
-                android:background="@drawable/weather_background"
-                android:layout_marginLeft="80dp"/>
+                android:padding="4dp"
+                android:textSize="10sp"
+                android:background="@drawable/weather_background" />
 
             <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="20dp"
                 android:text="开心"
                 android:id="@+id/fp_2pic_feelings"
                 android:layout_marginLeft="18dp"
-                android:padding="5dp"
-                android:textSize="12sp"
+                android:padding="4dp"
+                android:textSize="10sp"
                 android:background="@drawable/feelings_background"
                 />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:text="记事"
+                android:id="@+id/fp_2pic_tag1"
+                android:padding="4dp"
+                android:textSize="10sp"
+                android:layout_marginLeft="80dp"
+                android:background="@drawable/tag_background"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:text="记事"
+                android:id="@+id/fp_2pic_tag2"
+                android:layout_marginLeft="18dp"
+                android:padding="4dp"
+                android:textSize="10sp"
+                android:background="@drawable/tag_background"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:text="记事"
+                android:id="@+id/fp_2pic_tag3"
+                android:layout_marginLeft="18dp"
+                android:padding="4dp"
+                android:textSize="10sp"
+                android:background="@drawable/tag_background"
+                />
+
+
         </LinearLayout>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/fp_2pic_content"
             android:maxLines="4"
+            android:paddingTop="5dp"
             android:text="每天用淘宝和QQ会发现淘宝的商品详情页和qq的好友动态页都不约而同的用了工具栏透明渐变效果，淘宝是为了不挡住商品图片，qq设置为了不挡住header image背景，效果感觉还挺好看，老有人问怎么做的。"/>
 
         <LinearLayout
@@ -132,25 +133,14 @@
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingTop="5dp">
+            android:paddingTop="10dp">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/fp_2pic_oldTime"
                 android:text="2016-06-26 17:05"
-                android:textSize="10sp"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/fp_2pic_newTime"
                 android:layout_alignParentRight="true"
-                android:text="2016-07-01"
-                android:textColor="@color/red"
                 android:textSize="10sp"/>
-
         </RelativeLayout>
-
-
     </LinearLayout>
 </LinearLayout>

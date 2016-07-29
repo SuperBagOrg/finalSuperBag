@@ -105,6 +105,7 @@
                 android:text="21:32"
                 android:id="@+id/add_memo_alarmTime_tv"
                 android:padding="8dp"
+                android:clickable="false"
                 android:background="@color/light"
                 android:gravity="center"
                 />
@@ -121,6 +122,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
+                    android:clickable="false"
                     android:id="@+id/add_memo_sound_sc"/>
                 <TextView
                     android:layout_width="wrap_content"
@@ -131,6 +133,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
+                    android:clickable="false"
                     android:id="@+id/add_memo_shake_sc"/>
             </LinearLayout>
 

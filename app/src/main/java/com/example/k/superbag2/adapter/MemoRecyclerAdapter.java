@@ -2,6 +2,7 @@ package com.example.k.superbag2.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,7 @@ import android.widget.TextView;
 
 import com.example.k.superbag2.R;
 import com.example.k.superbag2.bean.MemoItem;
+import com.example.k.superbag2.utils.GetTime;
 
 import java.util.List;
 
@@ -27,14 +29,14 @@ public class MemoRecyclerAdapter extends RecyclerView.Adapter<MemoRecyclerAdapte
     }
 
     //因为recyclerView没有提供点击事件，所以要自己实现
-    public interface ONItemClickListener{
+    public interface OnItemClickListener{
         void onItemClick(View view,int position);
         void onItemLongClick(View view,int position);
     }
 
-    private ONItemClickListener onItemClickListener = null;
+    private OnItemClickListener onItemClickListener = null;
 
-    public void setOnItemClickListener(ONItemClickListener onItemClickListener){
+    public void setOnItemClickListener(OnItemClickListener onItemClickListener){
         this.onItemClickListener = onItemClickListener;
     }
 
@@ -46,17 +48,33 @@ public class MemoRecyclerAdapter extends RecyclerView.Adapter<MemoRecyclerAdapte
     }
 
     @Override
-    public void onBindViewHolder(MyViewHolder holder, int position) {
+    public void onBindViewHolder(final MyViewHolder holder, int position) {
         MemoItem item = memoItemList.get(position);
         holder.titleTV.setText(item.getTitle());
         if (item.getContent() != null){
             holder.contentTV.setText(item.getContent());
         }
-        //有待完善，还有很大问题
+        //如果设置了提醒，则显示“提醒”
         if (item.isAlarm()){
-//            holder.alarmTime.setText("提醒时间:"+item.getAlarmTime());
+            holder.alarmTime.setText("提醒");
         }
-        holder.editTime.setText(item.getEditTime());
+
+        //设置编辑时间
+        int editDay = item.getDay();
+        int today = Integer.parseInt(new GetTime().getDay());
+        if (item.getYear() == Integer.parseInt(new GetTime().getYear())) {
+            if (editDay == today) {
+                holder.editTime.setText("今天");
+            } else if (editDay + 1 == today) {
+                holder.editTime.setText("昨天");
+            } else if (editDay + 2 == today) {
+                holder.editTime.setText("前天");
+            } else {
+                holder.editTime.setText(item.getMonth()+"月"+item.getDay()+"日");
+            }
+        } else {
+            holder.editTime.setText(item.getYear()+"年"+item.getMonth()+"月"+item.getDay()+"日");
+        }
 
         //如果外部设置了点击事件
         if (onItemClickListener != null){
@@ -64,6 +82,8 @@ public class MemoRecyclerAdapter extends RecyclerView.Adapter<MemoRecyclerAdapte
                 @Override
                 public void onClick(View view) {
                     //查看备忘
+                    int pos = holder.getLayoutPosition();
+                    onItemClickListener.onItemClick(holder.itemMemoLL,pos);
                 }
             });
 
@@ -72,7 +92,7 @@ public class MemoRecyclerAdapter extends RecyclerView.Adapter<MemoRecyclerAdapte
                 public boolean onLongClick(View view) {
                     //删除等
                     //TODO --
-                    return true;
+                    return false;
                 }
             });
         }
@@ -81,6 +101,19 @@ public class MemoRecyclerAdapter extends RecyclerView.Adapter<MemoRecyclerAdapte
     @Override
     public int getItemCount() {
         return memoItemList.size();
+    }
+
+    public void addItem(int position,MemoItem memoItem){
+        memoItemList.add(position,memoItem);
+        notifyItemInserted(position);
+        memoItem.save();
+        // TODO　更新数据库操作
+    }
+
+    public void removeItem(int position){
+        memoItemList.remove(position);
+        notifyItemRemoved(position);
+        // TODO 数据库删除操作
     }
 
     class MyViewHolder extends RecyclerView.ViewHolder{

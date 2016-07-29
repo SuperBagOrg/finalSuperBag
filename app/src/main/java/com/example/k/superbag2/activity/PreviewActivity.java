@@ -128,9 +128,9 @@ public class PreviewActivity extends Activity implements View.OnClickListener{
             preMin.setText(item.getHourMIn());
 
             //
-            String min = time[3];//hour and 分钟
+
 //            String min = item.getOldTime().substring(11,item.getOldTime().length());
-            preMin.setText(min);
+
             //设置图片
             List<Uri> picList = item.getPicList();
             if (!item.getPic1().equals("")){

@@ -162,4 +162,20 @@ public class ItemBean extends DataSupport{
     public void setPic1(String pic1) {
         this.pic1 = pic1;
     }
+
+    public int getDay() {
+        return Integer.parseInt(dayTime.substring(8,10));
+    }
+
+    public int getMonth() {
+        return Integer.parseInt(dayTime.substring(5,7));
+    }
+
+    public int getYear() {
+        return Integer.parseInt(dayTime.substring(0,4));
+    }
+
+    public String getHourMIn(){
+        return dayTime.substring(11);
+    }
 }

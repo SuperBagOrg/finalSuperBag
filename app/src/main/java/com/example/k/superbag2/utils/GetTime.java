@@ -64,6 +64,6 @@ public class GetTime {
 
     public String getSpecificTime(){
         GetTime gt = new GetTime();
-        return gt.getYear()+"-"+gt.getMonth()+"-"+gt.getDay()+"-"+gt.getHour()+":"+gt.getMin();
+        return gt.getYear()+"-"+gt.getMonth()+"-"+gt.getDay()+" "+gt.getHour()+":"+gt.getMin();
     }
 }

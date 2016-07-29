@@ -78,7 +78,8 @@ public class FirstpageAdapter extends ArrayAdapter<ItemBean> {
                 } else {
                     holder0.tag3.setText(itemBean.getTag3());
                 }
-
+                holder0.oldTime.setText(itemBean.getDayTime());
+                holder0.time.setText(itemBean.getDay()+"/"+itemBean.getMonth()+"\n周五");
                 holder0.content.setText(itemBean.getContent());
                 holder0.weather.setText(itemBean.getWeather());
                 holder0.feelings.setText(itemBean.getFeelings());
@@ -92,7 +93,6 @@ public class FirstpageAdapter extends ArrayAdapter<ItemBean> {
                     holder1.time = (TextView) convertView.findViewById(R.id.fp_1pic_time);
                     holder1.content = (TextView)convertView.findViewById(R.id.fp_1pic_content);
                     holder1.oldTime = (TextView)convertView.findViewById(R.id.fp_1pic_oldTime);
-                    holder1.newTime = (TextView)convertView.findViewById(R.id.fp_1pic_newTime);
                     holder1.tag1 = (TextView)convertView.findViewById(R.id.fp_1pic_tag1);
                     holder1.tag2 = (TextView)convertView.findViewById(R.id.fp_1pic_tag2);
                     holder1.tag3 = (TextView)convertView.findViewById(R.id.fp_1pic_tag3);
@@ -117,12 +117,12 @@ public class FirstpageAdapter extends ArrayAdapter<ItemBean> {
                 } else {
                     holder1.tag3.setText(itemBean.getTag3());
                 }
-
+                holder1.oldTime.setText(itemBean.getDayTime());
+                holder1.time.setText(itemBean.getDay()+"/"+itemBean.getMonth()+"\n周五");
                 holder1.content.setText(itemBean.getContent());
                 holder1.weather.setText(itemBean.getWeather());
                 holder1.feelings.setText(itemBean.getFeelings());
-//                Bitmap pic = GetImageUtils.getBMFromUri(getContext(),itemBean.getPicList().get(0));
-//                holder1.iv.setImageBitmap(pic);
+
                 Glide.with(getContext())
                         .load(itemBean.getPic1())
                         .asBitmap()
@@ -136,7 +136,6 @@ public class FirstpageAdapter extends ArrayAdapter<ItemBean> {
                     holder2.time = (TextView) convertView.findViewById(R.id.fp_2pic_time);
                     holder2.content = (TextView)convertView.findViewById(R.id.fp_2pic_content);
                     holder2.oldTime = (TextView)convertView.findViewById(R.id.fp_2pic_oldTime);
-                    holder2.newTime = (TextView)convertView.findViewById(R.id.fp_2pic_newTime);
                     holder2.tag1 = (TextView)convertView.findViewById(R.id.fp_2pic_tag1);
                     holder2.tag2 = (TextView)convertView.findViewById(R.id.fp_2pic_tag2);
                     holder2.tag3 = (TextView)convertView.findViewById(R.id.fp_2pic_tag3);
@@ -160,7 +159,8 @@ public class FirstpageAdapter extends ArrayAdapter<ItemBean> {
                 } else {
                     holder2.tag3.setText(itemBean.getTag3());
                 }
-
+                holder2.oldTime.setText(itemBean.getDayTime());
+                holder2.time.setText(itemBean.getDay()+"/"+itemBean.getMonth()+"\n周五");
                 holder2.content.setText(itemBean.getContent());
                 holder2.weather.setText(itemBean.getWeather());
                 holder2.feelings.setText(itemBean.getFeelings());
@@ -190,16 +190,16 @@ public class FirstpageAdapter extends ArrayAdapter<ItemBean> {
     }
 
     class Pic0ViewHolder{
-        TextView time,content,oldTime,newTime,tag1,tag2,tag3,weather,feelings;
+        TextView time,content,oldTime,tag1,tag2,tag3,weather,feelings;
     }
 
     class Pic1ViewHolder{
-        TextView time,content,oldTime,newTime,tag1,tag2,tag3,weather,feelings;
+        TextView time,content,oldTime,tag1,tag2,tag3,weather,feelings;
         ImageView iv;
     }
 
     class Pic2ViewHolder{
-        TextView time,content,oldTime,newTime,tag1,tag2,tag3,weather,feelings;
+        TextView time,content,oldTime,tag1,tag2,tag3,weather,feelings;
         ImageView iv1,iv2;
     }
 }

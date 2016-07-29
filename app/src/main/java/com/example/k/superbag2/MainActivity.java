@@ -48,8 +48,10 @@ import com.example.k.superbag2.adapter.MemoRecyclerAdapter;
 import com.example.k.superbag2.bean.ItemBean;
 import com.example.k.superbag2.bean.MemoItem;
 import com.example.k.superbag2.others.Constant;
+import com.example.k.superbag2.utils.DialogUtils;
 import com.example.k.superbag2.utils.GetImageUtils;
 import com.example.k.superbag2.utils.GetTime;
+import com.example.k.superbag2.view.GridDividerDecoration;
 import com.nineoldandroids.view.ViewHelper;
 
 import org.litepal.crud.DataSupport;
@@ -78,6 +80,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     private RecyclerView recyclerView;
 
     private List<View> viewList = new ArrayList<>();
+    private MemoRecyclerAdapter memoRecyclerAdapter;
 
     private int currentIndex = 0;
 
@@ -98,8 +101,6 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         setListener();
         initEvents();
         initDataBase();
-        setPager();
-
     }
 
     //初始化数据库 2016/7/27
@@ -142,11 +143,12 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.action_edit:
+                //根据页面的不同，新建不同项目
                 if (viewPager.getCurrentItem() == 0) {
                     Intent intent = new Intent(MainActivity.this, EditActivity.class);
                     startActivity(intent);
                 } else {
-                    addMemo();
+                    addMemo(0,null);
                 }
                 break;
             case R.id.action_search:
@@ -158,11 +160,15 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
 
     private void setPager(){
         setDiaryView();
+
         setMemoView();
         MainPagerAdapter pagerAdapter = new MainPagerAdapter(viewList);
         viewPager.setAdapter(pagerAdapter);
     }
 
+    /**
+     * 显示日记界面
+     */
     private void setDiaryView(){
         View diaryView = LayoutInflater.from(this).inflate(R.layout.fragment_firstpage,null);
         viewList.add(diaryView);
@@ -232,7 +238,6 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         });
     }
 
-    //缺少分割线
     private void setMemoView(){
         View memoView = LayoutInflater.from(this).inflate(R.layout.memo_list,null);
         viewList.add(memoView);
@@ -240,23 +245,84 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         //必须设置，设置为StaggeredGridL...即为瀑布流布局
         recyclerView.setLayoutManager(new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL));
 
-        try {
-            List<MemoItem> memoLists = DataSupport.findAll(MemoItem.class);
-            MemoRecyclerAdapter memoRecyclerAdapter = new MemoRecyclerAdapter(MainActivity.this,memoLists);
+        List<MemoItem> memoLists = DataSupport.findAll(MemoItem.class);
+        Collections.reverse(memoLists);
 
-            recyclerView.setAdapter(memoRecyclerAdapter);
-            //设置默认动画
-            recyclerView.setItemAnimator(new DefaultItemAnimator());
-        }catch (Exception e){
+        memoRecyclerAdapter = new MemoRecyclerAdapter(MainActivity.this,memoLists);
+        recyclerView.addItemDecoration(new GridDividerDecoration(this));
+        recyclerView.setAdapter(memoRecyclerAdapter);
+        //设置默认动画
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        //设置点击事件
+        memoRecyclerAdapter.setOnItemClickListener(new MemoRecyclerAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                //查看
+                previewMemo(position);
+            }
 
-        }
+            @Override
+            public void onItemLongClick(View view, int position) {
 
-
+            }
+        });
 
     }
 
-    //新建备忘录
-    private void addMemo(){
+    private void previewMemo(int i){
+        View preview = LayoutInflater.from(MainActivity.this).inflate(R.layout.preview_memo,null);
+        TextView preTitle,preContent,preAlarm;
+        Button preDelete,preEdit;
+        preTitle = (TextView)preview.findViewById(R.id.pre_memo_title_tv);
+        preContent = (TextView)preview.findViewById(R.id.pre_memo_content_tv);
+        preAlarm = (TextView)preview.findViewById(R.id.pre_memo_alarm_tv);
+        preDelete = (Button)preview.findViewById(R.id.pre_memo_delete_bt);
+        preEdit = (Button)preview.findViewById(R.id.pre_memo_edit_bt);
+
+        final AlertDialog preMemoDialog = new AlertDialog.Builder(MainActivity.this).create();
+        preMemoDialog.setView(preview);
+        preMemoDialog.setCancelable(true);
+
+        //设置数据
+        int record_num = DataSupport.count(MemoItem.class);
+        final MemoItem memoItem = DataSupport.find(MemoItem.class,record_num - i);
+        preTitle.setText(memoItem.getTitle());
+        preContent.setText(memoItem.getContent());
+        if (!memoItem.isAlarm()){
+            preAlarm.setText("无");
+        } else {
+            String str = memoItem.getAlarmTime();
+            if (memoItem.isSound()){
+                str = str + "\n提示音";
+            }
+            if (memoItem.isShake()){
+                str = str + "  震动";
+            }
+        }
+        preDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // TODO 删除
+
+            }
+        });
+        preEdit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                addMemo(1,memoItem);
+                preMemoDialog.dismiss();
+            }
+        });
+        preMemoDialog.show();
+        DialogUtils.setDialog(MainActivity.this,preMemoDialog,4,5);
+    }
+
+    /**
+     * 新建备忘
+     * @param temp 为 0，表示新建一条备忘
+     *             为 1，表示编辑一条现有的备忘
+     */
+    private void addMemo(final int temp, final MemoItem item){
         final AlertDialog addMemoDialog = new AlertDialog.Builder(MainActivity.this).create();
         View dialogView = LayoutInflater.from(MainActivity.this).inflate(R.layout.add_memo,null);
         addMemoDialog.setView(dialogView);
@@ -266,11 +332,27 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         final EditText contentET = (EditText)dialogView.findViewById(R.id.add_memo_content_et);
         TextView dateTV = (TextView)dialogView.findViewById(R.id.add_memo_date_tv);
         CheckBox alarmCK = (CheckBox)dialogView.findViewById(R.id.add_memo_setAlarm_ck);
-        TextView alarmTimeTV = (TextView)dialogView.findViewById(R.id.add_memo_alarmTime_tv);
-        Switch soundSC = (Switch)dialogView.findViewById(R.id.add_memo_sound_sc);
-        Switch shakeSC = (Switch)dialogView.findViewById(R.id.add_memo_shake_sc);
+        final TextView alarmTimeTV = (TextView)dialogView.findViewById(R.id.add_memo_alarmTime_tv);
+        final Switch soundSC = (Switch)dialogView.findViewById(R.id.add_memo_sound_sc);
+        final Switch shakeSC = (Switch)dialogView.findViewById(R.id.add_memo_shake_sc);
         Button OKBT = (Button)dialogView.findViewById(R.id.add_memo_ok_bt);
+        alarmTimeTV.setText(new GetTime().getSpecificTime());
+        dateTV.setText(new GetTime().getSpecificTime());
 
+        //初始化数据
+        if (temp == 1){
+            titleET.setText(item.getTitle());
+            contentET.setText(item.getContent());
+            alarmCK.setChecked(item.isAlarm());
+            soundSC.setChecked(item.isAlarm());
+            shakeSC.setChecked(item.isShake());
+            if (item.isAlarm()){
+                alarmTimeTV.setText(item.getAlarmTime());
+                alarmTimeTV.setClickable(true);
+                soundSC.setClickable(true);
+                shakeSC.setClickable(true);
+            }
+        }
 
         dateTV.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -284,6 +366,13 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
                 switch (compoundButton.getId()){
                     case R.id.add_memo_setAlarm_ck:
                         isAlarm = b;
+                        soundSC.setClickable(b);
+                        alarmTimeTV.setClickable(b);
+                        shakeSC.setClickable(b);
+                        if (!b){
+                            soundSC.setChecked(b);
+                            shakeSC.setChecked(b);
+                        }
                         break;
                     case R.id.add_memo_sound_sc:
                         isSound = b;
@@ -306,15 +395,29 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
                 if (titleET.getText().toString().trim().equals("")){
                     Toast.makeText(MainActivity.this,"不能为空呦",Toast.LENGTH_SHORT).show();
                 } else {
-                    MemoItem memoItem = new MemoItem();
-                    memoItem.setTitle(titleET.getText().toString());
-                    memoItem.setContent(contentET.getText().toString());
-                    memoItem.setAlarm(isAlarm);
-                    memoItem.setSound(isSound);
-                    memoItem.setShake(isShake);
-                    memoItem.setAlarmTime(alarmTime);
-                    memoItem.setEditTime(new GetTime().getSpecificTime());
-                    memoItem.save();
+                    //新建时的保存
+                    if (temp == 0) {
+                        MemoItem memoItem = new MemoItem();
+                        memoItem.setTitle(titleET.getText().toString());
+                        memoItem.setContent(contentET.getText().toString());
+                        memoItem.setAlarm(isAlarm);
+                        memoItem.setSound(isSound);
+                        memoItem.setShake(isShake);
+                        memoItem.setAlarmTime(alarmTime);
+                        memoItem.setEditTime(new GetTime().getSpecificTime());
+                        memoRecyclerAdapter.addItem(0, memoItem);
+                    } else {
+                        //更新数据
+                        item.setTitle(titleET.getText().toString());
+                        item.setContent(contentET.getText().toString());
+                        item.setAlarm(isAlarm);
+                        item.setSound(isSound);
+                        item.setShake(isShake);
+                        item.setAlarmTime(alarmTime);
+                        item.setEditTime(new GetTime().getSpecificTime());
+                        // TODO 执行更新操作
+                        memoRecyclerAdapter.addItem(0,item);
+                    }
                 }
                 addMemoDialog.dismiss();
             }
@@ -488,6 +591,13 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     public void onStart() {
         initView();
         initDiaryListView();
+
         super.onStart();
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+//        setMemoView();
     }
 }
