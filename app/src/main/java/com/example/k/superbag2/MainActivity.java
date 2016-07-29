@@ -101,6 +101,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         setListener();
         initEvents();
         initDataBase();
+        setPager();
     }
 
     //初始化数据库 2016/7/27
@@ -197,14 +198,19 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
 
     private void initDiaryListView(){
 
-        final List<ItemBean> itemBeanList = DataSupport.findAll(ItemBean.class);
-        Collections.reverse(itemBeanList);//反转列表
-        Log.d("列表长度：",itemBeanList.size()+"");
-        FirstpageAdapter adapter = new FirstpageAdapter(this,R.layout.item_fp_1pic,itemBeanList);
-        fPListView.setAdapter(adapter);
-        //----------------
-        setListViewHeightBasedOnChildren(fPListView);
-        adapter.notifyDataSetChanged();
+        try {
+            final List<ItemBean> itemBeanList = DataSupport.findAll(ItemBean.class);
+            Collections.reverse(itemBeanList);//反转列表
+            Log.d("列表长度：",itemBeanList.size()+"");
+            FirstpageAdapter adapter = new FirstpageAdapter(this,R.layout.item_fp_1pic,itemBeanList);
+            fPListView.setAdapter(adapter);
+            //----------------
+            setListViewHeightBasedOnChildren(fPListView);
+            adapter.notifyDataSetChanged();
+        }catch (Exception e){
+
+        }
+
 
         fPListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

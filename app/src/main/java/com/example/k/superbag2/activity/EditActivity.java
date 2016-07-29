@@ -68,7 +68,6 @@ public class EditActivity extends Activity implements View.OnClickListener,
 
     private boolean hasSaved = false;
     private Uri imageUri;
-    private boolean isEditable = true;
     private List<View> popupViewList;
     private String tag1="",tag2="",tag3="";
     private int flag = 1;
@@ -92,6 +91,8 @@ public class EditActivity extends Activity implements View.OnClickListener,
     private List<CheckBox> feelingsCKList;
     private int feelingsIndex = 0;
     private String oldtime;
+    private int lineNum;
+    private int record_num;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -173,11 +174,13 @@ public class EditActivity extends Activity implements View.OnClickListener,
         //如果是从ListView点击进入活动，则初始化数据;
         //如何让editTExt无法点击编辑，还有问题
         Intent intent = getIntent();
-        int lineNum = intent.getIntExtra(Constant.EDIT_DONE,-1);
-        if (lineNum != -1){
-            ItemBean item = DataSupport.find(ItemBean.class,lineNum);
-            saveBT.setBackground(getResources().getDrawable(R.drawable.edit));
-            contentET.setFocusable(false);
+        lineNum = intent.getIntExtra(Constant.EDIT_DONE,-1);
+        Log.d("edit act", lineNum +"");
+        if (lineNum != -1){//从列表点击进入
+            record_num = DataSupport.count(ItemBean.class);
+            ItemBean item = DataSupport.find(ItemBean.class, record_num -lineNum);
+            saveBT.setBackground(getResources().getDrawable(R.drawable.save));
+//            contentET.setFocusable(false);
             contentET.setText(item.getContent());
 
             if (!item.getTag2().equals("")){
@@ -188,7 +191,6 @@ public class EditActivity extends Activity implements View.OnClickListener,
                 tag3TV.setVisibility(View.VISIBLE);
                 tag3TV.setText(item.getTag3());
             }
-            isEditable = false;
         }
     }
 
@@ -219,12 +221,6 @@ public class EditActivity extends Activity implements View.OnClickListener,
                 break;
             case R.id.edit_save_ll:
             case R.id.edit_save:
-                if (!isEditable){
-                    saveBT.setBackground(getResources().getDrawable(R.drawable.save));
-                    contentET.setFocusable(true);
-                    contentET.setClickable(true);
-                    isEditable = true;
-                } else {
                     String content = contentET.getText().toString();
                     Log.d("比较结果，=", (content.trim().equals("")) + "");
                     if (content.trim().equals("")) {
@@ -234,8 +230,6 @@ public class EditActivity extends Activity implements View.OnClickListener,
                         saveData();
                         finish();
                     }
-                }
-
                 break;
             case R.id.edit_pic_bt:
 //                Log.d("已点击","插入图片");
@@ -262,7 +256,6 @@ public class EditActivity extends Activity implements View.OnClickListener,
                         });
                 builder.show();
                 break;
-
             case R.id.cancel_bt:
                 doneBT.setEnabled(false);
                 break;
@@ -277,7 +270,6 @@ public class EditActivity extends Activity implements View.OnClickListener,
                 break;
         }
     }
-
     @Override
     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
         //选择天气
@@ -406,31 +398,49 @@ public class EditActivity extends Activity implements View.OnClickListener,
 
     //保存数据
     private void saveData(){
-//        SQLiteDatabase myDatabase = Connector.getDatabase();
+        if (lineNum!=-1){
+            save_edit();
+        }else {
+            save_first();
+        }
+    }
+    private void save_edit(){
         ItemBean newitem = new ItemBean();
         String content = contentET.getText().toString().trim();
         GetTime gt = new GetTime();
-        //使用litepal库的数据库操作
         newitem.setTag1(tag1);
         newitem.setTag2(tag2);
         newitem.setTag3(tag3);
         newitem.setContent(content);
-        newitem.setDayTime(gt.getSpecificTime());
-        //图片这不知道存的是啥。。。
-//        newitem.setDrawableList(uriList);
-//        newitem.setPicList(uriList);
         newitem.setPic1(uriList.get(0));
         newitem.setPic2(uriList.get(1));
         newitem.setPic3(uriList.get(0));
         newitem.setPic4(uriList.get(0));
         newitem.setFeelings(feelings);
-        //貌似暂无数据，先写1吧
+        newitem.setImportance(1);
+        newitem.setWeather(weather);
+        newitem.update(record_num-lineNum);
+        Log.d("已执行修改操作","");
+    }
+    private void save_first(){
+        ItemBean newitem = new ItemBean();
+        String content = contentET.getText().toString().trim();
+        GetTime gt = new GetTime();
+        newitem.setTag1(tag1);
+        newitem.setTag2(tag2);
+        newitem.setTag3(tag3);
+        newitem.setContent(content);
+        newitem.setDayTime(gt.getSpecificTime());
+        newitem.setPic1(uriList.get(0));
+        newitem.setPic2(uriList.get(1));
+        newitem.setPic3(uriList.get(0));
+        newitem.setPic4(uriList.get(0));
+        newitem.setFeelings(feelings);
         newitem.setImportance(1);
         newitem.setWeather(weather);
         newitem.save();
         Log.d("已执行保存操作","");
     }
-
     //拍照
     private void takePhoto(){
         createUri();
