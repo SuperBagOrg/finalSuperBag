@@ -91,6 +91,8 @@ public class PreviewActivity extends Activity implements View.OnClickListener{
                 Intent intent = new Intent(PreviewActivity.this,EditActivity.class);
                 intent.putExtra(Constant.EDIT_DONE,lineNum);
                 startActivity(intent);
+                //跳转后关闭当前活动
+                finish();
                 break;
         }
     }
