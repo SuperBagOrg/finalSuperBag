@@ -90,7 +90,6 @@ public class PreviewActivity extends Activity implements View.OnClickListener{
             case R.id.pre_edit_ll:
                 Intent intent = new Intent(PreviewActivity.this,EditActivity.class);
                 intent.putExtra(Constant.EDIT_DONE,lineNum);
-
                 startActivity(intent);
                 break;
         }
@@ -119,38 +118,32 @@ public class PreviewActivity extends Activity implements View.OnClickListener{
 
             preMonth.setText(item.getYear()+"-"+item.getMonth()+"-"+item.getDay());
             preFeelings.setText(item.getFeelings());
-            //图片暂时没有id：貌似id是整型的
-//            prePic1.setImageResource();
-//            prePic2.setImageResource();
-//            prePic3.setImageResource();
-//            prePic4.setImageResource();
             preWeather.setText(item.getWeather());
             preMin.setText(item.getHourMIn());
 
-            //
-
-//            String min = item.getOldTime().substring(11,item.getOldTime().length());
-
             //设置图片
-            List<Uri> picList = item.getPicList();
             if (!item.getPic1().equals("")){
                 Glide.with(this)
                         .load(item.getPic1())
+                        .asBitmap()
                         .into(prePic1);
             }
             if (!item.getPic2().equals("")){
                 Glide.with(this)
                         .load(item.getPic2())
+                        .asBitmap()
                         .into(prePic2);
             }
             if (!item.getPic3().equals("")){
                 Glide.with(this)
                         .load(item.getPic3())
+                        .asBitmap()
                         .into(prePic3);
             }
             if (!item.getPic4().equals("")){
                 Glide.with(this)
                         .load(item.getPic4())
+                        .asBitmap()
                         .into(prePic4);
             }
         }
