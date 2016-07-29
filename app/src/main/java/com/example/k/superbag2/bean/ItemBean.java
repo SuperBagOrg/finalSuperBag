@@ -23,9 +23,9 @@ public class ItemBean extends DataSupport{
     private String pic1,pic2,pic3,pic4;
     private List<Uri> picList;
 
-    public ItemBean(String tag1, String tag2, String tag3, String content, boolean isMemo,
-                    int importance, String oldTime, String newTime, List<Uri> picList,
-                    String weather, String feelings,List<Drawable> drawableList){
+    public ItemBean(String tag1, String tag2, String tag3, String content,
+                    int importance,List<Uri> picList, String weather,
+                    String feelings,List<Drawable> drawableList){
         this.tag1 = tag1;
         this.tag2 = tag2;
         this.tag3 = tag3;

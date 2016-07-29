@@ -101,7 +101,8 @@
         android:layout_height="match_parent"
         android:name="com.example.k.superbag2.fragment.SettingsLeftFragment"
         android:layout_gravity="left"
-        android:id="@+id/left_settings"/>
+        android:id="@+id/left_settings"
+        tools:layout="@layout/set_signature" />
 
 
 </android.support.v4.widget.DrawerLayout>

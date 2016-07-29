@@ -97,8 +97,9 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         initView();
         setListener();
         initEvents();
-        setPager();
         initDataBase();
+        setPager();
+
     }
 
     //初始化数据库 2016/7/27
@@ -239,12 +240,19 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         //必须设置，设置为StaggeredGridL...即为瀑布流布局
         recyclerView.setLayoutManager(new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL));
 
-        List<MemoItem> memoLists = DataSupport.findAll(MemoItem.class);
-        MemoRecyclerAdapter memoRecyclerAdapter = new MemoRecyclerAdapter(MainActivity.this,memoLists);
+        try {
+            List<MemoItem> memoLists = DataSupport.findAll(MemoItem.class);
+            MemoRecyclerAdapter memoRecyclerAdapter = new MemoRecyclerAdapter(MainActivity.this,memoLists);
 
-        recyclerView.setAdapter(memoRecyclerAdapter);
-        //设置默认动画
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
+            recyclerView.setAdapter(memoRecyclerAdapter);
+            //设置默认动画
+            recyclerView.setItemAnimator(new DefaultItemAnimator());
+        }catch (Exception e){
+
+        }
+
+
+
     }
 
     //新建备忘录
