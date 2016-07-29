@@ -48,19 +48,16 @@ import java.util.List;
  */
 
 public class EditActivity extends Activity implements
-        View.OnClickListener,RadioGroup.OnCheckedChangeListener,
-        CheckBox.OnCheckedChangeListener{
+        View.OnClickListener, CheckBox.OnCheckedChangeListener{
 
-    private Button backBT,saveBT,picBT,faceBT,weatherBT,locationBT,editAlarm,feelingsBT;
+    private Button backBT,saveBT,picBT,weatherBT,feelingsBT;
     private EditText contentET;
     private RadioGroup radioGroup;
     private ImageView headIcon;
     private TextView oldTime;
     private LinearLayout backLL,saveLL,bottomLL;
-    private RadioButton editDiary,editMemo;
     private PopupWindow popupWindow,alarmPOpup;
     private ImageView popupPic1,popupPic2,popupPic3,popupPic4;
-    private ViewPager viewPager;
     private Button setTimeBT,doneBT,cancelBT,addTagBT;
     private TextView tag2TV,tag3TV;
     private CheckBox sunnyCK,cloudyCk,rainyCK,snowyCk,foggyCK,hazeCK;
@@ -70,11 +67,8 @@ public class EditActivity extends Activity implements
 
     private boolean hasSaved = false;
     private Uri imageUri;
-    private boolean isMemo;
-    private String newTime = "-1";
     private boolean isEditable = true;
     private List<View> popupViewList;
-    private boolean clickable = false;
     private String tag1="",tag2="",tag3="";
     private int flag = 1;
     private String weather = "晴",feelings = "开心";
@@ -119,15 +113,11 @@ public class EditActivity extends Activity implements
         weatherBT = (Button)findViewById(R.id.edit_weather_bt);
 //        locationBT = (Button)findViewById(R.id.edit_location_bt);
         contentET = (EditText)findViewById(R.id.edit_et);
-        radioGroup = (RadioGroup)findViewById(R.id.edit_rg);
-        editMemo = (RadioButton)findViewById(R.id.edit_memo);
-        editDiary = (RadioButton)findViewById(R.id.edit_diary);
         headIcon = (ImageView)findViewById(R.id.edit_head_icon);
         oldTime = (TextView) findViewById(R.id.edit_time);
         backLL = (LinearLayout)findViewById(R.id.edit_back_ll);
         saveLL = (LinearLayout)findViewById(R.id.edit_save_ll);
 //        bottomLL = (LinearLayout)findViewById(R.id.edit_bottom_LL);
-        editAlarm = (Button)findViewById(R.id.edit_alarm);
         tag2TV = (TextView)findViewById(R.id.edit_tag2);
         tag3TV = (TextView)findViewById(R.id.edit_tag3);
         addTagBT = (Button)findViewById(R.id.add_tag_bt);
@@ -157,14 +147,12 @@ public class EditActivity extends Activity implements
 //        faceBT.setOnClickListener(this);
         weatherBT.setOnClickListener(this);
 //        locationBT.setOnClickListener(this);
-        radioGroup.setOnCheckedChangeListener(this);
         backLL.setOnClickListener(this);
         saveLL.setOnClickListener(this);
         popupPic1.setOnClickListener(this);
         popupPic2.setOnClickListener(this);
         popupPic3.setOnClickListener(this);
         popupPic4.setOnClickListener(this);
-        editAlarm.setOnClickListener(this);
         addTagBT.setOnClickListener(this);
         feelingsBT.setOnClickListener(this);
     }
@@ -184,7 +172,7 @@ public class EditActivity extends Activity implements
         //如果是从ListView点击进入活动，则初始化数据;
         //如何让editTExt无法点击编辑，还有问题
         Intent intent = getIntent();
-        int lineNum = intent.getIntExtra(Constant.LINE_INDEX,-1);
+        int lineNum = intent.getIntExtra(Constant.EDIT_DONE,-1);
         if (lineNum != -1){
             ItemBean item = DataSupport.find(ItemBean.class,lineNum);
             saveBT.setBackground(getResources().getDrawable(R.drawable.edit));
@@ -273,16 +261,8 @@ public class EditActivity extends Activity implements
                         });
                 builder.show();
                 break;
-            case R.id.edit_alarm:
-                setAlarmPopup();
-                break;
-            case R.id.done_bt:
-                editAlarm.setBackground(getResources().getDrawable(R.drawable.alarm_black));
-                Toast.makeText(EditActivity.this,"已标记为已完成",Toast.LENGTH_SHORT).show();
-                break;
+
             case R.id.cancel_bt:
-                editAlarm.setBackground(getResources().getDrawable(R.drawable.alarm_black));
-                Toast.makeText(EditActivity.this,"已取消提醒",Toast.LENGTH_SHORT).show();
                 doneBT.setEnabled(false);
                 break;
             case R.id.add_tag_bt:
@@ -433,21 +413,6 @@ public class EditActivity extends Activity implements
         setTimeBT.setOnClickListener(this);
         doneBT.setOnClickListener(this);
         cancelBT.setOnClickListener(this);
-        alarmPOpup.showAsDropDown(findViewById(R.id.edit_alarm));
-    }
-
-
-    //用于确定单选钮的选中情况
-    @Override
-    public void onCheckedChanged(RadioGroup radioGroup, int i) {
-        switch (i){
-            case R.id.edit_memo:
-                isMemo = true;
-                break;
-            case R.id.edit_diary:
-                isMemo = false;
-                break;
-        }
     }
 
     //保存数据

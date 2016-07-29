@@ -3,6 +3,7 @@ package com.example.k.superbag2.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -12,12 +13,15 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.k.superbag2.R;
 import com.example.k.superbag2.bean.ItemBean;
 import com.example.k.superbag2.others.Constant;
 import com.example.k.superbag2.utils.GetImageUtils;
 
 import org.litepal.crud.DataSupport;
+
+import java.util.List;
 
 /**
  * Created by K on 2016/7/26.
@@ -85,7 +89,8 @@ public class PreviewActivity extends Activity implements View.OnClickListener{
             case R.id.pre_edit:
             case R.id.pre_edit_ll:
                 Intent intent = new Intent(PreviewActivity.this,EditActivity.class);
-                intent.putExtra(Constant.LINE_INDEX,lineNum);
+                intent.putExtra(Constant.EDIT_DONE,lineNum);
+
                 startActivity(intent);
                 break;
         }
@@ -122,28 +127,32 @@ public class PreviewActivity extends Activity implements View.OnClickListener{
             preWeather.setText(item.getWeather());
             preMin.setText(item.getHourMIn());
 
+            //
+            String min = time[3];//hour and 分钟
+//            String min = item.getOldTime().substring(11,item.getOldTime().length());
+            preMin.setText(min);
             //设置图片
-            /*List<Uri> picList = item.getPicList();
-            if (!picList.get(0).toString().equals("")){
+            List<Uri> picList = item.getPicList();
+            if (!item.getPic1().equals("")){
                 Glide.with(this)
-                        .load(picList.get(0))
+                        .load(item.getPic1())
                         .into(prePic1);
             }
-            if (!picList.get(1).toString().equals("")){
+            if (!item.getPic2().equals("")){
                 Glide.with(this)
-                        .load(picList.get(1))
+                        .load(item.getPic2())
                         .into(prePic2);
             }
-            if (!picList.get(2).toString().equals("")){
+            if (!item.getPic3().equals("")){
                 Glide.with(this)
-                        .load(picList.get(2))
+                        .load(item.getPic3())
                         .into(prePic3);
             }
-            if (!picList.get(3).toString().equals("")){
+            if (!item.getPic4().equals("")){
                 Glide.with(this)
-                        .load(picList.get(3))
+                        .load(item.getPic4())
                         .into(prePic4);
-            }*/
+            }
         }
     }
 }
