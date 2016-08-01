@@ -29,13 +29,16 @@
             android:layout_width="10dp"
             android:layout_height="10dp"
             android:layout_marginLeft="1dp"
-            android:background="@drawable/green_dot"></View>
+            android:background="@drawable/green_dot">
+        </View>
 
         <View
             android:layout_width="2dp"
             android:layout_height="match_parent"
             android:background="@color/gray"
-            android:layout_marginLeft="5dp"></View>
+            android:layout_marginLeft="5dp">
+
+        </View>
     </LinearLayout>
 
     <LinearLayout

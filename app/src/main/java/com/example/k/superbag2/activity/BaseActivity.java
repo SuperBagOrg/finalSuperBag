@@ -26,7 +26,7 @@ public class BaseActivity extends AppCompatActivity {
         super.onStop();
         //后台
         if (IsReception.isApplicationBroughtToBackground(MyApplication.getContext())){
-            MyApplication.isLocked = Constant.ISLOCKED_YES;
+            myApplaction.isLocked = Constant.ISLOCKED_default;
         }
     }
 }

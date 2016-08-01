@@ -13,7 +13,7 @@ import org.litepal.LitePalApplication;
  * Created by Aersasi on 2016/8/1.
  */
 public class MyApplication extends LitePalApplication {
-    public static boolean isLocked = Constant.ISLOCKED_YES;
+    public static boolean isLocked = Constant.ISLOCKED_default;
     private IntentFilter intentFilter;
     private LockBroadReceiver lockBroadReceiver;
     @Override
@@ -24,7 +24,6 @@ public class MyApplication extends LitePalApplication {
         intentFilter.addAction("android.intent.action.SCREEN_OFF");
         lockBroadReceiver = new LockBroadReceiver();
         this.registerReceiver(lockBroadReceiver, intentFilter);
-        Log.d("receiver","registerBroadcast");
     }
 
     @Override

@@ -9,6 +9,7 @@ public class Constant {
     public static final String EDIT_NULL = "edit_null";
     public static final String EDIT_DONE = "edit_done";
     public static final String HEAD_ICON_URI = "headIconUri";
-    public static final boolean ISLOCKED_YES = true;
-    public static final boolean ISLOCKED_NO = false;
+    public static boolean ISLOCKED = true;
+    public static boolean ISLOCKED_default = false;
+
 }
