@@ -26,7 +26,7 @@ import java.util.List;
 /**
  * Created by K on 2016/7/26.
  */
-public class PreviewActivity extends Activity implements View.OnClickListener{
+public class PreviewActivity extends BaseActivity implements View.OnClickListener{
 
     private Button preBack,preEdit;
     private LinearLayout preBackLL,preEditLL;

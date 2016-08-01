@@ -3,9 +3,10 @@ package com.example.k.superbag2;
 import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.app.KeyguardManager;
 import android.app.PendingIntent;
+import android.app.Service;
 import android.app.TimePickerDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
@@ -45,6 +46,7 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.example.k.superbag2.activity.AlarmActivity;
+import com.example.k.superbag2.activity.BaseActivity;
 import com.example.k.superbag2.activity.EditActivity;
 import com.example.k.superbag2.activity.NumLockActivity;
 import com.example.k.superbag2.activity.PreviewActivity;
@@ -62,7 +64,6 @@ import com.example.k.superbag2.view.HidingScrollListener;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.ObjectAnimator;
 import com.nineoldandroids.view.ViewHelper;
-
 import org.litepal.crud.DataSupport;
 import org.litepal.crud.Many2ManyAnalyzer;
 import org.litepal.tablemanager.Connector;
@@ -73,7 +74,7 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements ViewPager.OnPageChangeListener
+public class MainActivity extends BaseActivity implements ViewPager.OnPageChangeListener
 ,View.OnClickListener{
 
     private ViewPager viewPager;
@@ -130,7 +131,6 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         initEvents();
         initDataBase();
     }
-
     //初始化数据库 2016/7/27
     private void initDataBase(){
         SQLiteDatabase myDatabase = Connector.getDatabase();

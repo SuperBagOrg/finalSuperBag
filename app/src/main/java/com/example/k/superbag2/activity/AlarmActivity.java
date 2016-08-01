@@ -8,7 +8,7 @@ import android.os.Bundle;
 /**
  * Created by K on 2016/7/14.
  */
-public class AlarmActivity extends Activity {
+public class AlarmActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

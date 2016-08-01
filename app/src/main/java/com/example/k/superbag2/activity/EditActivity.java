@@ -51,7 +51,7 @@ import java.util.List;
  * Created by K on 2016/6/26.
  */
 
-public class EditActivity extends Activity implements View.OnClickListener,
+public class EditActivity extends BaseActivity implements View.OnClickListener,
     CheckBox.OnCheckedChangeListener{
 
     private Button backBT,saveBT,picBT,weatherBT,feelingsBT;
