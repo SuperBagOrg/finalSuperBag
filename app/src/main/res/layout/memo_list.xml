@@ -7,7 +7,8 @@
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
+        android:paddingTop="?attr/actionBarSize"
+        android:clipToPadding="false"
         android:id="@+id/memo_list_recyclerView">
     </android.support.v7.widget.RecyclerView>
 </LinearLayout>

@@ -13,6 +13,8 @@ import com.example.k.superbag2.R;
 import com.example.k.superbag2.bean.MemoItem;
 import com.example.k.superbag2.utils.GetTime;
 
+import org.litepal.crud.DataSupport;
+
 import java.util.List;
 
 /**
@@ -92,7 +94,10 @@ public class MemoRecyclerAdapter extends RecyclerView.Adapter<MemoRecyclerAdapte
                 public boolean onLongClick(View view) {
                     //删除等
                     //TODO --
-                    return false;
+                    int pos = holder.getLayoutPosition();
+                    onItemClickListener.onItemLongClick(holder.itemMemoLL,pos);
+                    //必须返回true,否则会触发onClick
+                    return true;
                 }
             });
         }
@@ -103,10 +108,16 @@ public class MemoRecyclerAdapter extends RecyclerView.Adapter<MemoRecyclerAdapte
         return memoItemList.size();
     }
 
-    public void addItem(int position,MemoItem memoItem){
+    //temp 为0表示新建时保存，1表示编辑时保存
+    //index 表示当编辑时，更新数据库时需要的行号
+    public void addItem(int position,MemoItem memoItem,int temp,int index){
         memoItemList.add(position,memoItem);
+        if (temp == 0) {
+            memoItem.save();
+        } else {
+            memoItem.update(DataSupport.count(MemoItem.class) - index);
+        }
         notifyItemInserted(position);
-        memoItem.save();
         // TODO　更新数据库操作
     }
 

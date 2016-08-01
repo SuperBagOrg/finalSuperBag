@@ -3,7 +3,7 @@
     android:orientation="vertical"
     android:padding="10dp"
     android:id="@+id/item_memo_LL"
-    android:background="@color/light"
+    android:background="@drawable/item_memo_background"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 

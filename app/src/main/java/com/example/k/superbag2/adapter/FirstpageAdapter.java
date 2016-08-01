@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.k.superbag2.R;
@@ -47,7 +48,6 @@ public class FirstpageAdapter extends ArrayAdapter<ItemBean> {
         //------------
         ItemBean itemBean = getItem(position);
         int type = getItemViewType(position);
-        Log.d("类型是",type+"");
         switch (type){
             case ListItem.TYPE_NO_PIC:
                 Pic0ViewHolder holder0 = null;
@@ -68,22 +68,20 @@ public class FirstpageAdapter extends ArrayAdapter<ItemBean> {
                 }
                 //-----------------
 
-                if (itemBean.getTag2().equals("")){
-                    holder0.tag2.setVisibility(View.GONE);
-                } else {
-                    holder0.tag2.setText(itemBean.getTag2());
+                if (!itemBean.getTag1().equals("")) {
+                    holder0.tag1.setText(itemBean.getTag1());
+                    holder0.tag1.setVisibility(View.VISIBLE);
                 }
-                if (itemBean.getTag3().equals("")){
-                    holder0.tag3.setVisibility(View.GONE);
-                } else {
-                    holder0.tag3.setText(itemBean.getTag3());
+
+                if (!itemBean.getTag2().equals("")){
+                    holder0.tag2.setText(itemBean.getTag2());
+                    holder0.tag2.setVisibility(View.VISIBLE);
                 }
                 holder0.oldTime.setText(itemBean.getDayTime());
                 holder0.time.setText(itemBean.getDay()+"/"+itemBean.getMonth()+"\n周五");
                 holder0.content.setText(itemBean.getContent());
                 holder0.weather.setText(itemBean.getWeather());
                 holder0.feelings.setText(itemBean.getFeelings());
-                Log.d("执行到","没有图片的adapter");
                 break;
             case ListItem.TYPE_ONE_PIC:
                 Pic1ViewHolder holder1 = null;
@@ -105,17 +103,14 @@ public class FirstpageAdapter extends ArrayAdapter<ItemBean> {
                 }
                 //-----------------
                 //具体逻辑处理
-                Log.d("执行到有图片的adapter","");
 
-                if (itemBean.getTag2().equals("")){
-                    holder1.tag2.setVisibility(View.GONE);
-                } else {
-                    holder1.tag2.setText(itemBean.getTag2());
+                if (!itemBean.getTag1().equals("")){
+                    holder1.tag1.setText(itemBean.getTag1());
+                    holder1.tag1.setVisibility(View.VISIBLE);
                 }
-                if (itemBean.getTag3().equals("")){
-                    holder1.tag3.setVisibility(View.GONE);
-                } else {
-                    holder1.tag3.setText(itemBean.getTag3());
+                if (!itemBean.getTag2().equals("")){
+                    holder1.tag2.setVisibility(View.VISIBLE);
+                    holder1.tag2.setText(itemBean.getTag2());
                 }
                 holder1.oldTime.setText(itemBean.getDayTime());
                 holder1.time.setText(itemBean.getDay()+"/"+itemBean.getMonth()+"\n周五");
@@ -149,15 +144,13 @@ public class FirstpageAdapter extends ArrayAdapter<ItemBean> {
                 }
                 //-----------------
                 //具体逻辑处理
-                if (itemBean.getTag2().equals("")){
-                    holder2.tag2.setVisibility(View.GONE);
-                } else {
-                    holder2.tag2.setText(itemBean.getTag2());
+                if (!itemBean.getTag1().equals("")){
+                    holder2.tag1.setText(itemBean.getTag1());
+                    holder2.tag1.setVisibility(View.VISIBLE);
                 }
-                if (itemBean.getTag3().equals("")){
-                    holder2.tag3.setVisibility(View.GONE);
-                } else {
-                    holder2.tag3.setText(itemBean.getTag3());
+                if (!itemBean.getTag2().equals("")){
+                    holder2.tag2.setText(itemBean.getTag2());
+                    holder2.tag2.setVisibility(View.VISIBLE);
                 }
                 holder2.oldTime.setText(itemBean.getDayTime());
                 holder2.time.setText(itemBean.getDay()+"/"+itemBean.getMonth()+"\n周五");
@@ -172,6 +165,9 @@ public class FirstpageAdapter extends ArrayAdapter<ItemBean> {
                         .load(itemBean.getPic2())
                         .asBitmap()
                         .into(holder2.iv2);
+                break;
+            default:
+                Log.d("还没写","---------------");
                 break;
 
         }

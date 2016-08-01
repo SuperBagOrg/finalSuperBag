@@ -158,68 +158,58 @@
             android:hint="写点什么吧..."/>
     </LinearLayout>
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:layout_width="175dp"
+            android:layout_height="120dp"
+            android:layout_toLeftOf="@+id/v1"
+            android:visibility="gone"
+            android:scaleType="centerCrop"
+            android:id="@+id/edit_pic1"
+            android:padding="1dp"/>
+        <View
+            android:layout_width="2dp"
+            android:layout_height="2dp"
+            android:id="@+id/v1"
+            android:visibility="invisible"
+            android:layout_centerHorizontal="true"></View>
+        <ImageView
+            android:layout_width="175dp"
+            android:layout_height="120dp"
+            android:padding="1dp"
+            android:layout_toRightOf="@+id/v1"
+            android:visibility="gone"
+            android:scaleType="centerCrop"
+            android:id="@+id/edit_pic2" />
+    </RelativeLayout>
 
-
-    <!--<LinearLayout-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:padding="5dp"-->
-        <!--android:id="@+id/edit_bottom_LL"-->
-        <!--android:background="@color/gray"-->
-        <!--android:orientation="horizontal">-->
-
-        <!--<LinearLayout-->
-            <!--android:layout_width="0dp"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:gravity="center_horizontal"-->
-            <!--android:layout_weight="1">-->
-            <!--<Button-->
-                <!--android:layout_width="35dp"-->
-                <!--android:layout_height="35dp"-->
-
-                <!--android:background="@drawable/pic"-->
-                <!--android:id="@+id/edit_pic_bt"/>-->
-
-        <!--</LinearLayout>-->
-        <!--<LinearLayout-->
-            <!--android:layout_width="0dp"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:gravity="center_horizontal"-->
-            <!--android:layout_weight="1">-->
-            <!--<Button-->
-                <!--android:layout_width="30dp"-->
-                <!--android:layout_height="30dp"-->
-                <!--android:layout_marginTop="2dp"-->
-                <!--android:background="@drawable/face"-->
-                <!--android:id="@+id/edit_face_bt"/>-->
-
-        <!--</LinearLayout>-->
-        <!--<LinearLayout-->
-            <!--android:layout_width="0dp"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:gravity="center_horizontal"-->
-            <!--android:layout_weight="1">-->
-            <!--<Button-->
-                <!--android:layout_width="35dp"-->
-                <!--android:layout_height="35dp"-->
-                <!--android:background="@drawable/weather"-->
-                <!--android:id="@+id/edit_weather_bt"/>-->
-
-        <!--</LinearLayout>-->
-        <!--<LinearLayout-->
-            <!--android:layout_width="0dp"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:gravity="center_horizontal"-->
-            <!--android:layout_weight="1">-->
-            <!--<Button-->
-                <!--android:layout_width="30dp"-->
-                <!--android:layout_height="30dp"-->
-                <!--android:layout_marginTop="2dp"-->
-                <!--android:background="@drawable/location"-->
-                <!--android:id="@+id/edit_location_bt"/>-->
-
-        <!--</LinearLayout>-->
-
-    <!--</LinearLayout>-->
-
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:layout_width="175dp"
+            android:layout_height="120dp"
+            android:layout_toLeftOf="@+id/v2"
+            android:scaleType="centerCrop"
+            android:visibility="gone"
+            android:id="@+id/edit_pic3"
+            android:padding="1dp"/>
+        <View
+            android:layout_width="2dp"
+            android:layout_height="2dp"
+            android:id="@+id/v2"
+            android:visibility="invisible"
+            android:layout_centerHorizontal="true"></View>
+        <ImageView
+            android:layout_width="175dp"
+            android:layout_height="120dp"
+            android:padding="1dp"
+            android:layout_toRightOf="@+id/v2"
+            android:scaleType="centerCrop"
+            android:layout_alignParentRight="true"
+            android:visibility="gone"
+            android:id="@+id/edit_pic4" />
+    </RelativeLayout>
 </LinearLayout>

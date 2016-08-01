@@ -102,6 +102,7 @@ public class PreviewActivity extends Activity implements View.OnClickListener{
         lineNum = intent.getIntExtra(Constant.LINE_INDEX,-1);
         if (lineNum != -1){
             int record_num = DataSupport.count(ItemBean.class);
+            Log.d("总数是",record_num+"");
             ItemBean item = DataSupport.find(ItemBean.class,record_num-lineNum);
             if (item == null) {
                 return;
@@ -109,13 +110,13 @@ public class PreviewActivity extends Activity implements View.OnClickListener{
             if (item.getContent() != null) {
                 preContent.setText(item.getContent());
             }
-            if (!item.getTag2().equals("")){
+            if (!item.getTag1().equals("")){
                 preTag1.setVisibility(View.VISIBLE);
-                preTag1.setText(item.getTag2());
+                preTag1.setText(item.getTag1());
             }
-            if (!item.getTag3().equals("")){
+            if (!item.getTag2().equals("")){
                 preTag2.setVisibility(View.VISIBLE);
-                preTag2.setText(item.getTag3());
+                preTag2.setText(item.getTag2());
             }
 
             preMonth.setText(item.getYear()+"-"+item.getMonth()+"-"+item.getDay());
@@ -123,6 +124,7 @@ public class PreviewActivity extends Activity implements View.OnClickListener{
             preWeather.setText(item.getWeather());
             preMin.setText(item.getHourMIn());
 
+            Log.d("图片是",item.getPic3());
             //设置图片
             if (!item.getPic1().equals("")){
                 Glide.with(this)

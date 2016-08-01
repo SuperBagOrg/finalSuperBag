@@ -14,4 +14,13 @@
     <color name="pink">#ffb1b1</color>
     <color name="light">#e6e6e6</color>
     <color name="light1">#dbdbdb</color>
+
+    <color name="diary_pressed">#f2a8a8</color>
+    <color name="diary_normal">#f2dfdf</color>
+
+    <color name="dot_normal">#8a8a8a</color>
+    <color name="dot_selected">#cdcdcd</color>
+
+    <color name="memo_pressed">#a4998e</color>
+    <color name="memo_normal">#ece5db</color>
 </resources>

@@ -13,10 +13,12 @@ import android.provider.MediaStore;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -29,6 +31,7 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.k.superbag2.R;
 import com.example.k.superbag2.bean.ItemBean;
 import com.example.k.superbag2.others.Constant;
@@ -65,6 +68,7 @@ public class EditActivity extends Activity implements View.OnClickListener,
     private AlertDialog weatherDialog;
     private CheckBox happyCK,sweetCK,unforgettableCK,calmCK,angryCk,aggrievedCK,sadCK,noFeelingsCK;
     private AlertDialog feelingsDialog;
+    private ImageView pic1,pic2,pic3,pic4;
 
     private boolean hasSaved = false;
     private Uri imageUri;
@@ -72,7 +76,7 @@ public class EditActivity extends Activity implements View.OnClickListener,
     private String tag1="",tag2="",tag3="";
     private int flag = 1;
     private String weather = "晴",feelings = "开心";
-    private int picNum = 0;
+    private int picNum;
 
     private List<String> uriList;
 
@@ -106,24 +110,25 @@ public class EditActivity extends Activity implements View.OnClickListener,
         initData();
     }
 
-
     private void initView(){
         backBT = (Button)findViewById(R.id.edit_back);
         saveBT = (Button)findViewById(R.id.edit_save);
         picBT = (Button)findViewById(R.id.edit_pic_bt);
-//        faceBT = (Button)findViewById(R.id.edit_face_bt);
         weatherBT = (Button)findViewById(R.id.edit_weather_bt);
-//        locationBT = (Button)findViewById(R.id.edit_location_bt);
         contentET = (EditText)findViewById(R.id.edit_et);
         headIcon = (ImageView)findViewById(R.id.edit_head_icon);
         oldTime = (TextView) findViewById(R.id.edit_time);
         backLL = (LinearLayout)findViewById(R.id.edit_back_ll);
         saveLL = (LinearLayout)findViewById(R.id.edit_save_ll);
-//        bottomLL = (LinearLayout)findViewById(R.id.edit_bottom_LL);
         tag2TV = (TextView)findViewById(R.id.edit_tag2);
         tag3TV = (TextView)findViewById(R.id.edit_tag3);
         addTagBT = (Button)findViewById(R.id.add_tag_bt);
         feelingsBT = (Button)findViewById(R.id.edit_feelings_bt);
+        pic1 = (ImageView)findViewById(R.id.edit_pic1);
+        pic2 = (ImageView)findViewById(R.id.edit_pic2);
+        pic3 = (ImageView)findViewById(R.id.edit_pic3);
+        pic4 = (ImageView)findViewById(R.id.edit_pic4);
+
 
         tag2TV.setVisibility(View.GONE);
         tag3TV.setVisibility(View.GONE);
@@ -166,10 +171,8 @@ public class EditActivity extends Activity implements View.OnClickListener,
         oldtime = gt.getYear()+"-"+gt.getMonth()+"-"+gt.getDay();
         oldTime.setText(oldtime);
 
-        uriList = new ArrayList<>();
-        for (int i = 0; i < 4; i++){
-            uriList.add("");
-        }
+//        uriList = new ArrayList<>();
+        uriList = new ArrayList<>(Arrays.asList("","","",""));
 
         //如果是从ListView点击进入活动，则初始化数据;
         //如何让editTExt无法点击编辑，还有问题
@@ -179,17 +182,15 @@ public class EditActivity extends Activity implements View.OnClickListener,
         if (lineNum != -1){//从列表点击进入
             record_num = DataSupport.count(ItemBean.class);
             ItemBean item = DataSupport.find(ItemBean.class, record_num -lineNum);
-            saveBT.setBackground(getResources().getDrawable(R.drawable.save));
-//            contentET.setFocusable(false);
             contentET.setText(item.getContent());
 
-            if (!item.getTag2().equals("")){
+            if (!item.getTag1().equals("")){
                 tag2TV.setVisibility(View.VISIBLE);
-                tag2TV.setText(item.getTag2());
+                tag2TV.setText(item.getTag1());
             }
-            if (!item.getTag3().equals("")){
+            if (!item.getTag2().equals("")){
                 tag3TV.setVisibility(View.VISIBLE);
-                tag3TV.setText(item.getTag3());
+                tag3TV.setText(item.getTag2());
             }
         }
     }
@@ -222,9 +223,8 @@ public class EditActivity extends Activity implements View.OnClickListener,
             case R.id.edit_save_ll:
             case R.id.edit_save:
                     String content = contentET.getText().toString();
-                    Log.d("比较结果，=", (content.trim().equals("")) + "");
                     if (content.trim().equals("")) {
-                        Toast.makeText(EditActivity.this, "内容不能为空哦", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(EditActivity.this, "内容不能为空呦", Toast.LENGTH_SHORT).show();
                     } else {
                         //执行保存操作
                         saveData();
@@ -232,14 +232,6 @@ public class EditActivity extends Activity implements View.OnClickListener,
                     }
                 break;
             case R.id.edit_pic_bt:
-//                Log.d("已点击","插入图片");
-//                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-//                params.setMargins(0,0,0,600);
-//                params.bottomMargin = 400;
-//                bottomLL.setLayoutParams(params);
-//                popupWindow.showAsDropDown(view);
-//                popupWindow.showAtLocation(findViewById(R.id.edit_ll),Gravity.BOTTOM,0,0);
-//                Log.d("popup是否显示：",popupWindow.isShowing()+"");
                 final AlertDialog.Builder builder = new AlertDialog.Builder(EditActivity.this);
                 builder.setMessage("选择图片来源")
                         .setNegativeButton("拍照", new DialogInterface.OnClickListener() {
@@ -353,6 +345,9 @@ public class EditActivity extends Activity implements View.OnClickListener,
     private void addTag(){
         View v = LayoutInflater.from(EditActivity.this).inflate(R.layout.add_tag,null);
         final EditText addTagET = (EditText) v.findViewById(R.id.add_tag_edittext);
+//        View v = LayoutInflater.from(EditActivity.this).inflate(R.layout.add_tag2,null);
+//        final EditText addTagET = (EditText) v.findViewById(R.id.add_tag2_et);
+
         final AlertDialog.Builder builder = new AlertDialog.Builder(EditActivity.this);
         builder.setTitle("添加标签")
                 .setView(v)
@@ -378,6 +373,34 @@ public class EditActivity extends Activity implements View.OnClickListener,
                         }
                     }
                 });
+        /*builder.setView(v)
+                .setCancelable(true)
+                .setPositiveButton("好", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        //监听键盘的回车事件
+                        addTagET.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                            @Override
+                            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                                if (i == EditorInfo.IME_ACTION_NEXT){
+                                    //处理逻辑
+                                    String content = addTagET.getText().toString().trim();
+                                    if (content.equals("")){
+                                        return false;
+                                    }
+                                    addTagET.setText();
+                                }
+                                return false;
+                            }
+                        });
+                    }
+                })
+                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                    }
+                });*/
         builder.show();
     }
 
@@ -391,25 +414,7 @@ public class EditActivity extends Activity implements View.OnClickListener,
     }
     private void save_edit(){
         ItemBean newitem = new ItemBean();
-        String content = contentET.getText().toString().trim();
-        GetTime gt = new GetTime();
-        newitem.setTag1(tag1);
-        newitem.setTag2(tag2);
-        newitem.setTag3(tag3);
-        newitem.setContent(content);
-        newitem.setPic1(uriList.get(0));
-        newitem.setPic2(uriList.get(1));
-        newitem.setPic3(uriList.get(0));
-        newitem.setPic4(uriList.get(0));
-        newitem.setFeelings(feelings);
-        newitem.setImportance(1);
-        newitem.setWeather(weather);
-        newitem.update(record_num-lineNum);
-        Log.d("已执行修改操作","");
-    }
-    private void save_first(){
-        ItemBean newitem = new ItemBean();
-        String content = contentET.getText().toString().trim();
+        String content = contentET.getText().toString();
         GetTime gt = new GetTime();
         newitem.setTag1(tag1);
         newitem.setTag2(tag2);
@@ -418,8 +423,28 @@ public class EditActivity extends Activity implements View.OnClickListener,
         newitem.setDayTime(gt.getSpecificTime());
         newitem.setPic1(uriList.get(0));
         newitem.setPic2(uriList.get(1));
-        newitem.setPic3(uriList.get(0));
-        newitem.setPic4(uriList.get(0));
+        newitem.setPic3(uriList.get(2));
+        newitem.setPic4(uriList.get(3));
+        newitem.setFeelings(feelings);
+        newitem.setImportance(1);
+        newitem.setWeather(weather);
+        newitem.update(record_num-lineNum);
+        Log.d("已执行修改操作","");
+    }
+    private void save_first(){
+        ItemBean newitem = new ItemBean();
+        String content = contentET.getText().toString();
+        GetTime gt = new GetTime();
+        newitem.setTag1(tag1);
+        newitem.setTag2(tag2);
+        newitem.setTag3(tag3);
+        newitem.setContent(content);
+        newitem.setDayTime(gt.getSpecificTime());
+
+        newitem.setPic1(uriList.get(0));
+        newitem.setPic2(uriList.get(1));
+        newitem.setPic3(uriList.get(2));
+        newitem.setPic4(uriList.get(3));
         newitem.setFeelings(feelings);
         newitem.setImportance(1);
         newitem.setWeather(weather);
@@ -441,8 +466,33 @@ public class EditActivity extends Activity implements View.OnClickListener,
             case 1:
                 if(resultCode == RESULT_OK){
                     imageUri = data.getData();
-                    uriList.add(picNum,imageUri.toString());
-                    picNum++;
+                    uriList.set(picNum,imageUri.toString());
+                    if(picNum == 0){
+                        Glide.with(EditActivity.this)
+                                .load(imageUri)
+                                .asBitmap()
+                                .into(pic1);
+                        pic1.setVisibility(View.VISIBLE);
+                    } else if (picNum == 1){
+                        Glide.with(EditActivity.this)
+                                .load(imageUri)
+                                .asBitmap()
+                                .into(pic2);
+                        pic2.setVisibility(View.VISIBLE);
+                    } else if (picNum == 2){
+                        Glide.with(EditActivity.this)
+                                .load(imageUri)
+                                .asBitmap()
+                                .into(pic3);
+                        pic3.setVisibility(View.VISIBLE);
+                    } else if (picNum == 4){
+                        Glide.with(EditActivity.this)
+                                .load(imageUri)
+                                .asBitmap()
+                                .into(pic4);
+                        pic4.setVisibility(View.VISIBLE);
+                    }
+                    picNum = picNum + 1;
                     if(picNum == 4){
                         picBT.setClickable(false);
                     }

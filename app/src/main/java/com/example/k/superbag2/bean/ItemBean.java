@@ -20,7 +20,7 @@ public class ItemBean extends DataSupport{
     private String feelings;
     private int importance;
 
-    private String pic1,pic2,pic3,pic4;
+    private String pic1 = "",pic2 = "",pic3 = "",pic4 = "";
     private List<Uri> picList;
 
     public ItemBean(String tag1, String tag2, String tag3, String content,
