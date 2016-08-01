@@ -9,17 +9,17 @@ import java.security.NoSuchAlgorithmException;
 /*
  * MD5 算法
 */
-public class MD5 {
+public class MD5Utils {
 
     // 全局数组
-    private final static String[] strDigits = { "0", "1", "2", "3", "4", "5",
+    private static final String[] strDigits = { "0", "1", "2", "3", "4", "5",
             "6", "7", "8", "9", "a", "b", "c", "d", "e", "f" };
 
-    public MD5() {
+    public MD5Utils() {
     }
 
     // 返回形式为数字跟字符串
-    private static String byteToArrayString(byte bByte) {
+    public static String byteToArrayString(byte bByte) {
         int iRet = bByte;
         // System.out.println("iRet="+iRet);
         if (iRet < 0) {
@@ -31,7 +31,7 @@ public class MD5 {
     }
 
     // 返回形式只为数字
-    private static String byteToNum(byte bByte) {
+    public static String byteToNum(byte bByte) {
         int iRet = bByte;
         System.out.println("iRet1=" + iRet);
         if (iRet < 0) {
@@ -41,7 +41,7 @@ public class MD5 {
     }
 
     // 转换字节数组为16进制字串
-    private static String byteToString(byte[] bByte) {
+    public static String byteToString(byte[] bByte) {
         StringBuffer sBuffer = new StringBuffer();
         for (int i = 0; i < bByte.length; i++) {
             sBuffer.append(byteToArrayString(bByte[i]));
@@ -63,7 +63,7 @@ public class MD5 {
     }
 
     public static void main(String[] args) {
-        MD5 getMD5 = new MD5();
-        System.out.println(getMD5.GetMD5Code("000000"));
+        MD5Utils getMD5Utils = new MD5Utils();
+        System.out.println(getMD5Utils.GetMD5Code("000000"));
     }
 }

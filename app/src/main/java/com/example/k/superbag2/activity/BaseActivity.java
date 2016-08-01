@@ -1,7 +1,11 @@
 package com.example.k.superbag2.activity;
 
 import android.content.Intent;
+import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Window;
+
 import com.example.k.superbag2.MyApplication;
 import com.example.k.superbag2.others.Constant;
 import com.example.k.superbag2.others.IsReception;
@@ -10,12 +14,11 @@ import com.example.k.superbag2.others.IsReception;
  * Created by Aersasi on 2016/8/1.
  */
 public class BaseActivity extends AppCompatActivity {
-    MyApplication myApplaction;
+
     @Override
     protected void onResume() {
         super.onResume();
-        myApplaction = (MyApplication) getApplication();
-        if (myApplaction.isLocked) {
+        if (MyApplication.isLocked()) {
             Intent intent = new Intent(this, ScreenLockActivity.class);
             startActivity(intent);
         }
@@ -26,7 +29,7 @@ public class BaseActivity extends AppCompatActivity {
         super.onStop();
         //后台
         if (IsReception.isApplicationBroughtToBackground(MyApplication.getContext())){
-            myApplaction.isLocked = Constant.ISLOCKED_default;
+            MyApplication.setIsLocked(false);
         }
     }
 }

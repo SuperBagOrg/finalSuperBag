@@ -20,7 +20,6 @@ import java.util.Map;
  */
 public class NumLockActivity extends Activity {
 
-    private GridView gridView;
     private Button deleteBT,num0BT,cancleBT;
     private View dot1,dot2,dot3,dot4;
 
@@ -38,7 +37,6 @@ public class NumLockActivity extends Activity {
     }
 
     private void initView(){
-        gridView = (GridView)findViewById(R.id.num_lock_grid);
     }
 
     private void initData(){
@@ -51,12 +49,6 @@ public class NumLockActivity extends Activity {
 
         SimpleAdapter adapter = new SimpleAdapter(this,itemLists,R.layout.item_num_lock,
                 new String[]{"num"},new int[]{R.id.num_lock_bt});
-        gridView.setAdapter(adapter);
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                //在这里处理1-9的点击事件
-            }
-        });
+
     }
 }

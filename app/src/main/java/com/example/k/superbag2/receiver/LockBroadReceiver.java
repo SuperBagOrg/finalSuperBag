@@ -17,8 +17,8 @@ import com.example.k.superbag2.others.IsReception;
 public class LockBroadReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
-        if (Constant.ISLOCKED_default){
-            if (Intent.ACTION_SCREEN_OFF.equals(intent.getAction())) {
+
+            if (Intent.ACTION_SCREEN_OFF.equals(intent.getAction()) && MyApplication.isHasSetLock()) {
                 Intent intent_startLock = new Intent(context,ScreenLockActivity.class);
                 intent_startLock.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(intent_startLock);
@@ -27,7 +27,7 @@ public class LockBroadReceiver extends BroadcastReceiver {
 //                intent_startLock.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 //                context.startActivity(intent_startLock);
             }
-        }
+
     }
 
 }

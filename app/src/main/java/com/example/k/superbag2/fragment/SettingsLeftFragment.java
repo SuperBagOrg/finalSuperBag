@@ -23,6 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.k.superbag2.R;
+import com.example.k.superbag2.activity.ChooseLockActivity;
 import com.example.k.superbag2.others.Constant;
 
 import java.io.File;
@@ -33,7 +34,7 @@ import java.io.IOException;
  */
 public class SettingsLeftFragment extends Fragment{
 
-    private LinearLayout changeHeadLL,changeBgLL,uploadLL,downloadLL,aboutLL,changeSignLL;
+    private LinearLayout changeHeadLL,changeBgLL,uploadLL,downloadLL,aboutLL,changeSignLL,lockLL;
     private TextView changeHeadStatus,changeBgStatus;
     private Uri imageUri;
 
@@ -57,6 +58,7 @@ public class SettingsLeftFragment extends Fragment{
         changeBgStatus = (TextView)v.findViewById(R.id.change_bg_status);
         aboutLL = (LinearLayout)v.findViewById(R.id.about_ll);
         changeSignLL = (LinearLayout)v.findViewById(R.id.change_signature_ll);
+        lockLL = (LinearLayout)v.findViewById(R.id.password_ll);
 
         SharedPreferences sp = PreferenceManager
                 .getDefaultSharedPreferences(context);
@@ -104,6 +106,12 @@ public class SettingsLeftFragment extends Fragment{
             @Override
             public void onClick(View view) {
                 changeSignature();
+            }
+        });
+        lockLL.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(context, ChooseLockActivity.class));
             }
         });
     }
