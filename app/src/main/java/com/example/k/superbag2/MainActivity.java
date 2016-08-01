@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.PendingIntent;
 import android.app.TimePickerDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
@@ -21,15 +22,19 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
@@ -41,6 +46,7 @@ import android.widget.Toast;
 
 import com.example.k.superbag2.activity.AlarmActivity;
 import com.example.k.superbag2.activity.EditActivity;
+import com.example.k.superbag2.activity.NumLockActivity;
 import com.example.k.superbag2.activity.PreviewActivity;
 import com.example.k.superbag2.adapter.FirstpageAdapter;
 import com.example.k.superbag2.adapter.MainPagerAdapter;
@@ -52,9 +58,13 @@ import com.example.k.superbag2.utils.DialogUtils;
 import com.example.k.superbag2.utils.GetImageUtils;
 import com.example.k.superbag2.utils.GetTime;
 import com.example.k.superbag2.view.GridDividerDecoration;
+import com.example.k.superbag2.view.HidingScrollListener;
+import com.nineoldandroids.animation.Animator;
+import com.nineoldandroids.animation.ObjectAnimator;
 import com.nineoldandroids.view.ViewHelper;
 
 import org.litepal.crud.DataSupport;
+import org.litepal.crud.Many2ManyAnalyzer;
 import org.litepal.tablemanager.Connector;
 import org.w3c.dom.Text;
 
@@ -70,14 +80,21 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     private DrawerLayout drawerLayout;
     private Button mainDiaryBT,mainMemoBT;
     private TextView mainDiaryTV,mainMemoTV;
-    private LinearLayout mainDiaryLL,mainMemoLL;
+    private LinearLayout mainDiaryLL,mainMemoLL,mainBottomLL;
     private Toolbar toolbar;
     //diary
     private ImageView fPBackgroundIV,fPHeadIconIV;
     private TextView fPSummaryTV;
     private ListView fPListView;
+    private FirstpageAdapter diaryAdapter;
+    private List<ItemBean> itemBeanList;
+    View diaryView;
+    //用于删除时用
+    private int whichToDel;//0表示日记，1表示备忘
+    private int deleteDiaryIndex,deleteMemoIndex;
     //memo
     private RecyclerView recyclerView;
+    View memoView;
 
     private List<View> viewList = new ArrayList<>();
     private MemoRecyclerAdapter memoRecyclerAdapter;
@@ -90,6 +107,14 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     private boolean isShake = false;
     private String alarmTime = "";
 
+
+    float firstY,currentY,threshold = 150;
+    float scrolledDistance = 0;
+    boolean temp = true;
+    float lastX;
+    float lastY;
+    boolean isChange = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -99,9 +124,11 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
 
         initView();
         setListener();
+        setPager();
+        setDiaryView();
+        setMemoView();
         initEvents();
         initDataBase();
-        setPager();
     }
 
     //初始化数据库 2016/7/27
@@ -124,6 +151,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         setSupportActionBar(toolbar);
         viewPager = (ViewPager) findViewById(R.id.main_viewPager);
 
+        mainBottomLL = (LinearLayout)findViewById(R.id.main_bottom_ll);
     }
 
     private void setListener(){
@@ -149,20 +177,21 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
                     Intent intent = new Intent(MainActivity.this, EditActivity.class);
                     startActivity(intent);
                 } else {
-                    addMemo(0,null);
+                    addMemo(0,null,-1);
                 }
                 break;
             case R.id.action_search:
-
+                startActivity(new Intent(MainActivity.this, NumLockActivity.class));
                 break;
         }
         return true;
     }
 
     private void setPager(){
-        setDiaryView();
-
-        setMemoView();
+        diaryView = LayoutInflater.from(this).inflate(R.layout.fragment_firstpage,null);
+        viewList.add(diaryView);
+        memoView = LayoutInflater.from(this).inflate(R.layout.memo_list,null);
+        viewList.add(memoView);
         MainPagerAdapter pagerAdapter = new MainPagerAdapter(viewList);
         viewPager.setAdapter(pagerAdapter);
     }
@@ -171,8 +200,6 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
      * 显示日记界面
      */
     private void setDiaryView(){
-        View diaryView = LayoutInflater.from(this).inflate(R.layout.fragment_firstpage,null);
-        viewList.add(diaryView);
         fPBackgroundIV = (ImageView)diaryView.findViewById(R.id.top_background);
         fPHeadIconIV = (ImageView)diaryView.findViewById(R.id.top_head_icon);
         fPSummaryTV = (TextView)diaryView.findViewById(R.id.top_summary);
@@ -199,25 +226,23 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     private void initDiaryListView(){
 
         try {
-            final List<ItemBean> itemBeanList = DataSupport.findAll(ItemBean.class);
+            itemBeanList = DataSupport.findAll(ItemBean.class);
             Collections.reverse(itemBeanList);//反转列表
-            Log.d("列表长度：",itemBeanList.size()+"");
-            FirstpageAdapter adapter = new FirstpageAdapter(this,R.layout.item_fp_1pic,itemBeanList);
-            fPListView.setAdapter(adapter);
+            diaryAdapter = new FirstpageAdapter(this,R.layout.item_fp_1pic,itemBeanList);
+            fPListView.setAdapter(diaryAdapter);
             //----------------
             setListViewHeightBasedOnChildren(fPListView);
-            adapter.notifyDataSetChanged();
-        }catch (Exception e){
-
+            diaryAdapter.notifyDataSetChanged();
+        } catch (Exception e){
+            e.printStackTrace();
         }
-
 
         fPListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 //得到数据库中的行号
                 int index = i;
-                Log.d("索引是",index+"");
+                Log.d("点击了，" ,i+"");
                 Intent intent = new Intent(MainActivity.this,PreviewActivity.class);
                 intent.putExtra(Constant.LINE_INDEX,index);
                 startActivity(intent);
@@ -227,26 +252,94 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         fPListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
-                return false;
+                //删除日记
+                final int index = i;
+                final AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                builder.setMessage("确定删除这篇日记？")
+                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                DataSupport.delete(ItemBean.class,DataSupport.count(ItemBean.class) - index);
+                                Toast.makeText(MainActivity.this,"删除成功",Toast.LENGTH_SHORT).show();
+                                setDiaryView();
+                            }
+                        })
+                        .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+
+                            }
+                        })
+                        .setCancelable(true)
+                        .show();
+                return true;
             }
         });
 
-        fPListView.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
 
-            }
+        fPListView.setOnTouchListener(new View.OnTouchListener() {
 
             @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
+            public boolean onTouch(View view, MotionEvent motionEvent) {
 
+                switch (motionEvent.getAction()){
+                    case MotionEvent.ACTION_DOWN:
+                        firstY = motionEvent.getY();
+                        lastX = motionEvent.getX();
+                        lastY = motionEvent.getY();
+                        isChange = false;
+                        break;
+                    case MotionEvent.ACTION_MOVE:
+                        currentY = motionEvent.getY();
+                        /*if (scrolledDistance > threshold && temp){
+                            showViews();
+                            temp = false;
+                            scrolledDistance = 0;
+                        } else if (scrolledDistance < -threshold && !temp){
+                            hideViews();
+                            temp = true;
+                            scrolledDistance = 0;
+                        }
+                        if ((temp && (currentY - firstY) < 0) || (!temp && (currentY - firstY) > 0)) {
+                            scrolledDistance += (currentY - firstY);
+                        }*/
+                       /* if (currentY - firstY > threshold) {
+                            showOrHide(true); //下滑 显示titlebar
+                        } else if (firstY - currentY > threshold) {
+                            showOrHide(false); //上滑 隐藏titlebar
+                        }*/
+                        break;
+                    case MotionEvent.ACTION_UP:
+
+                        break;
+                }
+                return false;
             }
         });
     }
 
+    private Animator mAnimationTitle;
+    private Animator mAnimationContent;
+
+    private void showOrHide(boolean tag) {
+        if (mAnimationTitle != null && mAnimationTitle.isRunning()) {
+            mAnimationTitle.cancel();
+        }
+        if (mAnimationContent != null && mAnimationContent.isRunning()) {
+            mAnimationContent.cancel();
+        }
+        if (tag) {
+            mAnimationTitle = ObjectAnimator.ofFloat(toolbar, "translationY", toolbar.getTranslationY(), 0);
+            mAnimationContent = ObjectAnimator.ofFloat(fPListView, "translationY", fPListView.getTranslationY(), getResources().getDimension(R.dimen.title));
+        } else {
+            mAnimationTitle = ObjectAnimator.ofFloat(toolbar,"translationY",toolbar.getTranslationY(),toolbar.getHeight());
+            mAnimationContent = ObjectAnimator.ofFloat(fPListView,"translationY",fPListView.getTranslationY(),0);
+        }
+        mAnimationTitle.start();
+        mAnimationContent.start();
+    }
+
     private void setMemoView(){
-        View memoView = LayoutInflater.from(this).inflate(R.layout.memo_list,null);
-        viewList.add(memoView);
         recyclerView = (RecyclerView) memoView.findViewById(R.id.memo_list_recyclerView);
         //必须设置，设置为StaggeredGridL...即为瀑布流布局
         recyclerView.setLayoutManager(new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL));
@@ -267,15 +360,60 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
                 previewMemo(position);
             }
 
+            //长按，删除
             @Override
-            public void onItemLongClick(View view, int position) {
+            public void onItemLongClick(View view, final int position) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                builder.setMessage("删除此条备忘？")
+                        .setCancelable(true)
+                        .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
 
+                            }
+                        })
+                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                memoRecyclerAdapter.removeItem(position);
+                                DataSupport.delete(MemoItem.class,DataSupport.count(MemoItem.class) - position);
+                                Toast.makeText(MainActivity.this,"删除成功",Toast.LENGTH_SHORT).show();
+                            }
+                        })
+                        .show();
             }
         });
 
+        recyclerView.setOnScrollListener(new HidingScrollListener() {
+            @Override
+            public void onHide() {
+                hideViews();
+            }
+
+            @Override
+            public void onShow() {
+                showViews();
+            }
+        });
     }
 
-    private void previewMemo(int i){
+    private void hideViews() {
+        toolbar.animate().translationY(-toolbar.getHeight()).setInterpolator(new AccelerateInterpolator(2));
+        //----
+        mainBottomLL.setVisibility(View.GONE);
+        /*FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) mFabButton.getLayoutParams();
+        int fabBottomMargin = lp.bottomMargin;
+        mFabButton.animate().translationY(mFabButton.getHeight()+fabBottomMargin).setInterpolator(new AccelerateInterpolator(2)).start();*/
+    }
+
+    private void showViews() {
+        toolbar.animate().translationY(0).setInterpolator(new DecelerateInterpolator(2));
+        mainBottomLL.setVisibility(View.VISIBLE);
+//        mFabButton.animate().translationY(0).setInterpolator(new DecelerateInterpolator(2)).start();
+    }
+
+    //参数为所点击的项在列表的位置
+    private void previewMemo(final int i){
         View preview = LayoutInflater.from(MainActivity.this).inflate(R.layout.preview_memo,null);
         TextView preTitle,preContent,preAlarm;
         Button preDelete,preEdit;
@@ -309,13 +447,16 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
             @Override
             public void onClick(View view) {
                 // TODO 删除
-
+                memoRecyclerAdapter.removeItem(i);
+                DataSupport.delete(MemoItem.class,DataSupport.count(MemoItem.class) - i);
+                preMemoDialog.dismiss();
+                Toast.makeText(MainActivity.this,"删除成功",Toast.LENGTH_SHORT).show();
             }
         });
         preEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                addMemo(1,memoItem);
+                addMemo(1,memoItem,i);
                 preMemoDialog.dismiss();
             }
         });
@@ -327,8 +468,9 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
      * 新建备忘
      * @param temp 为 0，表示新建一条备忘
      *             为 1，表示编辑一条现有的备忘
+     * @param index 表示在列表中的位置
      */
-    private void addMemo(final int temp, final MemoItem item){
+    private void addMemo(final int temp, final MemoItem item, final int index){
         final AlertDialog addMemoDialog = new AlertDialog.Builder(MainActivity.this).create();
         View dialogView = LayoutInflater.from(MainActivity.this).inflate(R.layout.add_memo,null);
         addMemoDialog.setView(dialogView);
@@ -411,7 +553,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
                         memoItem.setShake(isShake);
                         memoItem.setAlarmTime(alarmTime);
                         memoItem.setEditTime(new GetTime().getSpecificTime());
-                        memoRecyclerAdapter.addItem(0, memoItem);
+                        memoRecyclerAdapter.addItem(0, memoItem,0,-1);
                     } else {
                         //更新数据
                         item.setTitle(titleET.getText().toString());
@@ -422,7 +564,8 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
                         item.setAlarmTime(alarmTime);
                         item.setEditTime(new GetTime().getSpecificTime());
                         // TODO 执行更新操作
-                        memoRecyclerAdapter.addItem(0,item);
+                        memoRecyclerAdapter.addItem(0,item,1,index);
+                        setMemoView();
                     }
                 }
                 addMemoDialog.dismiss();
@@ -584,7 +727,6 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
             totalHeight += listItem.getMeasuredHeight(); // 统计所有子项的总高度
 
         }
-
         ViewGroup.LayoutParams params = listView.getLayoutParams();
         params.height = totalHeight
                 + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
