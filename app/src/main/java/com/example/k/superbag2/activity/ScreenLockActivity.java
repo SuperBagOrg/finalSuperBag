@@ -17,16 +17,15 @@ import com.example.k.superbag2.utils.LockUtils;
 import com.example.k.superbag2.utils.MD5Utils;
 import com.example.k.superbag2.view.LockView;
 
-import org.litepal.util.Const;
-
 import java.util.List;
 
 /**
  * Created by Aersasi on 2016/7/30.
  */
-public class ScreenLockActivity extends AppCompatActivity {
+public class ScreenLockActivity extends BaseActivity {
 
     private TextView inputTV;
+    private Button cancelBt;
 
     private Button set_password;
     private Button clean_password;
@@ -48,14 +47,14 @@ public class ScreenLockActivity extends AppCompatActivity {
         setContentView(R.layout.activity_pic_lock);
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        isFirstSet = preferences.getBoolean(Constant.FIRST_SET_LOCK,true);
+        isFirstSet = preferences.getBoolean(Constant.FIRST_SET_LOCK,false);
         initView();
     }
 
     private void initView() {
-        /*set_password = (Button) findViewById(R.id.set_password);
-        clean_password = (Button) findViewById(R.id.clean_password);*/
+
         inputTV = (TextView)findViewById(R.id.input_pic_tv);
+        cancelBt = (Button)findViewById(R.id.pic_lock_cancel_bt);
         final LockView lockView = (LockView) findViewById(R.id.lockView);
         lockView.setOnDrawFinishedListener(new LockView.OnDrawFinishedListener() {
 
@@ -92,6 +91,7 @@ public class ScreenLockActivity extends AppCompatActivity {
                             LockUtils.setPassword(firstPass);
                             SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(ScreenLockActivity.this).edit();
                             editor.putBoolean(Constant.FIRST_SET_LOCK,false);
+                            editor.commit();
                             MyApplication.setHasSetLock(true);
                             finish();
                         } else {
@@ -119,10 +119,16 @@ public class ScreenLockActivity extends AppCompatActivity {
                 }*/
 
 
-            return true;
+            return false;
             }
         });
 
+        cancelBt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
     }
 
     private boolean compare(String password, String input) {

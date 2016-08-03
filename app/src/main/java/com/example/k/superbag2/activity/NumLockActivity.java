@@ -32,23 +32,7 @@ public class NumLockActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_num_lock);
 
-        initView();
-        initData();
     }
 
-    private void initView(){
-    }
 
-    private void initData(){
-        itemLists = new ArrayList<>();
-        for(int i = 0; i< 9; i++){
-            Map<String,Object> item = new HashMap<>();
-            item.put("num",nums[i]);
-            itemLists.add(item);
-        }
-
-        SimpleAdapter adapter = new SimpleAdapter(this,itemLists,R.layout.item_num_lock,
-                new String[]{"num"},new int[]{R.id.num_lock_bt});
-
-    }
 }

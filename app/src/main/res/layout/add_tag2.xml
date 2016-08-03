@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:padding="15dp"
     android:layout_width="300dp"
@@ -18,13 +19,16 @@
         android:layout_height="2dp"
         android:background="@color/light_green"></View>
 
-    <EditText
+    <mabbas007.tagsedittext.TagsEditText
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint=" 添加标签"
+        android:layout_height="45dp"
         android:id="@+id/add_tag2_et"
-        android:imeOptions="actionNext"
-        android:layout_marginTop="5dp"/>
+        app:allowSpaceInTag="true"
+        app:tagsBackground="@drawable/tag_bg"
+        app:tagsCloseImagePadding="10dp"
+        app:paddingEnd="10dp"
+        app:tagsCloseImageRight="@drawable/wrong"
+        app:paddingStart="10dp"/>
 
     <ListView
         android:layout_width="match_parent"

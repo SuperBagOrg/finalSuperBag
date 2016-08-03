@@ -5,6 +5,8 @@ import android.net.Uri;
 
 import org.litepal.crud.DataSupport;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -12,29 +14,26 @@ import java.util.List;
  */
 public class ItemBean extends DataSupport{
 
-    private String tag1,tag2,tag3;
+    private String tag1 = "",tag2 = "",tag3 = "";
     private String content;
-    private List<Drawable> drawableList;
     private String dayTime;
     private String weather;
     private String feelings;
     private int importance;
 
     private String pic1 = "",pic2 = "",pic3 = "",pic4 = "";
-    private List<Uri> picList;
+    private List<String> picList;
 
     public ItemBean(String tag1, String tag2, String tag3, String content,
-                    int importance,List<Uri> picList, String weather,
-                    String feelings,List<Drawable> drawableList){
+                    int importance, String weather,
+                    String feelings){
         this.tag1 = tag1;
         this.tag2 = tag2;
         this.tag3 = tag3;
         this.content = content;
         this.importance = importance;
-        this.picList = picList;
         this.weather = weather;
         this.feelings = feelings;
-        this.drawableList = drawableList;
     }
 
     public ItemBean(){}
@@ -45,14 +44,6 @@ public class ItemBean extends DataSupport{
 
     public void setContent(String content) {
         this.content = content;
-    }
-
-    public List<Drawable> getDrawableList() {
-        return drawableList;
-    }
-
-    public void setDrawableList(List<Drawable> drawableList) {
-        this.drawableList = drawableList;
     }
 
     public String getDayTime() {
@@ -83,11 +74,12 @@ public class ItemBean extends DataSupport{
         return 4;
     }
 
-    public List<Uri> getPicList(){
+    public List<String> getPicList(){
+        picList = new ArrayList<>(Arrays.asList(pic1,pic2,pic3,pic4));
         return picList;
     }
 
-    public void setPicList(List<Uri> list){
+    public void setPicList(List<String> list){
         picList = list;
     }
 

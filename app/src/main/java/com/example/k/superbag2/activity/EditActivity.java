@@ -48,6 +48,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import mabbas007.tagsedittext.TagsEditText;
+
 /**
  * Created by K on 2016/6/26.
  */
@@ -64,7 +66,7 @@ public class EditActivity extends BaseActivity implements View.OnClickListener,
     private PopupWindow popupWindow,alarmPOpup;
     private ImageView popupPic1,popupPic2,popupPic3,popupPic4;
     private Button setTimeBT,doneBT,cancelBT,addTagBT;
-    private TextView tag2TV,tag3TV;
+    private TextView tag1TV,tag2TV,tag3TV;
     private CheckBox sunnyCK,cloudyCk,rainyCK,snowyCk,foggyCK,hazeCK;
     private AlertDialog weatherDialog;
     private CheckBox happyCK,sweetCK,unforgettableCK,calmCK,angryCk,aggrievedCK,sadCK,noFeelingsCK;
@@ -122,6 +124,7 @@ public class EditActivity extends BaseActivity implements View.OnClickListener,
         oldTime = (TextView) findViewById(R.id.edit_time);
         backLL = (LinearLayout)findViewById(R.id.edit_back_ll);
         saveLL = (LinearLayout)findViewById(R.id.edit_save_ll);
+        tag1TV = (TextView)findViewById(R.id.edit_tag1);
         tag2TV = (TextView)findViewById(R.id.edit_tag2);
         tag3TV = (TextView)findViewById(R.id.edit_tag3);
         addTagBT = (Button)findViewById(R.id.add_tag_bt);
@@ -131,9 +134,6 @@ public class EditActivity extends BaseActivity implements View.OnClickListener,
         pic3 = (ImageView)findViewById(R.id.edit_pic3);
         pic4 = (ImageView)findViewById(R.id.edit_pic4);
 
-
-        tag2TV.setVisibility(View.GONE);
-        tag3TV.setVisibility(View.GONE);
         //设置头像
         Bitmap head = GetImageUtils.getBMFromUri(this,Constant.HEAD_ICON_URI);
         if (head != null){
@@ -187,12 +187,16 @@ public class EditActivity extends BaseActivity implements View.OnClickListener,
             contentET.setText(item.getContent());
 
             if (!item.getTag1().equals("")){
-                tag2TV.setVisibility(View.VISIBLE);
-                tag2TV.setText(item.getTag1());
+                tag1TV.setVisibility(View.VISIBLE);
+                tag1TV.setText(item.getTag1());
             }
             if (!item.getTag2().equals("")){
+                tag2TV.setVisibility(View.VISIBLE);
+                tag2TV.setText(item.getTag2());
+            }
+            if (!item.getTag3().equals("")){
                 tag3TV.setVisibility(View.VISIBLE);
-                tag3TV.setText(item.getTag2());
+                tag3TV.setText(item.getTag3());
             }
         }
     }
@@ -345,13 +349,13 @@ public class EditActivity extends BaseActivity implements View.OnClickListener,
     }
 
     private void addTag(){
-        View v = LayoutInflater.from(EditActivity.this).inflate(R.layout.add_tag,null);
-        final EditText addTagET = (EditText) v.findViewById(R.id.add_tag_edittext);
-//        View v = LayoutInflater.from(EditActivity.this).inflate(R.layout.add_tag2,null);
-//        final EditText addTagET = (EditText) v.findViewById(R.id.add_tag2_et);
+//        View v = LayoutInflater.from(EditActivity.this).inflate(R.layout.add_tag,null);
+//        final EditText addTagET = (EditText) v.findViewById(R.id.add_tag_edittext);
+        View v = LayoutInflater.from(EditActivity.this).inflate(R.layout.add_tag2,null);
+        final EditText addTagET = (TagsEditText) v.findViewById(R.id.add_tag2_et);
 
         final AlertDialog.Builder builder = new AlertDialog.Builder(EditActivity.this);
-        builder.setTitle("添加标签")
+        /*builder.setTitle("添加标签")
                 .setView(v)
                 .setCancelable(true)
                 .setPositiveButton("完成", new DialogInterface.OnClickListener() {
@@ -374,27 +378,45 @@ public class EditActivity extends BaseActivity implements View.OnClickListener,
                             flag++;
                         }
                     }
-                });
-        /*builder.setView(v)
+                });*/
+        builder.setView(v)
                 .setCancelable(true)
                 .setPositiveButton("好", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        //监听键盘的回车事件
-                        addTagET.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-                            @Override
-                            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-                                if (i == EditorInfo.IME_ACTION_NEXT){
-                                    //处理逻辑
-                                    String content = addTagET.getText().toString().trim();
-                                    if (content.equals("")){
-                                        return false;
-                                    }
-                                    addTagET.setText();
-                                }
-                                return false;
-                            }
-                        });
+                        //得到的标签是字符串，每个标签中间用空格分开
+                        String tags = addTagET.getText().toString();
+                        // TODO
+                        String[] allTag = tags.split(" ");
+                        switch (allTag.length){
+                            case 0:
+                                break;
+                            case 1:
+                                tag1 = allTag[0];
+                                tag1TV.setText(tag1);
+                                tag1TV.setVisibility(View.VISIBLE);
+                                break;
+                            case 2:
+                                tag1 = allTag[0];
+                                tag2 = allTag[1];
+                                tag1TV.setText(tag1);
+                                tag1TV.setVisibility(View.VISIBLE);
+                                tag2TV.setText(tag2);
+                                tag2TV.setVisibility(View.VISIBLE);
+                                break;
+                            default:
+                                tag1 = allTag[0];
+                                tag2 = allTag[1];
+                                tag3 = allTag[2];
+                                tag1TV.setText(tag1);
+                                tag1TV.setVisibility(View.VISIBLE);
+                                tag2TV.setText(tag2);
+                                tag2TV.setVisibility(View.VISIBLE);
+                                tag3TV.setText(tag3);
+                                tag3TV.setVisibility(View.VISIBLE);
+                                break;
+                        }
+
                     }
                 })
                 .setNegativeButton("取消", new DialogInterface.OnClickListener() {
@@ -402,7 +424,7 @@ public class EditActivity extends BaseActivity implements View.OnClickListener,
                     public void onClick(DialogInterface dialogInterface, int i) {
 
                     }
-                });*/
+                });
         builder.show();
     }
 

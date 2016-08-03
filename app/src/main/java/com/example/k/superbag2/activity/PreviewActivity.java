@@ -1,12 +1,16 @@
 package com.example.k.superbag2.activity;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Display;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -17,7 +21,9 @@ import com.bumptech.glide.Glide;
 import com.example.k.superbag2.R;
 import com.example.k.superbag2.bean.ItemBean;
 import com.example.k.superbag2.others.Constant;
+import com.example.k.superbag2.utils.DialogUtils;
 import com.example.k.superbag2.utils.GetImageUtils;
+import com.example.k.superbag2.view.LookPicDialog;
 
 import org.litepal.crud.DataSupport;
 
@@ -34,11 +40,13 @@ public class PreviewActivity extends BaseActivity implements View.OnClickListene
     private TextView preMonth,preWeather,preFeelings,preTag1,preTag2,preTag3,preContent,preMin;
     private ImageView prePic1,prePic2,prePic3,prePic4;
 
+    private ItemBean item;
     private int lineNum = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_preview);
 
         initView();
@@ -77,6 +85,12 @@ public class PreviewActivity extends BaseActivity implements View.OnClickListene
         preEdit.setOnClickListener(this);
         preBackLL.setOnClickListener(this);
         preEditLL.setOnClickListener(this);
+
+        prePic1.setOnClickListener(this);
+        prePic2.setOnClickListener(this);
+        prePic3.setOnClickListener(this);
+        prePic4.setOnClickListener(this);
+
     }
 
     @Override
@@ -94,7 +108,30 @@ public class PreviewActivity extends BaseActivity implements View.OnClickListene
                 //跳转后关闭当前活动
                 finish();
                 break;
+            case R.id.pre_iv1:
+                showPic(1);
+                break;
+            case R.id.pre_iv2:
+                showPic(2);
+                break;
+            case R.id.pre_iv3:
+                showPic(3);
+                break;
+            case R.id.pre_iv4:
+                showPic(4);
+                break;
         }
+    }
+
+    private void showPic(int i){
+        LookPicDialog dialog = new LookPicDialog(PreviewActivity.this,item,i);
+        dialog.show();
+        //设置dialog的宽度为屏幕宽度，否则则不能充满屏幕
+        WindowManager windowManager = getWindowManager();
+        Display display = windowManager.getDefaultDisplay();
+        WindowManager.LayoutParams lp = dialog.getWindow().getAttributes();
+        lp.width = display.getWidth(); //设置宽度
+        dialog.getWindow().setAttributes(lp);
     }
 
     private void initData(){
@@ -103,7 +140,7 @@ public class PreviewActivity extends BaseActivity implements View.OnClickListene
         if (lineNum != -1){
             int record_num = DataSupport.count(ItemBean.class);
             Log.d("总数是",record_num+"");
-            ItemBean item = DataSupport.find(ItemBean.class,record_num-lineNum);
+            item = DataSupport.find(ItemBean.class,record_num-lineNum);
             if (item == null) {
                 return;
             }
