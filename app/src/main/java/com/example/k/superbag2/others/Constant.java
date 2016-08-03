@@ -11,4 +11,7 @@ public class Constant {
     public static final String HEAD_ICON_URI = "headIconUri";
 
     public static final String FIRST_SET_LOCK = "first_set_lock";
+    public static final boolean NUMBERLOCK = true;
+    public static final boolean NINEBLOCKLOCK = false;
+
 }

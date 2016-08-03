@@ -14,9 +14,12 @@ import org.litepal.LitePalApplication;
  */
 public class MyApplication extends LitePalApplication {
     //表示现在程序是否上锁
-    private static boolean isLocked = true;
+    private static boolean isLocked = false;
     //表示现在是否设置了锁的功能
     private static boolean hasSetLock = false;
+    //表示设置锁的种类 默认：数字锁
+    private  static boolean lockStyle = Constant.NUMBERLOCK;
+
     private IntentFilter intentFilter;
     private LockBroadReceiver lockBroadReceiver;
 
@@ -36,6 +39,13 @@ public class MyApplication extends LitePalApplication {
         this.unregisterReceiver(lockBroadReceiver);
     }
 
+    public static boolean isLockStyle() {
+        return lockStyle;
+    }
+
+    public static void setLockStyle(boolean lockStyle) {
+        MyApplication.lockStyle = lockStyle;
+    }
 
     public static boolean isLocked() {
         if (hasSetLock) {
