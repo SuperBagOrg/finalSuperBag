@@ -1,7 +1,6 @@
 package com.example.k.superbag2.adapter;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,13 +8,11 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.k.superbag2.R;
 import com.example.k.superbag2.bean.ItemBean;
-import com.example.k.superbag2.others.ListItem;
-import com.example.k.superbag2.utils.GetImageUtils;
+import com.example.k.superbag2.others.Constant;
 
 import java.util.List;
 
@@ -49,7 +46,7 @@ public class FirstpageAdapter extends ArrayAdapter<ItemBean> {
         ItemBean itemBean = getItem(position);
         int type = getItemViewType(position);
         switch (type){
-            case ListItem.TYPE_NO_PIC:
+            case Constant.TYPE_NO_PIC:
                 Pic0ViewHolder holder0 = null;
                 if (convertView == null){
                     convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_firstpage_0pic,null);
@@ -83,7 +80,7 @@ public class FirstpageAdapter extends ArrayAdapter<ItemBean> {
                 holder0.weather.setText(itemBean.getWeather());
                 holder0.feelings.setText(itemBean.getFeelings());
                 break;
-            case ListItem.TYPE_ONE_PIC:
+            case Constant.TYPE_ONE_PIC:
                 Pic1ViewHolder holder1 = null;
                 if (convertView == null){
                     convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_fp_1pic,null);
@@ -123,7 +120,7 @@ public class FirstpageAdapter extends ArrayAdapter<ItemBean> {
                         .asBitmap()
                         .into(holder1.iv);
                 break;
-            case ListItem.TYPE_TWO_PIC:
+            case Constant.TYPE_TWO_PIC:
                 Pic2ViewHolder holder2 = null;
                 if (convertView == null){
                     convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_fp_2pic,null);
@@ -182,7 +179,7 @@ public class FirstpageAdapter extends ArrayAdapter<ItemBean> {
 
     @Override
     public int getViewTypeCount() {
-        return ListItem.TYPE_ALL_COUNT;
+        return Constant.TYPE_ALL_COUNT;
     }
 
     class Pic0ViewHolder{

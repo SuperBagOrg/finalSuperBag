@@ -8,6 +8,7 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.example.k.superbag2.R;
 import com.example.k.superbag2.bean.ItemBean;
@@ -21,6 +22,7 @@ import uk.co.senab.photoview.PhotoViewAttacher;
 public class LookPicDialog extends Dialog {
 
     private HackyViewPager pager;
+    private TextView textView;
     private ItemBean itemBean;
     private Context context;
     private int position;
@@ -42,6 +44,8 @@ public class LookPicDialog extends Dialog {
         setContentView(R.layout.look_pic_view);
 
         pager = (HackyViewPager)findViewById(R.id.look_pic_viewpager);
+        textView = (TextView)findViewById(R.id.look_pic_tv);
+        textView.setText(position + "/" + itemBean.getPicNum());
         LookPicPagerAdapter adapter = new LookPicPagerAdapter();
         pager.setAdapter(adapter);
         adapter.notifyDataSetChanged();
@@ -54,7 +58,7 @@ public class LookPicDialog extends Dialog {
 
             @Override
             public void onPageSelected(int position) {
-
+                textView.setText(position+1 + "/" + itemBean.getPicNum());
             }
 
             @Override

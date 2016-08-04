@@ -14,4 +14,11 @@ public class Constant {
     public static final boolean NUMBERLOCK = true;
     public static final boolean NINEBLOCKLOCK = false;
 
+    public static final int TYPE_NO_PIC = 0;
+    public static final int TYPE_ONE_PIC = 1;
+    public static final int TYPE_TWO_PIC = 2;
+    public static final int TYPE_THREE_PIC = 3;
+    public static final int TYPE_FOUR_PIC = 3;
+    public static final int TYPE_ALL_COUNT = 4;
+
 }

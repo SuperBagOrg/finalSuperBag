@@ -3,13 +3,17 @@ package com.example.k.superbag2.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.view.Window;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.example.k.superbag2.MyApplication;
 import com.example.k.superbag2.R;
 import com.example.k.superbag2.others.Constant;
 import com.example.k.superbag2.utils.LockUtils;
+import com.example.k.superbag2.utils.MD5Utils;
 import com.example.k.superbag2.view.LockView;
 
 import java.util.List;
@@ -42,10 +46,17 @@ public class ScreenLockActivity extends AppCompatActivity {
         setContentView(R.layout.activity_pic_lock);
         initView();
     }
+
     private void initView() {
         lockView = (LockView) findViewById(R.id.lockView);
-        inputTV = (TextView)findViewById(R.id.input_pic_tv);
-        cancelBt = (Button)findViewById(R.id.pic_lock_cancel_bt);
+        inputTV = (TextView) findViewById(R.id.input_pic_tv);
+        cancelBt = (Button) findViewById(R.id.pic_lock_cancel_bt);
+        cancelBt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
         final LockView lockView = (LockView) findViewById(R.id.lockView);
         lockView.setOnDrawFinishedListener(new LockView.OnDrawFinishedListener() {
             @Override
@@ -55,15 +66,15 @@ public class ScreenLockActivity extends AppCompatActivity {
                 for (Integer i : passPositions) {
                     sb.append(i.intValue());
                 }
-                if (MyApplication.isHasSetLock()){
+                if (MyApplication.isHasSetLock()) {
                     //直接为解锁
                     inputTV.setText("输入密码");
-                    if (LockUtils.getPassword().equals(sb.toString())){
+                    if (LockUtils.getPassword().equals(sb.toString())) {
                         Intent intent = getIntent();
-                        if (intent.getBooleanExtra("setting",false)){
+                        if (intent.getBooleanExtra("setting", false)) {
                             inputTV.setText("重新设置密码");
                             setPassword();
-                        }else {
+                        } else {
                             finish();
                         }
                         return true;
@@ -76,37 +87,30 @@ public class ScreenLockActivity extends AppCompatActivity {
                     inputTV.setText("输入密码");
                     setPassword();
                 }
-            return true;
+                return true;
             }
         });
     }
-    private void setPassword(){
-        if (temp){
+
+    private void setPassword() {
+        if (temp) {
             firstPass = sb.toString();
             lockView.resetPoints();
             inputTV.setText("再次输入以确认");
             temp = false;
         } else {
             //第二次
-            if (sb.toString().equals(firstPass)){
-                Toast.makeText(ScreenLockActivity.this,"密码设置成功",Toast.LENGTH_SHORT).show();
+            if (sb.toString().equals(firstPass)) {
+                Toast.makeText(ScreenLockActivity.this, "密码设置成功", Toast.LENGTH_SHORT).show();
                 LockUtils.setPassword(firstPass);
                 MyApplication.setHasSetLock(true);
                 MyApplication.setLockStyle(Constant.NINEBLOCKLOCK);
                 ScreenLockActivity.this.finish();
             } else {
-                Toast.makeText(ScreenLockActivity.this,"两次输入密码不同，请重新输入",Toast.LENGTH_SHORT).show();
+                Toast.makeText(ScreenLockActivity.this, "两次输入密码不同，请重新输入", Toast.LENGTH_SHORT).show();
                 temp = true;
             }
         }
-        });
-
-        cancelBt.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
     }
 
     private boolean compare(String password, String input) {
