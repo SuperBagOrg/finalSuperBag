@@ -51,10 +51,9 @@ public class FirstpageAdapter2 extends RecyclerView.Adapter<RecyclerView.ViewHol
         } else if (viewType == Constant.TYPE_TWO_PIC){
             return new Pic2ViewHolder(inflater.inflate(R.layout.item_fp_2pic,parent,false));
         } else if (viewType == Constant.TYPE_THREE_PIC){
-            //有待修改
-            return new Pic2ViewHolder(inflater.inflate(R.layout.item_fp_2pic,parent,false));
+            return new Pic3ViewHolder(inflater.inflate(R.layout.item_fp_3pic,parent,false));
         } else {
-            return new Pic2ViewHolder(inflater.inflate(R.layout.item_fp_2pic,parent,false));
+            return new Pic4ViewHolder(inflater.inflate(R.layout.item_fp_4pic,parent,false));
         }
     }
 
@@ -180,10 +179,107 @@ public class FirstpageAdapter2 extends RecyclerView.Adapter<RecyclerView.ViewHol
                     }
                 });
             }
+        } else if (holder instanceof Pic3ViewHolder){
+            if (!itemBean.getTag1().equals("")){
+                ((Pic3ViewHolder)holder).tag1.setText(itemBean.getTag1());
+                ((Pic3ViewHolder)holder).tag1.setVisibility(View.VISIBLE);
+            }
+            if (!itemBean.getTag2().equals("")){
+                ((Pic3ViewHolder)holder).tag2.setText(itemBean.getTag2());
+                ((Pic3ViewHolder)holder).tag2.setVisibility(View.VISIBLE);
+            }
+            ((Pic3ViewHolder)holder).oldTime.setText(itemBean.getDayTime());
+            ((Pic3ViewHolder)holder).time.setText(itemBean.getDay()+"/"+itemBean.getMonth()+"\n周五");
+            ((Pic3ViewHolder)holder).content.setText(itemBean.getContent());
+            ((Pic3ViewHolder)holder).weather.setText(itemBean.getWeather());
+            ((Pic3ViewHolder)holder).feelings.setText(itemBean.getFeelings());
+            Glide.with(context)
+                    .load(itemBean.getPic1())
+                    .asBitmap()
+                    .into(((Pic3ViewHolder)holder).iv1);
+            Glide.with(context)
+                    .load(itemBean.getPic2())
+                    .asBitmap()
+                    .into(((Pic3ViewHolder)holder).iv2);
+            Glide.with(context)
+                    .load(itemBean.getPic3())
+                    .asBitmap()
+                    .into(((Pic3ViewHolder)holder).iv3);
+
+            if (onItemClickListener != null) {
+                ((Pic3ViewHolder) holder).fpLL.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        int pos = holder.getLayoutPosition();
+                        onItemClickListener.onItemClick(((Pic3ViewHolder) holder).fpLL, pos);
+                    }
+                });
+
+                ((Pic3ViewHolder) holder).fpLL.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View view) {
+                        //删除等
+                        int pos = holder.getLayoutPosition();
+                        onItemClickListener.onItemLongClick(((Pic3ViewHolder) holder).fpLL, pos);
+                        //必须返回true,否则会触发onClick
+                        return true;
+                    }
+                });
+            }
+        } else {
+            if (!itemBean.getTag1().equals("")){
+                ((Pic4ViewHolder)holder).tag1.setText(itemBean.getTag1());
+                ((Pic4ViewHolder)holder).tag1.setVisibility(View.VISIBLE);
+            }
+            if (!itemBean.getTag2().equals("")){
+                ((Pic4ViewHolder)holder).tag2.setText(itemBean.getTag2());
+                ((Pic4ViewHolder)holder).tag2.setVisibility(View.VISIBLE);
+            }
+            ((Pic4ViewHolder)holder).oldTime.setText(itemBean.getDayTime());
+            ((Pic4ViewHolder)holder).time.setText(itemBean.getDay()+"/"+itemBean.getMonth()+"\n周五");
+            ((Pic4ViewHolder)holder).content.setText(itemBean.getContent());
+            ((Pic4ViewHolder)holder).weather.setText(itemBean.getWeather());
+            ((Pic4ViewHolder)holder).feelings.setText(itemBean.getFeelings());
+            Glide.with(context)
+                    .load(itemBean.getPic1())
+                    .asBitmap()
+                    .into(((Pic4ViewHolder)holder).iv1);
+            Glide.with(context)
+                    .load(itemBean.getPic2())
+                    .asBitmap()
+                    .into(((Pic4ViewHolder)holder).iv2);
+            Glide.with(context)
+                    .load(itemBean.getPic3())
+                    .asBitmap()
+                    .into(((Pic4ViewHolder)holder).iv3);
+            Glide.with(context)
+                    .load(itemBean.getPic4())
+                    .asBitmap()
+                    .into(((Pic4ViewHolder)holder).iv4);
+
+            if (onItemClickListener != null) {
+                ((Pic4ViewHolder) holder).fpLL.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        int pos = holder.getLayoutPosition();
+                        onItemClickListener.onItemClick(((Pic4ViewHolder) holder).fpLL, pos);
+                    }
+                });
+
+                ((Pic4ViewHolder) holder).fpLL.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View view) {
+                        //删除等
+                        int pos = holder.getLayoutPosition();
+                        onItemClickListener.onItemLongClick(((Pic4ViewHolder) holder).fpLL, pos);
+                        //必须返回true,否则会触发onClick
+                        return true;
+                    }
+                });
+            }
         }
 
     }
-
 
 
     @Override
@@ -258,43 +354,46 @@ public class FirstpageAdapter2 extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     class Pic3ViewHolder extends RecyclerView.ViewHolder {
         TextView time,content,oldTime,tag1,tag2,tag3,weather,feelings;
-        ImageView iv1,iv2;
+        ImageView iv1,iv2,iv3;
         LinearLayout fpLL;
 
         public Pic3ViewHolder(View itemView) {
             super(itemView);
-            time = (TextView) itemView.findViewById(R.id.fp_2pic_time);
-            content = (TextView) itemView.findViewById(R.id.fp_2pic_content);
-            oldTime = (TextView) itemView.findViewById(R.id.fp_2pic_oldTime);
-            tag1 = (TextView) itemView.findViewById(R.id.fp_2pic_tag1);
-            tag2 = (TextView)itemView.findViewById(R.id.fp_2pic_tag2);
-            tag3 = (TextView)itemView.findViewById(R.id.fp_2pic_tag3);
-            iv1 = (ImageView)itemView.findViewById(R.id.fp_2pic_iv1);
-            iv2 = (ImageView)itemView.findViewById(R.id.fp_2pic_iv2);
-            weather = (TextView)itemView.findViewById(R.id.fp_2pic_weather);
-            feelings = (TextView)itemView.findViewById(R.id.fp_2pic_feelings);
-            //有问题
-            fpLL = (LinearLayout) itemView.findViewById(R.id.fp_2pic_ll);
+            time = (TextView) itemView.findViewById(R.id.fp_3pic_time);
+            content = (TextView) itemView.findViewById(R.id.fp_3pic_content);
+            oldTime = (TextView) itemView.findViewById(R.id.fp_3pic_oldTime);
+            tag1 = (TextView) itemView.findViewById(R.id.fp_3pic_tag1);
+            tag2 = (TextView)itemView.findViewById(R.id.fp_3pic_tag2);
+            tag3 = (TextView)itemView.findViewById(R.id.fp_3pic_tag3);
+            iv1 = (ImageView)itemView.findViewById(R.id.fp_3pic_iv1);
+            iv2 = (ImageView)itemView.findViewById(R.id.fp_3pic_iv2);
+            iv3 = (ImageView)itemView.findViewById(R.id.fp_3pic_iv3);
+            weather = (TextView)itemView.findViewById(R.id.fp_3pic_weather);
+            feelings = (TextView)itemView.findViewById(R.id.fp_3pic_feelings);
+            fpLL = (LinearLayout) itemView.findViewById(R.id.fp_3pic_ll);
         }
     }
 
     class Pic4ViewHolder extends RecyclerView.ViewHolder {
         TextView time,content,oldTime,tag1,tag2,tag3,weather,feelings;
-        ImageView iv1,iv2;
+        ImageView iv1,iv2,iv3,iv4;
         LinearLayout fpLL;
+
         public Pic4ViewHolder(View itemView) {
             super(itemView);
-            time = (TextView) itemView.findViewById(R.id.fp_2pic_time);
-            content = (TextView) itemView.findViewById(R.id.fp_2pic_content);
-            oldTime = (TextView) itemView.findViewById(R.id.fp_2pic_oldTime);
-            tag1 = (TextView) itemView.findViewById(R.id.fp_2pic_tag1);
-            tag2 = (TextView)itemView.findViewById(R.id.fp_2pic_tag2);
-            tag3 = (TextView)itemView.findViewById(R.id.fp_2pic_tag3);
-            iv1 = (ImageView)itemView.findViewById(R.id.fp_2pic_iv1);
-            iv2 = (ImageView)itemView.findViewById(R.id.fp_2pic_iv2);
-            weather = (TextView)itemView.findViewById(R.id.fp_2pic_weather);
-            feelings = (TextView)itemView.findViewById(R.id.fp_2pic_feelings);
-            fpLL = (LinearLayout) itemView.findViewById(R.id.fp_0pic_ll);
+            time = (TextView) itemView.findViewById(R.id.fp_4pic_time);
+            content = (TextView) itemView.findViewById(R.id.fp_4pic_content);
+            oldTime = (TextView) itemView.findViewById(R.id.fp_4pic_oldTime);
+            tag1 = (TextView) itemView.findViewById(R.id.fp_4pic_tag1);
+            tag2 = (TextView)itemView.findViewById(R.id.fp_4pic_tag2);
+            tag3 = (TextView)itemView.findViewById(R.id.fp_4pic_tag3);
+            iv1 = (ImageView)itemView.findViewById(R.id.fp_4pic_iv1);
+            iv2 = (ImageView)itemView.findViewById(R.id.fp_4pic_iv2);
+            iv3 = (ImageView)itemView.findViewById(R.id.fp_4pic_iv3);
+            iv4 = (ImageView)itemView.findViewById(R.id.fp_4pic_iv4);
+            weather = (TextView)itemView.findViewById(R.id.fp_4pic_weather);
+            feelings = (TextView)itemView.findViewById(R.id.fp_4pic_feelings);
+            fpLL = (LinearLayout) itemView.findViewById(R.id.fp_4pic_ll);
         }
     }
 }

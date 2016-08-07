@@ -21,4 +21,6 @@ public class Constant {
     public static final int TYPE_FOUR_PIC = 3;
     public static final int TYPE_ALL_COUNT = 4;
 
+    public static final String  IMAGE_URI_LIST = "image_uri_list";
+
 }

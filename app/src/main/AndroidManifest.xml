@@ -25,6 +25,7 @@
         <activity android:name=".activity.PreviewActivity"></activity>
         <activity android:name=".activity.NumLockActivity"></activity>
         <activity android:name=".activity.ChooseLockActivity"></activity>
+        <activity android:name=".activity.ChoosePicActivity"></activity>
     </application>
 
 </manifest>
