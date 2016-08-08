@@ -20,7 +20,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.ScreenLockActivity"/>
+        <activity android:name=".activity.ScreenLockActivity"
+            android:launchMode="singleTask">
+        </activity>
         <activity android:name=".activity.EditActivity"></activity>
         <activity android:name=".activity.PreviewActivity"></activity>
         <activity android:name=".activity.NumLockActivity"></activity>

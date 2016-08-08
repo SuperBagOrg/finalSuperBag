@@ -13,11 +13,12 @@ import android.widget.RelativeLayout;
 import com.example.k.superbag2.MyApplication;
 import com.example.k.superbag2.R;
 import com.example.k.superbag2.others.Constant;
+import com.example.k.superbag2.utils.SaveUtils;
 
 /**
  * Created by K on 2016/8/1.
  */
-public class ChooseLockActivity extends AppCompatActivity implements View.OnClickListener{
+public class ChooseLockActivity extends BaseActivity implements View.OnClickListener{
 
     private RelativeLayout noLockRL,numLockRL,picLockRL;
     private ImageView noLockIV,numLockIV,picLockIV;
@@ -42,25 +43,49 @@ public class ChooseLockActivity extends AppCompatActivity implements View.OnClic
         noLockRL.setOnClickListener(this);
         numLockRL.setOnClickListener(this);
         picLockRL.setOnClickListener(this);
+        if (!SaveUtils.getHasSetLock()){
+            setNoLockRL();
+        }else if (SaveUtils.getLockStyle()){
+            setNumLockRL();
+        }else {
+            setPicLockRL();
+        }
     }
-
     @Override
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.no_lock_rl:
-                MyApplication.setHasSetLock(false);
+                SaveUtils.setHasSetLock(false);
+                setNoLockRL();
+                finish();
                 break;
             case R.id.num_lock_rl:
-                MyApplication.setLockStyle(Constant.NUMBERLOCK);
+                setNumLockRL();
                 Intent intent = new Intent(ChooseLockActivity.this,NumLockActivity.class);
+                intent.putExtra("set",true);
                 startActivity(intent);
                 break;
             case R.id.pic_lock_rl:
-                MyApplication.setLockStyle(Constant.NINEBLOCKLOCK);
+                setPicLockRL();
                 Intent intent1 = new Intent(ChooseLockActivity.this,ScreenLockActivity.class);
                 intent1.putExtra("setting",true);
                 startActivity(intent1);
                 break;
         }
+    }
+    private void setNoLockRL(){
+        noLockIV.setVisibility(View.VISIBLE);
+        numLockIV.setVisibility(View.GONE);
+        picLockIV.setVisibility(View.GONE);
+    }
+    private void setNumLockRL(){
+        noLockIV.setVisibility(View.GONE);
+        numLockIV.setVisibility(View.VISIBLE);
+        picLockIV.setVisibility(View.GONE);
+    }
+    private void setPicLockRL(){
+        noLockIV.setVisibility(View.GONE);
+        numLockIV.setVisibility(View.GONE);
+        picLockIV.setVisibility(View.VISIBLE);
     }
 }
