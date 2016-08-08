@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -18,7 +19,7 @@ import java.util.Map;
 /**
  * Created by K on 2016/7/30.
  */
-public class NumLockActivity extends Activity {
+public class NumLockActivity extends AppCompatActivity {
     private Button deleteBT,cancelBT;
     private List<Map<String,Object>> itemLists;
     int[] buttons = new int[10];
@@ -30,6 +31,7 @@ public class NumLockActivity extends Activity {
     private View tempview;
     private String password;
     private boolean flag = true;
+    private boolean temp_change = true;
     private Intent intent;
     private TextView textView;
 
@@ -41,16 +43,18 @@ public class NumLockActivity extends Activity {
         initClick();
     }
 
-//    @Override
-//    protected void onResume() {
-//        intent = getIntent();
-//        if (SaveUtils.getHasSetLock()&&intent.getBooleanExtra("set",false)&&!SaveUtils.getLockStyle()){
-//            Intent getNineBlockLock = new Intent(NumLockActivity.this,ScreenLockActivity.class);
-//            startActivity(getNineBlockLock);
-//        }
-//        super.onResume();
-//
-//    }
+    @Override
+    protected void onResume() {
+        intent = getIntent();
+        if (SaveUtils.getHasSetLock()&&intent.getBooleanExtra("set",false)&&!SaveUtils.getLockStyle()
+                &&temp_change){
+            Intent getNineBlockLock = new Intent(NumLockActivity.this,ScreenLockActivity.class);
+            startActivity(getNineBlockLock);
+            Log.d("change","num---------->block");
+            temp_change = false;
+        }
+        super.onResume();
+    }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -117,17 +121,15 @@ public class NumLockActivity extends Activity {
                     }
                     if (count==6){
                         //最常见的情况，由外部跳入，直接判断即可:1、由锁屏进入。2、NineLock切换时的验证
-                        if (!intent.getBooleanExtra("set",false)&&SaveUtils.getHasSetLock()){
-                            Log.d("numlock",sb.toString()+"============================1_0");
+                        if (!intent.getBooleanExtra("set",false) &&SaveUtils.getHasSetLock()){
                             if (sb.toString().equals(SaveUtils.getPasswordnum())){
                                 Toast.makeText(NumLockActivity.this,"解锁成功",
                                         Toast.LENGTH_SHORT).show();
-                                Log.d("numlock",sb.toString()+"============================1_1");
-
+                                if (intent.getBooleanExtra("lock",false)){
+                                    SaveUtils.setHasSetLock(false);
+                                }
                                 finish();
                             }else {
-                                Log.d("numlock",sb.toString()+"============================1_2");
-
                                 Toast.makeText(NumLockActivity.this,"密码错误，请重试",
                                         Toast.LENGTH_SHORT).show();
                                 initPassword();
@@ -135,17 +137,12 @@ public class NumLockActivity extends Activity {
                             //次常见情况，更改密码：1、之前设置为Num模式 2、之前设置为NineLock模式
                         }else if (SaveUtils.getHasSetLock()){
                             if (SaveUtils.getLockStyle()){//Num模式:先验证，在输入一次，验证一次
-                                Log.d("numlock",sb.toString()+"============================2_1");
                                 if (lock==2&&sb.toString().equals(password)){
-                                    Log.d("numlock",sb.toString()+"============================2_4");
-
                                     Toast.makeText(NumLockActivity.this,"新密码设置成功",
                                             Toast.LENGTH_SHORT).show();
                                     savePassword();
                                     finish();
                                 }else if (lock==2){
-                                    Log.d("numlock",sb.toString()+"============================2_5");
-
                                     Toast.makeText(NumLockActivity.this,"前后密码不一致，请重设",
                                             Toast.LENGTH_SHORT).show();
                                     initPassword();
@@ -203,6 +200,22 @@ public class NumLockActivity extends Activity {
                                     flag = false;
                                     initPassword();
                                 }
+                            }
+                        }else if (SaveUtils.getHasSetLock()&&intent.getBooleanExtra("lock",false)){//不设置锁时的验证
+                            if (sb.toString().equals(SaveUtils.getPasswordnum())){
+                                Toast.makeText(NumLockActivity.this,"解锁成功",
+                                        Toast.LENGTH_SHORT).show();
+                                Log.d("numlock",sb.toString()+"============================5_1");
+                                if (intent.getBooleanExtra("no_lock",false)){
+                                    SaveUtils.setHasSetLock(false);
+                                }
+                                finish();
+                            }else {
+                                Log.d("numlock",sb.toString()+"============================5_2");
+
+                                Toast.makeText(NumLockActivity.this,"密码错误，请重试",
+                                        Toast.LENGTH_SHORT).show();
+                                initPassword();
                             }
                         }else {//第一次进入的模式
                             Log.d("numlock",sb.toString()+"============================4_1");

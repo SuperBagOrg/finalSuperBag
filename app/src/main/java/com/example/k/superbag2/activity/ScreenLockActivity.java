@@ -31,7 +31,7 @@ public class ScreenLockActivity extends AppCompatActivity {
     private Button cancelBt;
     private StringBuilder sb;
     private boolean temp = true;
-    private boolean temp_reset = true;
+    private boolean temp_change = true;
     private String firstPass = "";
     private LockView lockView;
     private Intent intent;
@@ -45,15 +45,18 @@ public class ScreenLockActivity extends AppCompatActivity {
         initView();
     }
 
-//    @Override
-//    protected void onResume() {
-//        super.onResume();
-//        intent = getIntent();
-//        if (SaveUtils.getHasSetLock()&&intent.getBooleanExtra("setting",false)&&SaveUtils.getLockStyle()){
-//            Intent getNumLock = new Intent(ScreenLockActivity.this,NumLockActivity.class);
-//            startActivity(getNumLock);
-//        }
-//    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        intent = getIntent();
+        if (SaveUtils.getHasSetLock()&&intent.getBooleanExtra("setting",false)&&SaveUtils.getLockStyle()
+                &&temp_change){
+            Intent getNumLock = new Intent(ScreenLockActivity.this,NumLockActivity.class);
+            startActivity(getNumLock);
+            temp_change = false;
+            Log.d("change","block---------->num");
+        }
+    }
 
     //加锁界面。重写BACk的点击响应，改为回到桌面
     @Override
@@ -101,18 +104,21 @@ public class ScreenLockActivity extends AppCompatActivity {
                 for (Integer i : passPositions) {
                     sb.append(i.intValue());
                 }
-                if (SaveUtils.getHasSetLock()&&temp) {
-                    //直接为解锁
+                //最常见的情形：从外部进入解锁界面
+                if (!intent.getBooleanExtra("setting",false)&&SaveUtils.getHasSetLock()) {
                     inputTV.setText("输入密码");
                     if (SaveUtils.getPassword().equals(sb.toString())) {
+                        if (intent.getBooleanExtra("lock",false)){
+                            SaveUtils.setHasSetLock(false);
+                        }
                         finish();
-                        Log.d("nani","===================================");
                         return true;
                     } else {
                         Toast.makeText(ScreenLockActivity.this, "手势密码错误，请重试！", Toast.LENGTH_SHORT).show();
                         return false;
                     }
-                } else {
+                    //第二种情形，第一次设置密码。
+                } else if (!SaveUtils.getHasSetLock()){
                     //第一次设置密码
                     inputTV.setText("输入密码");
                     if (temp) {
@@ -126,14 +132,69 @@ public class ScreenLockActivity extends AppCompatActivity {
                             Toast.makeText(ScreenLockActivity.this, "密码设置成功", Toast.LENGTH_SHORT).show();
                             SaveUtils.setPassword(firstPass);
                             SaveUtils.setLockStyle(Constant.NINEBLOCKLOCK);
+                            SaveUtils.setHasSetLock(true);
                             finish();
                         } else {
                             Toast.makeText(ScreenLockActivity.this, "两次输入密码不同，请重新输入", Toast.LENGTH_SHORT).show();
                             temp = true;
                         }
                     }
-                    SaveUtils.setHasSetLock(true);
-                    SaveUtils.setLockStyle(Constant.NINEBLOCKLOCK);
+                    //num锁模式，在加载页面时已经验证密码，这儿只用重设即可
+                }else if (SaveUtils.getHasSetLock()&&SaveUtils.getLockStyle()){
+                    inputTV.setText("输入密码");
+                    if (temp) {
+                        firstPass = sb.toString();
+                        lockView.resetPoints();
+                        inputTV.setText("再次输入以确认");
+                        temp = false;
+                    } else {
+                        //第二次
+                        if (sb.toString().equals(firstPass)) {
+                            Toast.makeText(ScreenLockActivity.this, "密码设置成功", Toast.LENGTH_SHORT).show();
+                            SaveUtils.setPassword(firstPass);
+                            SaveUtils.setLockStyle(Constant.NINEBLOCKLOCK);
+                            SaveUtils.setHasSetLock(true);
+                            finish();
+                        } else {
+                            Toast.makeText(ScreenLockActivity.this, "两次输入密码不同，请重新输入", Toast.LENGTH_SHORT).show();
+                            temp = true;
+                        }
+                    }
+                    //nineblocklock模式，先验证再重设
+                }else {
+                    inputTV.setText("输入密码");
+                    if (temp_change) {
+                        if (SaveUtils.getPassword().equals(sb.toString())) {
+                            temp_change = false;
+                            lockView.resetPoints();
+                            Toast.makeText(ScreenLockActivity.this, "验证通过", Toast.LENGTH_SHORT).show();
+                            return true;
+                        } else {
+                            Toast.makeText(ScreenLockActivity.this, "手势密码错误，请重试！", Toast.LENGTH_SHORT).show();
+                            return false;
+                        }
+                    }else {
+                        inputTV.setText("重新设置密码");
+                        if (temp) {
+                            firstPass = sb.toString();
+                            lockView.resetPoints();
+                            inputTV.setText("再次输入以确认");
+                            temp = false;
+                        } else {
+                            //第二次
+                            if (sb.toString().equals(firstPass)) {
+                                Toast.makeText(ScreenLockActivity.this, "密码设置成功", Toast.LENGTH_SHORT).show();
+                                SaveUtils.setPassword(firstPass);
+                                SaveUtils.setLockStyle(Constant.NINEBLOCKLOCK);
+                                SaveUtils.setHasSetLock(true);
+                                finish();
+                            } else {
+                                Toast.makeText(ScreenLockActivity.this, "两次输入密码不同，请重新输入", Toast.LENGTH_SHORT).show();
+                                temp = true;
+                            }
+                        }
+                    }
+
                 }
                 return true;
             }

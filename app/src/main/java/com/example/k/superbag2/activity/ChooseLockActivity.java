@@ -55,8 +55,20 @@ public class ChooseLockActivity extends BaseActivity implements View.OnClickList
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.no_lock_rl:
-                SaveUtils.setHasSetLock(false);
-                setNoLockRL();
+                Intent intent_nolock;
+                if (SaveUtils.getHasSetLock()) {
+                    if (SaveUtils.getLockStyle()){
+                        intent_nolock = new Intent(this, NumLockActivity.class);
+                    }else {
+                        intent_nolock = new Intent(this, ScreenLockActivity.class);
+                    }
+                    intent_nolock.putExtra("lock",true);
+                    startActivity(intent_nolock);
+                }
+                if (!SaveUtils.getHasSetLock()){
+                    setNoLockRL();
+                }
+
                 finish();
                 break;
             case R.id.num_lock_rl:

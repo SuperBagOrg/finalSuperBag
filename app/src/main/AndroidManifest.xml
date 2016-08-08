@@ -25,7 +25,10 @@
         </activity>
         <activity android:name=".activity.EditActivity"></activity>
         <activity android:name=".activity.PreviewActivity"></activity>
-        <activity android:name=".activity.NumLockActivity"></activity>
+        <activity android:name=".activity.NumLockActivity"
+            android:launchMode="singleTask">
+
+        </activity>
         <activity android:name=".activity.ChooseLockActivity"></activity>
         <activity android:name=".activity.ChoosePicActivity"></activity>
     </application>
