@@ -414,46 +414,6 @@ public class EditActivity extends BaseActivity implements View.OnClickListener,
         }
     }
 
-    private void save_edit() {
-        ItemBean newitem = new ItemBean();
-        String content = contentET.getText().toString();
-        GetTime gt = new GetTime();
-        newitem.setTag1(tag1);
-        newitem.setTag2(tag2);
-        newitem.setTag3(tag3);
-        newitem.setContent(content);
-        newitem.setDayTime(gt.getSpecificTime());
-        newitem.setPic1(uriList.get(0));
-        newitem.setPic2(uriList.get(1));
-        newitem.setPic3(uriList.get(2));
-        newitem.setPic4(uriList.get(3));
-        newitem.setFeelings(feelings);
-        newitem.setImportance(1);
-        newitem.setWeather(weather);
-        newitem.update(record_num - lineNum);
-        Log.d("已执行修改操作", "");
-    }
-
-    private void save_first() {
-        ItemBean newitem = new ItemBean();
-        String content = contentET.getText().toString();
-        GetTime gt = new GetTime();
-        newitem.setTag1(tag1);
-        newitem.setTag2(tag2);
-        newitem.setTag3(tag3);
-        newitem.setContent(content);
-        newitem.setDayTime(gt.getSpecificTime());
-
-        newitem.setPic1(uriList.get(0));
-        newitem.setPic2(uriList.get(1));
-        newitem.setPic3(uriList.get(2));
-        newitem.setPic4(uriList.get(3));
-        newitem.setFeelings(feelings);
-        newitem.setImportance(1);
-        newitem.setWeather(weather);
-        newitem.save();
-        Log.d("已执行保存操作", "");
-    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -520,4 +480,44 @@ public class EditActivity extends BaseActivity implements View.OnClickListener,
         startActivityForResult(intent, 1);
     }
 
+    private void save_edit() {
+        ItemBean newitem = new ItemBean();
+        String content = contentET.getText().toString();
+        GetTime gt = new GetTime();
+        newitem.setTag1(tag1);
+        newitem.setTag2(tag2);
+        newitem.setTag3(tag3);
+        newitem.setContent(content);
+        newitem.setDayTime(gt.getSpecificTime());
+        newitem.setPic1(uriList.get(0));
+        newitem.setPic2(uriList.get(1));
+        newitem.setPic3(uriList.get(2));
+        newitem.setPic4(uriList.get(3));
+        newitem.setFeelings(feelings);
+        newitem.setImportance(1);
+        newitem.setWeather(weather);
+        newitem.update(record_num - lineNum);
+        Log.d("已执行修改操作", "");
+    }
+
+    private void save_first() {
+        ItemBean newitem = new ItemBean();
+        String content = contentET.getText().toString();
+        GetTime gt = new GetTime();
+        newitem.setTag1(tag1);
+        newitem.setTag2(tag2);
+        newitem.setTag3(tag3);
+        newitem.setContent(content);
+        newitem.setDayTime(gt.getSpecificTime());
+
+        newitem.setPic1(uriList.get(0));
+        newitem.setPic2(uriList.get(1));
+        newitem.setPic3(uriList.get(2));
+        newitem.setPic4(uriList.get(3));
+        newitem.setFeelings(feelings);
+        newitem.setImportance(1);
+        newitem.setWeather(weather);
+        newitem.save();
+        Log.d("已执行保存操作", "");
+    }
 }

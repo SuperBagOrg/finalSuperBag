@@ -23,4 +23,7 @@ public class Constant {
 
     public static final String  IMAGE_URI_LIST = "image_uri_list";
 
+    public static final String SET_SOUND = "set_sound";
+    public static final String SET_SHAKE = "set_shake";
+
 }

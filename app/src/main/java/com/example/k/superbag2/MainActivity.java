@@ -633,6 +633,8 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
                         c.set(Calendar.HOUR_OF_DAY, i);
                         c.set(Calendar.MINUTE, i1);
                         Intent intent = new Intent(MainActivity.this, AlarmActivity.class);
+                        intent.putExtra(Constant.SET_SOUND,isSound);
+                        intent.putExtra(Constant.SET_SHAKE,isShake);
                         PendingIntent pt = PendingIntent.getActivity(MainActivity.this, 0, intent, 0);
                         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
                         alarmManager.set(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), pt);
