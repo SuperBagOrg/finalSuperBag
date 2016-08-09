@@ -10,24 +10,23 @@ import android.view.Window;
 import com.example.k.superbag2.MyApplication;
 import com.example.k.superbag2.others.Constant;
 import com.example.k.superbag2.others.IsReception;
+import com.example.k.superbag2.utils.SaveUtils;
 
 /**
  * Created by Aersasi on 2016/8/1.
  */
 public class BaseActivity extends AppCompatActivity {
-
     private Intent intent;
-
     @Override
     protected void onResume() {
         super.onResume();
-        if (MyApplication.isHasSetLock()&&MyApplication.isLocked()) {
-            if (MyApplication.isLockStyle()){
+        if (SaveUtils.getHasSetLock()&&SaveUtils.getIsLocked()) {
+            if (SaveUtils.getLockStyle()){
                 intent = new Intent(this, NumLockActivity.class);
             }else {
-                Log.d("activity","lock");
                 intent = new Intent(this, ScreenLockActivity.class);
             }
+            SaveUtils.setIsLocked(false);
             startActivity(intent);
         }
     }
@@ -36,12 +35,9 @@ public class BaseActivity extends AppCompatActivity {
         super.onStop();
         //后台
         if (!IsReception.isApplicationBroughtToBackground(MyApplication.getContext())){
-            MyApplication.setIsLocked(false);
+            SaveUtils.setIsLocked(false);
         }else {
-            MyApplication.setIsLocked(true);
+            SaveUtils.setIsLocked(true);
         }
-        Log.d("activity",""+
-                MyApplication.isLocked()+" "+MyApplication.isLockStyle()+" "+MyApplication.isHasSetLock());
-
     }
 }
