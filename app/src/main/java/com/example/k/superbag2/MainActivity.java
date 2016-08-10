@@ -126,12 +126,6 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
         setDiaryView();
         setMemoView();
         initEvents();
-        initDataBase();
-    }
-
-    //初始化数据库 2016/7/27
-    private void initDataBase() {
-        SQLiteDatabase myDatabase = Connector.getDatabase();
     }
 
     private void initView() {

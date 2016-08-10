@@ -1,12 +1,15 @@
 package com.example.k.superbag2.activity;
 
 import android.app.AlertDialog;
+import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,11 +28,14 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.k.superbag2.R;
+import com.example.k.superbag2.bean.DataImageView;
+import com.example.k.superbag2.bean.EditData;
 import com.example.k.superbag2.bean.ItemBean;
 import com.example.k.superbag2.others.Constant;
 import com.example.k.superbag2.utils.DialogUtils;
 import com.example.k.superbag2.utils.GetImageUtils;
 import com.example.k.superbag2.utils.GetTime;
+import com.example.k.superbag2.view.RichTextEditor;
 
 import org.litepal.crud.DataSupport;
 
@@ -47,7 +53,7 @@ public class EditActivity extends BaseActivity implements View.OnClickListener,
         CheckBox.OnCheckedChangeListener {
 
     private Button backBT, saveBT, picBT, weatherBT, feelingsBT;
-    private EditText contentET;
+//    private EditText contentET;
     private ImageView headIcon;
     private TextView oldTime;
     private LinearLayout backLL, saveLL;
@@ -58,8 +64,7 @@ public class EditActivity extends BaseActivity implements View.OnClickListener,
     private AlertDialog weatherDialog;
     private CheckBox happyCK, sweetCK, unforgettableCK, calmCK, angryCk, aggrievedCK, sadCK, noFeelingsCK;
     private AlertDialog feelingsDialog;
-    private ImageView pic1, pic2, pic3, pic4;
-    private ImageView delete1,delete2,delete3,delete4;
+    private RichTextEditor contentET;
 
     private boolean hasSaved = false;
     private Uri imageUri;
@@ -87,10 +92,8 @@ public class EditActivity extends BaseActivity implements View.OnClickListener,
     private String oldtime;
     private int lineNum;
     private int record_num;
+    private String content;
 
-    //用于选择图片后显示
-    private ImageView[] editPicIVs = new ImageView[4];
-    private ImageView[] deleteIVs = new ImageView[4];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,7 +113,7 @@ public class EditActivity extends BaseActivity implements View.OnClickListener,
         saveBT = (Button) findViewById(R.id.edit_save);
         picBT = (Button) findViewById(R.id.edit_pic_bt);
         weatherBT = (Button) findViewById(R.id.edit_weather_bt);
-        contentET = (EditText) findViewById(R.id.edit_et);
+        contentET = (RichTextEditor) findViewById(R.id.edit_et);
         headIcon = (ImageView) findViewById(R.id.edit_head_icon);
         oldTime = (TextView) findViewById(R.id.edit_time);
         backLL = (LinearLayout) findViewById(R.id.edit_back_ll);
@@ -120,15 +123,6 @@ public class EditActivity extends BaseActivity implements View.OnClickListener,
         tag3TV = (TextView) findViewById(R.id.edit_tag3);
         addTagBT = (Button) findViewById(R.id.add_tag_bt);
         feelingsBT = (Button) findViewById(R.id.edit_feelings_bt);
-        pic1 = (ImageView) findViewById(R.id.edit_pic1);
-        pic2 = (ImageView) findViewById(R.id.edit_pic2);
-        pic3 = (ImageView) findViewById(R.id.edit_pic3);
-        pic4 = (ImageView) findViewById(R.id.edit_pic4);
-        delete1 = (ImageView) findViewById(R.id.edit_delete1);
-        delete2 = (ImageView) findViewById(R.id.edit_delete2);
-        delete3 = (ImageView) findViewById(R.id.edit_delete3);
-        delete4 = (ImageView) findViewById(R.id.edit_delete4);
-
         //设置头像
         Bitmap head = GetImageUtils.getBMFromUri(this, Constant.HEAD_ICON_URI);
         if (head != null) {
@@ -146,10 +140,6 @@ public class EditActivity extends BaseActivity implements View.OnClickListener,
         saveLL.setOnClickListener(this);
         addTagBT.setOnClickListener(this);
         feelingsBT.setOnClickListener(this);
-        delete1.setOnClickListener(this);
-        delete2.setOnClickListener(this);
-        delete3.setOnClickListener(this);
-        delete4.setOnClickListener(this);
     }
 
     private void initData() {
@@ -161,15 +151,6 @@ public class EditActivity extends BaseActivity implements View.OnClickListener,
 
         uriList = new ArrayList<>(Arrays.asList("", "", "", ""));
 
-        editPicIVs[0] = pic1;
-        editPicIVs[1] = pic2;
-        editPicIVs[2] = pic3;
-        editPicIVs[3] = pic4;
-
-        deleteIVs[0] = delete1;
-        deleteIVs[1] = delete2;
-        deleteIVs[2] = delete3;
-        deleteIVs[3] = delete4;
         //如果是从ListView点击进入活动，则初始化数据;
         Intent intent = getIntent();
         lineNum = intent.getIntExtra(Constant.EDIT_DONE, -1);
@@ -177,7 +158,7 @@ public class EditActivity extends BaseActivity implements View.OnClickListener,
         if (lineNum != -1) {//从列表点击进入
             record_num = DataSupport.count(ItemBean.class);
             ItemBean item = DataSupport.find(ItemBean.class, record_num - lineNum);
-            contentET.setText(item.getContent());
+//            contentET.setText(item.getContent());
 
             if (!item.getTag1().equals("")) {
                 tag1TV.setVisibility(View.VISIBLE);
@@ -193,26 +174,6 @@ public class EditActivity extends BaseActivity implements View.OnClickListener,
             }
 
             uriList = item.getPicList();
-
-            for (int i = 0; i < 4 ;i++){
-                deleteIVs[i].setVisibility(View.GONE);
-            }
-
-            for (int i = 0; i <= item.getPicNum(); i++) {
-                Glide.with(EditActivity.this)
-                        .load(item.getPicList().get(i))
-                        .asBitmap()
-                        .into(editPicIVs[i]);
-                if (i == 0){
-                    editPicIVs[1].setVisibility(View.INVISIBLE);
-                }
-                if (i == 2){
-                    editPicIVs[3].setVisibility(View.INVISIBLE);
-                }
-                editPicIVs[i].setVisibility(View.VISIBLE);
-                deleteIVs[i].setVisibility(View.VISIBLE);
-            }
-
         }
     }
 
@@ -243,7 +204,19 @@ public class EditActivity extends BaseActivity implements View.OnClickListener,
                 break;
             case R.id.edit_save_ll:
             case R.id.edit_save:
-                String content = contentET.getText().toString();
+//                String content = contentET.getText().toString();
+                List<EditData> editDatas = contentET.getData();
+                StringBuilder sb = new StringBuilder();
+                int temp = 0;
+                for(int i = 0; i < editDatas.size(); i++){
+                    EditData ed = editDatas.get(i);
+                    sb.append(ed.getInputStr());
+                    if (!ed.getImagePath().equals("")) {
+                        uriList.set(temp, ed.getImagePath());
+                        temp++;
+                    }
+                }
+                content = sb.toString();
                 if (content.trim().equals("")) {
                     Toast.makeText(EditActivity.this, "内容不能为空呦", Toast.LENGTH_SHORT).show();
                 } else {
@@ -267,25 +240,7 @@ public class EditActivity extends BaseActivity implements View.OnClickListener,
             case R.id.edit_feelings_bt:
                 chooseFeelings();
                 break;
-            case R.id.edit_delete1:
-                deletePic(1);
-                break;
-            case R.id.edit_delete2:
-                deletePic(2);
-                break;
-            case R.id.edit_delete3:
-                deletePic(3);
-                break;
-            case R.id.edit_delete4:
-                deletePic(4);
-                break;
         }
-    }
-
-    private void deletePic(int index){
-        uriList.set(index-1,"");
-        editPicIVs[index-1].setVisibility(View.INVISIBLE);
-        deleteIVs[index-1].setVisibility(View.INVISIBLE);
     }
 
     @Override
@@ -462,65 +417,64 @@ public class EditActivity extends BaseActivity implements View.OnClickListener,
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             case 1:
-                if (resultCode == RESULT_OK) {
-                    imageUri = data.getData();
 
-                    uriList.set(picNum, imageUri.toString());
-                    if (picNum == 0) {
-                        Glide.with(EditActivity.this)
-                                .load(imageUri)
-                                .asBitmap()
-                                .into(pic1);
-                        pic1.setVisibility(View.VISIBLE);
-                    } else if (picNum == 1) {
-                        Glide.with(EditActivity.this)
-                                .load(imageUri)
-                                .asBitmap()
-                                .into(pic2);
-                        pic2.setVisibility(View.VISIBLE);
-                    } else if (picNum == 2) {
-                        Glide.with(EditActivity.this)
-                                .load(imageUri)
-                                .asBitmap()
-                                .into(pic3);
-                        pic3.setVisibility(View.VISIBLE);
-                    } else {
-                        Glide.with(EditActivity.this)
-                                .load(imageUri)
-                                .asBitmap()
-                                .into(pic4);
-                        pic4.setVisibility(View.VISIBLE);
-                    }
-                    picNum = picNum + 1;
-                    if (picNum == 4) {
-                        picBT.setClickable(false);
-                    }
-                }
                 break;
             case 2:
                 if (data != null) {
                     ArrayList<String> tempPics = data.getStringArrayListExtra(Constant.IMAGE_URI_LIST);
                     for (int i = 0; i < tempPics.size(); i++) {
                         uriList.set(i, tempPics.get(i));
-                        Glide.with(EditActivity.this)
-                                .load(uriList.get(i))
-                                .asBitmap()
-                                .into(editPicIVs[i]);
-                        if (i == 0){
-                            editPicIVs[1].setVisibility(View.INVISIBLE);
-                        }
-                        if (i == 2){
-                            editPicIVs[3].setVisibility(View.INVISIBLE);
-                        }
-                        editPicIVs[i].setVisibility(View.VISIBLE);
-                        deleteIVs[i].setVisibility(View.VISIBLE);
+                        insertBitmap(getRealFilePath(Uri.parse(uriList.get(i))));
                     }
                 }
+                break;
+            case 3:
+
                 break;
             default:
                 Log.d("default ", "");
                 break;
         }
+    }
+
+    /**
+     * 添加图片到富文本剪辑器
+     *
+     * @param imagePath
+     */
+    private void insertBitmap(String imagePath) {
+        contentET.insertImage(imagePath);
+    }
+
+
+    /**
+     * 根据Uri获取图片文件的绝对路径
+     */
+    public String getRealFilePath(final Uri uri) {
+        if (null == uri) {
+            return null;
+        }
+
+        final String scheme = uri.getScheme();
+        String data = null;
+        if (scheme == null) {
+            data = uri.getPath();
+        } else if (ContentResolver.SCHEME_FILE.equals(scheme)) {
+            data = uri.getPath();
+        } else if (ContentResolver.SCHEME_CONTENT.equals(scheme)) {
+            Cursor cursor = getContentResolver().query(uri,
+                    new String[] { MediaStore.Images.ImageColumns.DATA }, null, null, null);
+            if (null != cursor) {
+                if (cursor.moveToFirst()) {
+                    int index = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
+                    if (index > -1) {
+                        data = cursor.getString(index);
+                    }
+                }
+                cursor.close();
+            }
+        }
+        return data;
     }
 
     //从相册选取
@@ -532,7 +486,6 @@ public class EditActivity extends BaseActivity implements View.OnClickListener,
 
     private void save_edit() {
         ItemBean newitem = new ItemBean();
-        String content = contentET.getText().toString();
         GetTime gt = new GetTime();
         newitem.setTag1(tag1);
         newitem.setTag2(tag2);
@@ -552,7 +505,6 @@ public class EditActivity extends BaseActivity implements View.OnClickListener,
 
     private void save_first() {
         ItemBean newitem = new ItemBean();
-        String content = contentET.getText().toString();
         GetTime gt = new GetTime();
         newitem.setTag1(tag1);
         newitem.setTag2(tag2);

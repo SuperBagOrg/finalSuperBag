@@ -6,4 +6,6 @@
 
     <dimen name="card_insets">8dp</dimen>
     <dimen name="title">50dp</dimen>
+
+    <dimen name="edit_padding_top">0dp</dimen>
 </resources>
