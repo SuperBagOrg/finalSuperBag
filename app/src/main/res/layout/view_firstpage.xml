@@ -54,11 +54,11 @@
 
             </RelativeLayout>
 
-            <android.support.v7.widget.RecyclerView
+            <com.example.k.superbag2.view.MyRecyclerView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:clipToPadding="false"
-                android:id="@+id/first_page_rv"></android.support.v7.widget.RecyclerView>
+                android:id="@+id/first_page_rv"></com.example.k.superbag2.view.MyRecyclerView>
         </LinearLayout>
 
     </ScrollView>

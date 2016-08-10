@@ -28,10 +28,8 @@ public class ChooseLockActivity extends BaseActivity implements View.OnClickList
         super.onCreate(savedInstanceState);
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_choose_lock);
-
         initView();
     }
-
     private void initView(){
         noLockRL = (RelativeLayout)findViewById(R.id.no_lock_rl);
         noLockIV = (ImageView)findViewById(R.id.no_lock_right);
@@ -39,7 +37,6 @@ public class ChooseLockActivity extends BaseActivity implements View.OnClickList
         numLockIV = (ImageView)findViewById(R.id.num_lock_right);
         picLockRL = (RelativeLayout)findViewById(R.id.pic_lock_rl);
         picLockIV = (ImageView)findViewById(R.id.pic_lock_right);
-
         noLockRL.setOnClickListener(this);
         numLockRL.setOnClickListener(this);
         picLockRL.setOnClickListener(this);
@@ -68,7 +65,6 @@ public class ChooseLockActivity extends BaseActivity implements View.OnClickList
                 if (!SaveUtils.getHasSetLock()){
                     setNoLockRL();
                 }
-
                 finish();
                 break;
             case R.id.num_lock_rl:

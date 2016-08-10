@@ -3,9 +3,7 @@ package com.example.k.superbag2;
 import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
-import android.app.KeyguardManager;
 import android.app.PendingIntent;
-import android.app.Service;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -14,7 +12,6 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -25,20 +22,17 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
@@ -53,7 +47,6 @@ import com.example.k.superbag2.activity.BaseActivity;
 import com.example.k.superbag2.activity.EditActivity;
 import com.example.k.superbag2.activity.NumLockActivity;
 import com.example.k.superbag2.activity.PreviewActivity;
-import com.example.k.superbag2.adapter.FirstpageAdapter;
 import com.example.k.superbag2.adapter.FirstpageAdapter2;
 import com.example.k.superbag2.adapter.MainPagerAdapter;
 import com.example.k.superbag2.adapter.MemoRecyclerAdapter;
@@ -66,14 +59,11 @@ import com.example.k.superbag2.utils.GetTime;
 import com.example.k.superbag2.view.DividerItemDecoration;
 import com.example.k.superbag2.view.GridDividerDecoration;
 import com.example.k.superbag2.view.HidingScrollListener;
-import com.nineoldandroids.animation.Animator;
-import com.nineoldandroids.animation.ObjectAnimator;
+import com.example.k.superbag2.view.MyRecyclerView;
 import com.nineoldandroids.view.ViewHelper;
 
 import org.litepal.crud.DataSupport;
-import org.litepal.crud.Many2ManyAnalyzer;
 import org.litepal.tablemanager.Connector;
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -94,7 +84,7 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
     private TextView fPSummaryTV;
     private ListView fPListView;
     //----
-    private RecyclerView fpRecyclerView;
+    private MyRecyclerView fpRecyclerView;
 //    private FirstpageAdapter diaryAdapter;
     private FirstpageAdapter2 diaryAdapter;
     private List<ItemBean> itemBeanList;
@@ -214,7 +204,7 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
         fPHeadIconIV = (ImageView) diaryView.findViewById(R.id.top_head_icon);
         fPSummaryTV = (TextView) diaryView.findViewById(R.id.top_summary);
 //        fPListView = (ListView)diaryView.findViewById(R.id.firstPage_lv);
-        fpRecyclerView = (RecyclerView) diaryView.findViewById(R.id.first_page_rv);
+        fpRecyclerView = (MyRecyclerView) diaryView.findViewById(R.id.first_page_rv);
         fpRecyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
         //添加分割线
         fpRecyclerView.addItemDecoration(new DividerItemDecoration(MainActivity.this,DividerItemDecoration.VERTICAL_LIST));
@@ -334,6 +324,7 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
         Collections.reverse(itemBeanList);//反转列表
         diaryAdapter = new FirstpageAdapter2(MainActivity.this,itemBeanList);
         fpRecyclerView.setAdapter(diaryAdapter);
+        fpRecyclerView.setFocusable(false);
         fpRecyclerView.setItemAnimator(new DefaultItemAnimator());
         diaryAdapter.notifyDataSetChanged();
 
