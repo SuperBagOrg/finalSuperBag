@@ -327,7 +327,7 @@ public class ChoosePicActivity extends Activity implements ListImageDirPopupWind
                 break;
             case R.id.choose_pic_ok:
                 Intent intent = new Intent();
-                intent.putStringArrayListExtra(Constant.IMAGE_URI_LIST, (ArrayList<String>) mAdapter.getSelectedImage());
+                intent.putStringArrayListExtra(Constant.IMAGE_URI_LIST,mAdapter.getSelectedImage());
                 setResult(2, intent);
                 finish();
                 break;

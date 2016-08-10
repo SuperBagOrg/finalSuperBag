@@ -20,7 +20,7 @@ public class MyAdapter extends CommonAdapter<String> {
     /**
      * 用户选择的图片，存储为图片的完整路径
      */
-    public static List<String> mSelectedImage = new ArrayList<>();
+    public static List<String> mSelectedImage;
 
     /**
      * 文件夹路径
@@ -33,6 +33,7 @@ public class MyAdapter extends CommonAdapter<String> {
         super(context, mDatas, itemLayoutId);
         this.mDirPath = dirPath;
         this.context = context;
+        mSelectedImage = new ArrayList<>();
     }
 
     @Override
@@ -85,7 +86,7 @@ public class MyAdapter extends CommonAdapter<String> {
 
     }
 
-    public List<String> getSelectedImage() {
-        return mSelectedImage;
+    public ArrayList<String> getSelectedImage() {
+        return (ArrayList<String>) mSelectedImage;
     }
 }
