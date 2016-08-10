@@ -171,57 +171,106 @@
             android:hint="写点什么吧..."/>
     </LinearLayout>
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <ImageView
-            android:layout_width="175dp"
-            android:layout_height="120dp"
-            android:visibility="gone"
-            android:layout_toLeftOf="@+id/v1"
-            android:scaleType="centerCrop"
-            android:id="@+id/edit_pic1"
-            android:padding="1dp"/>
-        <View
-            android:layout_width="2dp"
-            android:layout_height="2dp"
-            android:id="@+id/v1"
-            android:visibility="invisible"
-            android:layout_centerHorizontal="true"></View>
-        <ImageView
-            android:layout_width="175dp"
-            android:layout_height="120dp"
-            android:padding="1dp"
-            android:visibility="gone"
-            android:layout_toRightOf="@+id/v1"
-            android:scaleType="centerCrop"
-            android:id="@+id/edit_pic2" />
-    </RelativeLayout>
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="120dp"
+                android:scaleType="centerCrop"
+                android:id="@+id/edit_pic1"
+                android:visibility="gone"
+                android:padding="1dp"/>
+            <ImageView
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:src="@drawable/delete_white"
+                android:visibility="gone"
+                android:id="@+id/edit_delete1"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"/>
+        </RelativeLayout>
 
-    <RelativeLayout
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="120dp"
+                android:padding="1dp"
+                android:visibility="gone"
+                android:scaleType="centerCrop"
+                android:id="@+id/edit_pic2" />
+            <ImageView
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:src="@drawable/delete_white"
+                android:visibility="gone"
+                android:id="@+id/edit_delete2"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"/>
+        </RelativeLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <ImageView
-            android:layout_width="175dp"
-            android:layout_height="120dp"
-            android:layout_toLeftOf="@+id/v2"
-            android:scaleType="centerCrop"
-            android:visibility="gone"
-            android:id="@+id/edit_pic3"
-            android:padding="1dp"/>
-        <View
-            android:layout_width="2dp"
-            android:layout_height="2dp"
-            android:id="@+id/v2"
-            android:visibility="invisible"
-            android:layout_centerHorizontal="true"></View>
-        <ImageView
-            android:layout_width="175dp"
-            android:layout_height="120dp"
-            android:padding="1dp"
-            android:visibility="gone"
-            android:layout_toRightOf="@+id/v2"
-            android:scaleType="centerCrop"
-            android:id="@+id/edit_pic4" />
-    </RelativeLayout>
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="120dp"
+                android:padding="1dp"
+                android:visibility="gone"
+                android:scaleType="centerCrop"
+                android:id="@+id/edit_pic3" />
+            <ImageView
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:src="@drawable/delete_white"
+                android:visibility="gone"
+                android:id="@+id/edit_delete3"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"/>
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="120dp"
+                android:padding="1dp"
+                android:visibility="gone"
+                android:scaleType="centerCrop"
+                android:id="@+id/edit_pic4" />
+            <ImageView
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:src="@drawable/delete_white"
+                android:visibility="gone"
+                android:id="@+id/edit_delete4"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"/>
+        </RelativeLayout>
+    </LinearLayout>
+
 </LinearLayout>

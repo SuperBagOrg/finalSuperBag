@@ -92,19 +92,20 @@ public class LockView extends View {
         int width = getWidth();
         int height = getHeight();
         // 九宫格点的偏移量
-        int offSet = Math.abs(width - height) / 2;
+        int offSet = Math.abs(width - height) / 4;
+//        int offSet = 0;
         // x、y轴上的偏移量
         int offSetX = 0, offSetY = 0;
         int pointItemWidth = 0; // 每个点所占用方格的宽度
         if (width > height){ // 横屏的时候
             offSetX = offSet;
             offSetY = 0;
-            pointItemWidth = height / 4;
+            pointItemWidth = 7*height / 24;
         }
         if (width < height){ // 竖屏的时候
             offSetX = 0;
             offSetY = offSet;
-            pointItemWidth = width / 4;
+            pointItemWidth = width / 6;
         }
 
         // 初始化九个点

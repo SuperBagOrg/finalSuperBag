@@ -23,4 +23,7 @@
 
     <color name="memo_pressed">#a4998e</color>
     <color name="memo_normal">#ece5db</color>
+
+    <color name="dark_white">#ecf0f1</color>
+    <color name="test">#949494</color>
 </resources>

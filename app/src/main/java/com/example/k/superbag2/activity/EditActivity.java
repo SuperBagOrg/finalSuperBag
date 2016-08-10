@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -58,6 +59,7 @@ public class EditActivity extends BaseActivity implements View.OnClickListener,
     private CheckBox happyCK, sweetCK, unforgettableCK, calmCK, angryCk, aggrievedCK, sadCK, noFeelingsCK;
     private AlertDialog feelingsDialog;
     private ImageView pic1, pic2, pic3, pic4;
+    private ImageView delete1,delete2,delete3,delete4;
 
     private boolean hasSaved = false;
     private Uri imageUri;
@@ -88,6 +90,7 @@ public class EditActivity extends BaseActivity implements View.OnClickListener,
 
     //用于选择图片后显示
     private ImageView[] editPicIVs = new ImageView[4];
+    private ImageView[] deleteIVs = new ImageView[4];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -121,6 +124,10 @@ public class EditActivity extends BaseActivity implements View.OnClickListener,
         pic2 = (ImageView) findViewById(R.id.edit_pic2);
         pic3 = (ImageView) findViewById(R.id.edit_pic3);
         pic4 = (ImageView) findViewById(R.id.edit_pic4);
+        delete1 = (ImageView) findViewById(R.id.edit_delete1);
+        delete2 = (ImageView) findViewById(R.id.edit_delete2);
+        delete3 = (ImageView) findViewById(R.id.edit_delete3);
+        delete4 = (ImageView) findViewById(R.id.edit_delete4);
 
         //设置头像
         Bitmap head = GetImageUtils.getBMFromUri(this, Constant.HEAD_ICON_URI);
@@ -128,13 +135,6 @@ public class EditActivity extends BaseActivity implements View.OnClickListener,
             headIcon.setImageBitmap(head);
         }
 
-        View v = LayoutInflater.from(this).inflate(R.layout.popup_pic, null);
-        popupPic1 = (ImageView) v.findViewById(R.id.popup_pic1);
-        popupPic2 = (ImageView) v.findViewById(R.id.popup_pic2);
-        popupPic3 = (ImageView) v.findViewById(R.id.popup_pic3);
-        popupPic4 = (ImageView) v.findViewById(R.id.popup_pic4);
-        popupViewList = new ArrayList<>();
-        popupViewList.add(v);
     }
 
     private void initListener() {
@@ -144,12 +144,12 @@ public class EditActivity extends BaseActivity implements View.OnClickListener,
         weatherBT.setOnClickListener(this);
         backLL.setOnClickListener(this);
         saveLL.setOnClickListener(this);
-        popupPic1.setOnClickListener(this);
-        popupPic2.setOnClickListener(this);
-        popupPic3.setOnClickListener(this);
-        popupPic4.setOnClickListener(this);
         addTagBT.setOnClickListener(this);
         feelingsBT.setOnClickListener(this);
+        delete1.setOnClickListener(this);
+        delete2.setOnClickListener(this);
+        delete3.setOnClickListener(this);
+        delete4.setOnClickListener(this);
     }
 
     private void initData() {
@@ -166,8 +166,11 @@ public class EditActivity extends BaseActivity implements View.OnClickListener,
         editPicIVs[2] = pic3;
         editPicIVs[3] = pic4;
 
+        deleteIVs[0] = delete1;
+        deleteIVs[1] = delete2;
+        deleteIVs[2] = delete3;
+        deleteIVs[3] = delete4;
         //如果是从ListView点击进入活动，则初始化数据;
-        //如何让editTExt无法点击编辑，还有问题
         Intent intent = getIntent();
         lineNum = intent.getIntExtra(Constant.EDIT_DONE, -1);
         Log.d("edit act", lineNum + "");
@@ -188,6 +191,28 @@ public class EditActivity extends BaseActivity implements View.OnClickListener,
                 tag3TV.setVisibility(View.VISIBLE);
                 tag3TV.setText(item.getTag3());
             }
+
+            uriList = item.getPicList();
+
+            for (int i = 0; i < 4 ;i++){
+                deleteIVs[i].setVisibility(View.GONE);
+            }
+
+            for (int i = 0; i <= item.getPicNum(); i++) {
+                Glide.with(EditActivity.this)
+                        .load(item.getPicList().get(i))
+                        .asBitmap()
+                        .into(editPicIVs[i]);
+                if (i == 0){
+                    editPicIVs[1].setVisibility(View.INVISIBLE);
+                }
+                if (i == 2){
+                    editPicIVs[3].setVisibility(View.INVISIBLE);
+                }
+                editPicIVs[i].setVisibility(View.VISIBLE);
+                deleteIVs[i].setVisibility(View.VISIBLE);
+            }
+
         }
     }
 
@@ -242,7 +267,25 @@ public class EditActivity extends BaseActivity implements View.OnClickListener,
             case R.id.edit_feelings_bt:
                 chooseFeelings();
                 break;
+            case R.id.edit_delete1:
+                deletePic(1);
+                break;
+            case R.id.edit_delete2:
+                deletePic(2);
+                break;
+            case R.id.edit_delete3:
+                deletePic(3);
+                break;
+            case R.id.edit_delete4:
+                deletePic(4);
+                break;
         }
+    }
+
+    private void deletePic(int index){
+        uriList.set(index-1,"");
+        editPicIVs[index-1].setVisibility(View.INVISIBLE);
+        deleteIVs[index-1].setVisibility(View.INVISIBLE);
     }
 
     @Override
@@ -463,7 +506,14 @@ public class EditActivity extends BaseActivity implements View.OnClickListener,
                                 .load(uriList.get(i))
                                 .asBitmap()
                                 .into(editPicIVs[i]);
+                        if (i == 0){
+                            editPicIVs[1].setVisibility(View.INVISIBLE);
+                        }
+                        if (i == 2){
+                            editPicIVs[3].setVisibility(View.INVISIBLE);
+                        }
                         editPicIVs[i].setVisibility(View.VISIBLE);
+                        deleteIVs[i].setVisibility(View.VISIBLE);
                     }
                 }
                 break;

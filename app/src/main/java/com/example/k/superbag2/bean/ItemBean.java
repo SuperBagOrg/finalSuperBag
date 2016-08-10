@@ -24,18 +24,6 @@ public class ItemBean extends DataSupport{
     private String pic1 = "",pic2 = "",pic3 = "",pic4 = "";
     private List<String> picList;
 
-    public ItemBean(String tag1, String tag2, String tag3, String content,
-                    int importance, String weather,
-                    String feelings){
-        this.tag1 = tag1;
-        this.tag2 = tag2;
-        this.tag3 = tag3;
-        this.content = content;
-        this.importance = importance;
-        this.weather = weather;
-        this.feelings = feelings;
-    }
-
     public ItemBean(){}
 
     public String getContent() {

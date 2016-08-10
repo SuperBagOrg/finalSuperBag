@@ -29,6 +29,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.WindowManager;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.AdapterView;
@@ -98,9 +99,7 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
     private FirstpageAdapter2 diaryAdapter;
     private List<ItemBean> itemBeanList;
     View diaryView;
-    //用于删除时用
-    private int whichToDel;//0表示日记，1表示备忘
-    private int deleteDiaryIndex, deleteMemoIndex;
+
     //memo
     private RecyclerView recyclerView;
     View memoView;
@@ -516,6 +515,7 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
      * @param index 表示在列表中的位置
      */
     private void addMemo(final int temp, final MemoItem item, final int index) {
+
         final AlertDialog addMemoDialog = new AlertDialog.Builder(MainActivity.this).create();
         View dialogView = LayoutInflater.from(MainActivity.this).inflate(R.layout.add_memo, null);
         addMemoDialog.setView(dialogView);

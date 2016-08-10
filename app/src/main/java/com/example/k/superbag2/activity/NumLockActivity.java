@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -103,6 +104,7 @@ public class NumLockActivity extends AppCompatActivity {
     }
 
     private void initView(){
+        supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_num_lock);
         sb = new StringBuilder();
         textView = (TextView) findViewById(R.id.num_lock_tv);
@@ -117,6 +119,7 @@ public class NumLockActivity extends AppCompatActivity {
                         sb.append(((Button) view).getText());
                         tempview = findViewById(dots[count]);
                         tempview.setBackgroundResource(R.drawable.num_lock_dot);
+                        deleteBT.setVisibility(View.VISIBLE);
                         count++;
                     }
                     if (count==6){
@@ -269,6 +272,7 @@ public class NumLockActivity extends AppCompatActivity {
                     tempview = findViewById(dots[j]);
                     tempview.setBackgroundResource(R.drawable.num_unlock_dot);
                 }
+                deleteBT.setVisibility(View.INVISIBLE);
             }
         });
     }
