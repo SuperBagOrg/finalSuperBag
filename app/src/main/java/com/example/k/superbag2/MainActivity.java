@@ -168,6 +168,7 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
                 if (viewPager.getCurrentItem() == 0) {
                     Intent intent = new Intent(MainActivity.this, EditActivity.class);
                     startActivity(intent);
+                    overridePendingTransition(android.R.anim.slide_in_left,android.R.anim.slide_out_right);
                 } else {
                     addMemo(0, null, -1);
                 }

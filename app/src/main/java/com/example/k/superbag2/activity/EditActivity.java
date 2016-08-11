@@ -57,7 +57,6 @@ public class EditActivity extends BaseActivity implements View.OnClickListener,
     private ImageView headIcon;
     private TextView oldTime;
     private LinearLayout backLL, saveLL;
-    private ImageView popupPic1, popupPic2, popupPic3, popupPic4;
     private Button addTagBT;
     private TextView tag1TV, tag2TV, tag3TV;
     private CheckBox sunnyCK, cloudyCk, rainyCK, snowyCk, foggyCK, hazeCK;
@@ -67,11 +66,9 @@ public class EditActivity extends BaseActivity implements View.OnClickListener,
     private RichTextEditor contentET;
 
     private boolean hasSaved = false;
-    private Uri imageUri;
-    private List<View> popupViewList;
     private String tag1 = "", tag2 = "", tag3 = "";
     private String weather = "晴", feelings = "开心";
-    private int picNum;
+    private List<Integer> picIndex;
 
     private List<String> uriList;
 
@@ -90,7 +87,7 @@ public class EditActivity extends BaseActivity implements View.OnClickListener,
     private List<CheckBox> feelingsCKList;
     private int feelingsIndex = 0;
     private String oldtime;
-    private int lineNum;
+    private int lineNum = 0;
     private int record_num;
     private String content;
 
@@ -143,16 +140,15 @@ public class EditActivity extends BaseActivity implements View.OnClickListener,
     }
 
     private void initData() {
-        //表示已选取的图片数量
-        picNum = 0;
         GetTime gt = new GetTime();
         oldtime = gt.getYear() + "-" + gt.getMonth() + "-" + gt.getDay();
         oldTime.setText(oldtime);
 
         uriList = new ArrayList<>(Arrays.asList("", "", "", ""));
-
+        picIndex = new ArrayList<>(Arrays.asList(-1,-1,-1,-1));
         //如果是从ListView点击进入活动，则初始化数据;
         Intent intent = getIntent();
+        //若为-1，表示新建
         lineNum = intent.getIntExtra(Constant.EDIT_DONE, -1);
         Log.d("edit act", lineNum + "");
         if (lineNum != -1) {//从列表点击进入
@@ -204,7 +200,6 @@ public class EditActivity extends BaseActivity implements View.OnClickListener,
                 break;
             case R.id.edit_save_ll:
             case R.id.edit_save:
-//                String content = contentET.getText().toString();
                 List<EditData> editDatas = contentET.getData();
                 StringBuilder sb = new StringBuilder();
                 int temp = 0;
@@ -213,6 +208,7 @@ public class EditActivity extends BaseActivity implements View.OnClickListener,
                     sb.append(ed.getInputStr());
                     if (!ed.getImagePath().equals("")) {
                         uriList.set(temp, ed.getImagePath());
+                        picIndex.add(temp,i);
                         temp++;
                     }
                 }
@@ -221,8 +217,9 @@ public class EditActivity extends BaseActivity implements View.OnClickListener,
                     Toast.makeText(EditActivity.this, "内容不能为空呦", Toast.LENGTH_SHORT).show();
                 } else {
                     //执行保存操作
-                    saveData();
+                    saveData(lineNum);
                     finish();
+                    overridePendingTransition(android.R.anim.slide_in_left,android.R.anim.slide_out_right);
                 }
                 break;
             case R.id.edit_pic_bt:
@@ -403,37 +400,18 @@ public class EditActivity extends BaseActivity implements View.OnClickListener,
         builder.show();
     }
 
-    //保存数据
-    private void saveData() {
-        if (lineNum != -1) {
-            save_edit();
-        } else {
-            save_first();
-        }
-    }
-
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (requestCode) {
-            case 1:
-
-                break;
-            case 2:
-                if (data != null) {
-                    ArrayList<String> tempPics = data.getStringArrayListExtra(Constant.IMAGE_URI_LIST);
-                    for (int i = 0; i < tempPics.size(); i++) {
-                        uriList.set(i, tempPics.get(i));
-                        insertBitmap(getRealFilePath(Uri.parse(uriList.get(i))));
-                    }
+        if (resultCode == RESULT_OK) {
+            if (data != null) {
+                ArrayList<String> tempPics = data.getStringArrayListExtra(Constant.IMAGE_URI_LIST);
+                for (int i = 0; i < tempPics.size(); i++) {
+                    uriList.set(i, tempPics.get(i));
+                    insertBitmap(getRealFilePath(Uri.parse(uriList.get(i))));
                 }
-                break;
-            case 3:
-
-                break;
-            default:
-                Log.d("default ", "");
-                break;
+            }
+        } else {
+            Log.d("未获取到图片","");
         }
     }
 
@@ -484,42 +462,36 @@ public class EditActivity extends BaseActivity implements View.OnClickListener,
         startActivityForResult(intent, 1);
     }
 
-    private void save_edit() {
-        ItemBean newitem = new ItemBean();
+    /**
+     * 保存数据
+     * @param whichToSave -1 表示保存
+     *                    其他表更新
+     */
+    private void saveData(int whichToSave){
+        ItemBean newItem = new ItemBean();
         GetTime gt = new GetTime();
-        newitem.setTag1(tag1);
-        newitem.setTag2(tag2);
-        newitem.setTag3(tag3);
-        newitem.setContent(content);
-        newitem.setDayTime(gt.getSpecificTime());
-        newitem.setPic1(uriList.get(0));
-        newitem.setPic2(uriList.get(1));
-        newitem.setPic3(uriList.get(2));
-        newitem.setPic4(uriList.get(3));
-        newitem.setFeelings(feelings);
-        newitem.setImportance(1);
-        newitem.setWeather(weather);
-        newitem.update(record_num - lineNum);
-        Log.d("已执行修改操作", "");
-    }
-
-    private void save_first() {
-        ItemBean newitem = new ItemBean();
-        GetTime gt = new GetTime();
-        newitem.setTag1(tag1);
-        newitem.setTag2(tag2);
-        newitem.setTag3(tag3);
-        newitem.setContent(content);
-        newitem.setDayTime(gt.getSpecificTime());
-
-        newitem.setPic1(uriList.get(0));
-        newitem.setPic2(uriList.get(1));
-        newitem.setPic3(uriList.get(2));
-        newitem.setPic4(uriList.get(3));
-        newitem.setFeelings(feelings);
-        newitem.setImportance(1);
-        newitem.setWeather(weather);
-        newitem.save();
-        Log.d("已执行保存操作", "");
+        newItem.setTag1(tag1);
+        newItem.setTag2(tag2);
+        newItem.setTag3(tag3);
+        newItem.setContent(content);
+        newItem.setDayTime(gt.getSpecificTime());
+        newItem.setPic1(uriList.get(0));
+        newItem.setPic2(uriList.get(1));
+        newItem.setPic3(uriList.get(2));
+        newItem.setPic4(uriList.get(3));
+        newItem.setFeelings(feelings);
+        newItem.setImportance(1);
+        newItem.setWeather(weather);
+        newItem.setPic1Index(picIndex.get(0));
+        newItem.setPic2Index(picIndex.get(1));
+        newItem.setPic3Index(picIndex.get(2));
+        newItem.setPic4Index(picIndex.get(3));
+        if (whichToSave == -1){
+            newItem.save();
+            Log.d("新建保存","");
+        } else {
+            newItem.update(record_num - lineNum);
+            Log.d("更新操作","");
+        }
     }
 }

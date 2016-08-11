@@ -20,11 +20,12 @@ public class ItemBean extends DataSupport{
     private String weather;
     private String feelings;
     private int importance;
+    //新增，为了能再次编辑，所以要保存位置
+    private int pic1Index = -1,pic2Index = -1,pic3Index = -1,pic4Index = -1;
+    private List<Integer> picIndex;
 
     private String pic1 = "",pic2 = "",pic3 = "",pic4 = "";
     private List<String> picList;
-
-    public ItemBean(){}
 
     public String getContent() {
         return content;
@@ -157,5 +158,46 @@ public class ItemBean extends DataSupport{
 
     public String getHourMIn(){
         return dayTime.substring(11);
+    }
+
+    public List<Integer> getPicIndex() {
+        picIndex = new ArrayList<>(Arrays.asList(pic1Index,pic2Index,pic3Index,pic4Index));
+        return picIndex;
+    }
+
+    public void setPicIndex(List<Integer> picIndex) {
+        this.picIndex = picIndex;
+    }
+
+    public int getPic1Index() {
+        return pic1Index;
+    }
+
+    public void setPic1Index(int pic1Index) {
+        this.pic1Index = pic1Index;
+    }
+
+    public int getPic2Index() {
+        return pic2Index;
+    }
+
+    public void setPic2Index(int pic2Index) {
+        this.pic2Index = pic2Index;
+    }
+
+    public int getPic3Index() {
+        return pic3Index;
+    }
+
+    public void setPic3Index(int pic3Index) {
+        this.pic3Index = pic3Index;
+    }
+
+    public int getPic4Index() {
+        return pic4Index;
+    }
+
+    public void setPic4Index(int pic4Index) {
+        this.pic4Index = pic4Index;
     }
 }

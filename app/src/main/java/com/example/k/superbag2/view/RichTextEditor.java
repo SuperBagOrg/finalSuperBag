@@ -302,6 +302,17 @@ public class RichTextEditor extends ScrollView {
 		return BitmapFactory.decodeFile(filePath, options);
 	}
 
+	//---------
+	public void setTextAndImage(List<EditData> dataList){
+		for (int i = 0; i < dataList.size(); i++){
+			EditData data = dataList.get(i);
+			addEditTextAtIndex(i,data.getInputStr());
+			if (!data.getImagePath().equals("")){
+				addImageViewAtIndex(i,data.getBitmap(),data.getImagePath());
+			}
+		}
+	}
+
 	/**
 	 * 初始化transition动画
 	 */
