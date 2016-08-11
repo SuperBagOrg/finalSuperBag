@@ -28,7 +28,31 @@ public class ItemBean extends DataSupport{
     private List<String> picList;
 
     public String getContent() {
-        return content;
+        String[] con = content.split("/-/");
+        String str = "";
+        for (int i = 0; i < con.length; i++){
+            str += con[i];
+        }
+        return str;
+    }
+
+    public List<EditData> getListData(){
+        List<EditData> editDatas = new ArrayList<>();
+        String[] con = content.split("/-/");
+
+        for (int i = 0; i < 9; i++){
+            EditData editData = new EditData();
+            int temp = 0;
+            if (i != getPic1Index() && i != getPic2Index() && i != getPic3Index()
+                    && i != getPic4Index() && i < con.length){
+                editData.setInputStr(con[i]);
+            } else {
+                editData.setImagePath(getPicList().get(temp));
+                temp++;
+            }
+            editDatas.add(editData);
+        }
+        return editDatas;
     }
 
     public void setContent(String content) {
@@ -200,4 +224,9 @@ public class ItemBean extends DataSupport{
     public void setPic4Index(int pic4Index) {
         this.pic4Index = pic4Index;
     }
+
+    public String[] getCon() {
+        return content.split("/-/");
+    }
+
 }

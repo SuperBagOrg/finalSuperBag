@@ -1,15 +1,11 @@
 package com.example.k.superbag2.activity;
 
 import android.app.AlertDialog;
-import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,14 +17,10 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.PopupWindow;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.example.k.superbag2.R;
-import com.example.k.superbag2.bean.DataImageView;
 import com.example.k.superbag2.bean.EditData;
 import com.example.k.superbag2.bean.ItemBean;
 import com.example.k.superbag2.others.Constant;
@@ -53,7 +45,7 @@ public class EditActivity extends BaseActivity implements View.OnClickListener,
         CheckBox.OnCheckedChangeListener {
 
     private Button backBT, saveBT, picBT, weatherBT, feelingsBT;
-//    private EditText contentET;
+    //    private EditText contentET;
     private ImageView headIcon;
     private TextView oldTime;
     private LinearLayout backLL, saveLL;
@@ -145,7 +137,7 @@ public class EditActivity extends BaseActivity implements View.OnClickListener,
         oldTime.setText(oldtime);
 
         uriList = new ArrayList<>(Arrays.asList("", "", "", ""));
-        picIndex = new ArrayList<>(Arrays.asList(-1,-1,-1,-1));
+        picIndex = new ArrayList<>(Arrays.asList(-1, -1, -1, -1));
         //如果是从ListView点击进入活动，则初始化数据;
         Intent intent = getIntent();
         //若为-1，表示新建
@@ -203,12 +195,13 @@ public class EditActivity extends BaseActivity implements View.OnClickListener,
                 List<EditData> editDatas = contentET.getData();
                 StringBuilder sb = new StringBuilder();
                 int temp = 0;
-                for(int i = 0; i < editDatas.size(); i++){
+                for (int i = 0; i < editDatas.size(); i++) {
                     EditData ed = editDatas.get(i);
                     sb.append(ed.getInputStr());
                     if (!ed.getImagePath().equals("")) {
                         uriList.set(temp, ed.getImagePath());
-                        picIndex.add(temp,i);
+                        picIndex.add(temp, i);
+                        sb.append("/-/");
                         temp++;
                     }
                 }
@@ -219,7 +212,7 @@ public class EditActivity extends BaseActivity implements View.OnClickListener,
                     //执行保存操作
                     saveData(lineNum);
                     finish();
-                    overridePendingTransition(android.R.anim.slide_in_left,android.R.anim.slide_out_right);
+                    overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
                 }
                 break;
             case R.id.edit_pic_bt:
@@ -402,17 +395,18 @@ public class EditActivity extends BaseActivity implements View.OnClickListener,
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == RESULT_OK) {
-            if (data != null) {
-                ArrayList<String> tempPics = data.getStringArrayListExtra(Constant.IMAGE_URI_LIST);
-                for (int i = 0; i < tempPics.size(); i++) {
-                    uriList.set(i, tempPics.get(i));
-                    insertBitmap(getRealFilePath(Uri.parse(uriList.get(i))));
+        switch (requestCode) {
+            case 2:
+                if (data != null) {
+                    ArrayList<String> tempPics = data.getStringArrayListExtra(Constant.IMAGE_URI_LIST);
+                    for (int i = 0; i < tempPics.size(); i++) {
+                        uriList.set(i, tempPics.get(i));
+                        insertBitmap(GetImageUtils.getRealFilePath(this, Uri.parse(uriList.get(i))));
+                    }
                 }
-            }
-        } else {
-            Log.d("未获取到图片","");
+                break;
         }
+
     }
 
     /**
@@ -425,36 +419,6 @@ public class EditActivity extends BaseActivity implements View.OnClickListener,
     }
 
 
-    /**
-     * 根据Uri获取图片文件的绝对路径
-     */
-    public String getRealFilePath(final Uri uri) {
-        if (null == uri) {
-            return null;
-        }
-
-        final String scheme = uri.getScheme();
-        String data = null;
-        if (scheme == null) {
-            data = uri.getPath();
-        } else if (ContentResolver.SCHEME_FILE.equals(scheme)) {
-            data = uri.getPath();
-        } else if (ContentResolver.SCHEME_CONTENT.equals(scheme)) {
-            Cursor cursor = getContentResolver().query(uri,
-                    new String[] { MediaStore.Images.ImageColumns.DATA }, null, null, null);
-            if (null != cursor) {
-                if (cursor.moveToFirst()) {
-                    int index = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
-                    if (index > -1) {
-                        data = cursor.getString(index);
-                    }
-                }
-                cursor.close();
-            }
-        }
-        return data;
-    }
-
     //从相册选取
     private void selectFromAlbum() {
         Intent intent = new Intent("android.intent.action.GET_CONTENT");
@@ -464,10 +428,11 @@ public class EditActivity extends BaseActivity implements View.OnClickListener,
 
     /**
      * 保存数据
+     *
      * @param whichToSave -1 表示保存
      *                    其他表更新
      */
-    private void saveData(int whichToSave){
+    private void saveData(int whichToSave) {
         ItemBean newItem = new ItemBean();
         GetTime gt = new GetTime();
         newItem.setTag1(tag1);
@@ -486,12 +451,12 @@ public class EditActivity extends BaseActivity implements View.OnClickListener,
         newItem.setPic2Index(picIndex.get(1));
         newItem.setPic3Index(picIndex.get(2));
         newItem.setPic4Index(picIndex.get(3));
-        if (whichToSave == -1){
+        if (whichToSave == -1) {
             newItem.save();
-            Log.d("新建保存","");
+            Log.d("新建保存", "");
         } else {
             newItem.update(record_num - lineNum);
-            Log.d("更新操作","");
+            Log.d("更新操作", "");
         }
     }
 }

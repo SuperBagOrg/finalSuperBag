@@ -24,6 +24,7 @@ import com.example.k.superbag2.others.Constant;
 import com.example.k.superbag2.utils.DialogUtils;
 import com.example.k.superbag2.utils.GetImageUtils;
 import com.example.k.superbag2.view.LookPicDialog;
+import com.example.k.superbag2.view.RichTextEditor;
 
 import org.litepal.crud.DataSupport;
 
@@ -37,10 +38,13 @@ public class PreviewActivity extends BaseActivity implements View.OnClickListene
     private Button preBack,preEdit;
     private LinearLayout preBackLL,preEditLL;
     private ImageView preHeadIcon;
-    private TextView preMonth,preWeather,preFeelings,preTag1,preTag2,preTag3,preContent,preMin;
+    private TextView preMonth,preWeather,preFeelings,preTag1,preTag2,preTag3,preMin;
     private ImageView prePic1,prePic2,prePic3,prePic4;
+    private TextView preContent;
+//    private RichTextEditor preContent;
 
     private ItemBean item;
+    public static int width;
     private int lineNum = 0;
 
     @Override
@@ -52,6 +56,8 @@ public class PreviewActivity extends BaseActivity implements View.OnClickListene
         initView();
         setListener();
         initData();
+
+        width = getWindowManager().getDefaultDisplay().getWidth();
     }
 
     private void initView(){
@@ -67,6 +73,7 @@ public class PreviewActivity extends BaseActivity implements View.OnClickListene
         preTag2 = (TextView)findViewById(R.id.pre_tag2);
         preTag3 = (TextView)findViewById(R.id.pre_tag3);
         preContent = (TextView)findViewById(R.id.pre_content);
+//        preContent = (RichTextEditor)findViewById(R.id.pre_content);
         preMin = (TextView)findViewById(R.id.pre_min);
         prePic1 = (ImageView)findViewById(R.id.pre_iv1);
         prePic2 = (ImageView) findViewById(R.id.pre_iv2);
@@ -90,7 +97,6 @@ public class PreviewActivity extends BaseActivity implements View.OnClickListene
         prePic2.setOnClickListener(this);
         prePic3.setOnClickListener(this);
         prePic4.setOnClickListener(this);
-
     }
 
     @Override
@@ -147,6 +153,17 @@ public class PreviewActivity extends BaseActivity implements View.OnClickListene
             if (item.getContent() != null) {
                 preContent.setText(item.getContent());
             }
+//            preContent.setTextAndImage(item.getListData());
+            /*String[] content = item.getCon();
+            int temp = 0;
+            for (int i = 0; i < content.length; i++){
+                preContent.addEditTextAtIndex(i,content[i]);
+                if (!item.getPicList().get(temp).equals("")){
+                    preContent.insertImage(item.getPicList().get(temp));
+                    temp++;
+                }
+            }*/
+
             if (!item.getTag1().equals("")){
                 preTag1.setVisibility(View.VISIBLE);
                 preTag1.setText(item.getTag1());
