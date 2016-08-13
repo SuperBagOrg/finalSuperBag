@@ -7,7 +7,6 @@ import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
@@ -47,6 +46,8 @@ import com.example.k.superbag2.activity.BaseActivity;
 import com.example.k.superbag2.activity.EditActivity;
 import com.example.k.superbag2.activity.NumLockActivity;
 import com.example.k.superbag2.activity.PreviewActivity;
+import com.example.k.superbag2.activity.RegisterActivity;
+import com.example.k.superbag2.activity.SplashActivity;
 import com.example.k.superbag2.adapter.FirstpageAdapter2;
 import com.example.k.superbag2.adapter.MainPagerAdapter;
 import com.example.k.superbag2.adapter.MemoRecyclerAdapter;
@@ -63,7 +64,6 @@ import com.example.k.superbag2.view.MyRecyclerView;
 import com.nineoldandroids.view.ViewHelper;
 
 import org.litepal.crud.DataSupport;
-import org.litepal.tablemanager.Connector;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -174,7 +174,7 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
                 }
                 break;
             case R.id.action_search:
-                startActivity(new Intent(MainActivity.this, NumLockActivity.class));
+                startActivity(new Intent(MainActivity.this, SplashActivity.class));
                 break;
         }
         return true;
@@ -242,7 +242,7 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
                 Intent intent = new Intent(MainActivity.this, PreviewActivity.class);
                 intent.putExtra(Constant.LINE_INDEX, index);
                 startActivity(intent);
-            }
+               }
         });
 
         fPListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
@@ -331,6 +331,7 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
                 startActivity(intent);
             }
 
+
             @Override
             public void onItemLongClick(View view, final int position) {
                 //删除日记
@@ -408,8 +409,11 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
                                 DataSupport.delete(MemoItem.class, DataSupport.count(MemoItem.class) - position);
                                 Toast.makeText(MainActivity.this, "删除成功", Toast.LENGTH_SHORT).show();
                             }
-                        })
-                        .show();
+                        });
+                AlertDialog dialog = builder.create();
+                WindowManager.LayoutParams params = dialog.getWindow().getAttributes();
+                params.windowAnimations = R.style.fade_in_out;
+                dialog.show();
             }
         });
 
@@ -489,8 +493,8 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
                 preMemoDialog.dismiss();
             }
         });
+        DialogUtils.setDialog(MainActivity.this, preMemoDialog, 4, 5,R.style.fade_in_out);
         preMemoDialog.show();
-        DialogUtils.setDialog(MainActivity.this, preMemoDialog, 4, 5);
     }
 
     /**
@@ -604,6 +608,7 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
         });
         addMemoDialog.show();
     }
+
 
     //设置提醒时间
     private String setTime() {
@@ -779,6 +784,24 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
     @Override
     public void onResume() {
         super.onResume();
-//        setMemoView();
     }
+
+    //毫秒
+    private long firstClickTime = 0;
+    @Override
+    public void onBackPressed() {
+        if (firstClickTime < 0){
+            Toast.makeText(MainActivity.this,"再按一次退出",Toast.LENGTH_SHORT).show();
+            firstClickTime = System.currentTimeMillis();
+        } else {
+            long secondClickTime = System.currentTimeMillis();
+            if (secondClickTime - firstClickTime < 1000){
+                finish();
+            } else {
+                firstClickTime = secondClickTime;
+                Toast.makeText(MainActivity.this,"再按一次退出",Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
 }

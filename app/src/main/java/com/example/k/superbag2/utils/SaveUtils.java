@@ -12,15 +12,15 @@ import com.example.k.superbag2.MyApplication;
 public class SaveUtils {
     public static String getPassword() {
         SharedPreferences sp =
-                MyApplication.getContext().getSharedPreferences("password",Context.MODE_PRIVATE);
+                MyApplication.getContext().getSharedPreferences("lock_password",Context.MODE_PRIVATE);
         Log.d("shared","get"+sp.getString("password",""));
-        return sp.getString("password","");
+        return sp.getString("lock_password","");
     }
     public static void setPassword(String pass) {
         SharedPreferences sp =
-                MyApplication.getContext().getSharedPreferences("password", Context.MODE_PRIVATE);
+                MyApplication.getContext().getSharedPreferences("lock_password", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
-        editor.putString("password",pass);
+        editor.putString("lock_password",pass);
         editor.apply();
         Log.d("shared","set"+pass);
     }public static String getPasswordnum() {
@@ -77,4 +77,5 @@ public class SaveUtils {
                 MyApplication.getContext().getSharedPreferences("lockstyle",Context.MODE_PRIVATE);
         return sp.getBoolean("lockstyle",false);
     }
+
 }
