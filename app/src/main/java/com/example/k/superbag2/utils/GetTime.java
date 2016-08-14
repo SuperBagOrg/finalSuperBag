@@ -98,6 +98,20 @@ public class GetTime {
         return weekDays[w];
     }
 
+    //判断两个日期相隔的天数
+    public String getBetweenDay(String beginDay,String endDay){
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        long betweenDay = 0;
+        try {
+            Date begin = format.parse(beginDay);
+            Date end = format.parse(endDay);
+            betweenDay = (end.getTime() - begin.getTime()) / (1000*60*60*24);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return betweenDay+1+"";
+    }
+
     public String getMonthEn(){
         switch (month){
             case 1:

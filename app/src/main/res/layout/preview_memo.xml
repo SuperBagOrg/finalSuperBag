@@ -1,21 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
-    android:padding="8dp"
+    android:background="@color/white"
     android:layout_width="260dp"
     android:layout_height="match_parent">
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="待办事项"
-        android:gravity="center_horizontal"
-        android:textSize="20sp"
-        android:padding="5dp"/>
+        android:layout_height="47dp"
+        android:background="@color/new_primary"
+        android:gravity="center_vertical"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="待办事项"
+            android:textColor="@color/white"
+            android:gravity="center_horizontal"
+            android:textSize="20sp"
+            android:padding="5dp"/>
+    </LinearLayout>
+
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="47dp"
         android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginLeft="15dp"
         android:padding="4dp">
 
         <TextView
@@ -28,12 +39,18 @@
             android:layout_height="wrap_content"
             android:text="这是标题"
             android:id="@+id/pre_memo_title_tv"
-            android:padding="5dp"/>
+            android:paddingLeft="5dp"/>
     </LinearLayout>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.8dp"
+        android:background="@color/new_primary"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="47dp"
+        android:layout_marginLeft="15dp"
+        android:gravity="center_vertical"
         android:orientation="horizontal"
         android:padding="4dp">
 
@@ -47,12 +64,17 @@
             android:layout_height="wrap_content"
             android:text="这是备注"
             android:id="@+id/pre_memo_content_tv"
-            android:padding="5dp"/>
+            android:paddingLeft="5dp"/>
     </LinearLayout>
-
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.8dp"
+        android:background="@color/new_primary"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="47dp"
+        android:layout_marginLeft="15dp"
+        android:gravity="center_vertical"
         android:orientation="horizontal"
         android:padding="4dp">
 
@@ -64,19 +86,23 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text=""
-            android:padding="5dp"/>
+            android:paddingLeft="5dp"/>
     </LinearLayout>
-
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.8dp"
+        android:background="@color/new_primary"/>
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="47dp"
         android:orientation="horizontal"
+        android:layout_marginLeft="15dp"
+        android:gravity="center_vertical"
         android:padding="4dp">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingTop="7dp"
             android:text="提 醒："/>
 
         <LinearLayout
@@ -87,37 +113,45 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/pre_memo_alarm_tv"
-                android:padding="5dp"
+                android:paddingLeft="5dp"
                 android:text="7月29日 9:40 \n 震动"/>
 
         </LinearLayout>
     </LinearLayout>
-
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.8dp"
+        android:background="@color/white"/>
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="10dp"
+        android:layout_height="47dp"
+        android:background="@color/new_primary"
+        android:gravity="center_vertical"
         android:orientation="horizontal">
 
-        <Button
-            android:layout_width="80dp"
-            android:layout_height="27dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginLeft="5dp"
-            android:layout_gravity="center_horizontal"
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:text="删除"
-            android:id="@+id/pre_memo_delete_bt"
-            android:background="@drawable/btn_background"/>
-
-        <Button
-            android:layout_width="80dp"
-            android:layout_height="27dp"
-            android:layout_marginTop="8dp"
-            android:layout_gravity="center_horizontal"
+            android:background="@null"
+            android:textColor="@color/white"
+            android:id="@+id/pre_memo_delete_bt" />
+        <View
+            android:layout_width="0.8dp"
+            android:layout_height="match_parent"
+            android:background="@color/white"/>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
             android:text="编辑"
-            android:layout_marginLeft="25dp"
-            android:id="@+id/pre_memo_edit_bt"
-            android:background="@drawable/btn_background"/>
+            android:textColor="@color/white"
+            android:id="@+id/pre_memo_edit_bt" />
     </LinearLayout>
 
 </LinearLayout>

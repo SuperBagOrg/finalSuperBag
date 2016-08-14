@@ -21,6 +21,7 @@
                 android:layout_width="25dp"
                 android:layout_height="25dp"
                 android:id="@+id/edit_back"
+                android:layout_marginLeft="5dp"
                 android:background="@drawable/back_white"/>
         </LinearLayout>
 
@@ -31,7 +32,9 @@
             android:id="@+id/edit_title"
             android:text="333"
             android:textColor="@color/white"
-            android:layout_centerInParent="true"/>
+            android:layout_centerVertical="true"
+            android:paddingLeft="5dp"
+            android:layout_toRightOf="@+id/edit_back_ll"/>
 
         <LinearLayout
             android:layout_width="50dp"
@@ -60,10 +63,10 @@
             android:layout_height="30dp"
             android:id="@+id/edit_weather_bt"
             android:text="晴"
+            android:layout_marginLeft="5dp"
             android:textColor="@color/white"
             android:layout_centerVertical="true"
             android:textSize="12sp"
-            android:layout_marginLeft="10dp"
             android:background="@drawable/weather_background"/>
 
         <Button

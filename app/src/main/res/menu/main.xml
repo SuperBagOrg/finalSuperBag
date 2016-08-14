@@ -21,7 +21,7 @@
         android:id="@+id/action_edit"
         android:orderInCategory="100"
         android:title="edit"
-        android:icon="@drawable/edit"
+        android:icon="@drawable/edit_small"
         app:showAsAction="always" />
 
 </menu>
