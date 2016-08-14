@@ -106,13 +106,6 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
     private String alarmTime = "";
 
 
-    float firstY, currentY, threshold = 150;
-    float scrolledDistance = 0;
-    boolean temp = true;
-    float lastX;
-    float lastY;
-    boolean isChange = false;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -139,8 +132,9 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
         toolbar = (Toolbar) findViewById(R.id.toolbar);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.getBackground().setAlpha(50);
-        setSupportActionBar(toolbar);
+//        toolbar.getBackground().setAlpha(50);
+        toolbar.setTitle("SuperBag");
+        toolbar.setTitleTextColor(getResources().getColor(R.color.white));        setSupportActionBar(toolbar);
         viewPager = (ViewPager) findViewById(R.id.main_viewPager);
 
         mainBottomLL = (LinearLayout) findViewById(R.id.main_bottom_ll);

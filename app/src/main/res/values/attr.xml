@@ -5,4 +5,14 @@
     <declare-styleable name="SlidingMenu">
         <attr name="rightPadding" />
     </declare-styleable>
+
+    <declare-styleable name="TopBar">
+        <attr name="title" format="string"/>
+        <attr name="titleTextSize" format="dimension"/>
+        <attr name="titleTextColor" format="color"/>
+        <attr name="leftButtonBG" format="reference"/>
+        <attr name="rightButtonBG" format="reference"/>
+        <attr name="barBackground" format="reference|color"/>
+
+    </declare-styleable>
 </resources>

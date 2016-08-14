@@ -13,6 +13,7 @@ import com.bumptech.glide.Glide;
 import com.example.k.superbag2.R;
 import com.example.k.superbag2.bean.ItemBean;
 import com.example.k.superbag2.others.Constant;
+import com.example.k.superbag2.utils.GetTime;
 
 import java.util.List;
 
@@ -71,7 +72,9 @@ public class FirstpageAdapter2 extends RecyclerView.Adapter<RecyclerView.ViewHol
                 ((Pic0ViewHolder)holder).tag2.setVisibility(View.VISIBLE);
             }
             ((Pic0ViewHolder)holder).oldTime.setText(itemBean.getDayTime());
-            ((Pic0ViewHolder)holder).time.setText(itemBean.getDay()+"/"+itemBean.getMonth()+"\n周五");
+            ((Pic0ViewHolder)holder).time.setText(itemBean.getDay()+"");
+            ((Pic0ViewHolder)holder).month.setText("/"+itemBean.getMonth());
+            ((Pic0ViewHolder)holder).week.setText( GetTime.getWeekOfDate(itemBean.getYear()+"",itemBean.getMonth()+"",itemBean.getDay()+""));
             ((Pic0ViewHolder)holder).content.setText(itemBean.getContent());
             ((Pic0ViewHolder)holder).weather.setText(itemBean.getWeather());
             ((Pic0ViewHolder)holder).feelings.setText(itemBean.getFeelings());
@@ -106,7 +109,9 @@ public class FirstpageAdapter2 extends RecyclerView.Adapter<RecyclerView.ViewHol
                 ((Pic1ViewHolder)holder).tag2.setText(itemBean.getTag2());
             }
             ((Pic1ViewHolder)holder).oldTime.setText(itemBean.getDayTime());
-            ((Pic1ViewHolder)holder).time.setText(itemBean.getDay()+"/"+itemBean.getMonth()+"\n周五");
+            ((Pic1ViewHolder)holder).time.setText(itemBean.getDay()+"");
+            ((Pic1ViewHolder)holder).month.setText("/"+itemBean.getMonth());
+            ((Pic1ViewHolder)holder).week.setText( GetTime.getWeekOfDate(itemBean.getYear()+"",itemBean.getMonth()+"",itemBean.getDay()+""));
             ((Pic1ViewHolder)holder).content.setText(itemBean.getContent());
             ((Pic1ViewHolder)holder).weather.setText(itemBean.getWeather());
             ((Pic1ViewHolder)holder).feelings.setText(itemBean.getFeelings());
@@ -146,7 +151,9 @@ public class FirstpageAdapter2 extends RecyclerView.Adapter<RecyclerView.ViewHol
                 ((Pic2ViewHolder)holder).tag2.setVisibility(View.VISIBLE);
             }
             ((Pic2ViewHolder)holder).oldTime.setText(itemBean.getDayTime());
-            ((Pic2ViewHolder)holder).time.setText(itemBean.getDay()+"/"+itemBean.getMonth()+"\n周五");
+            ((Pic2ViewHolder)holder).time.setText(itemBean.getDay()+"");
+            ((Pic2ViewHolder)holder).month.setText("/"+itemBean.getMonth());
+            ((Pic2ViewHolder)holder).week.setText( GetTime.getWeekOfDate(itemBean.getYear()+"",itemBean.getMonth()+"",itemBean.getDay()+""));
             ((Pic2ViewHolder)holder).content.setText(itemBean.getContent());
             ((Pic2ViewHolder)holder).weather.setText(itemBean.getWeather());
             ((Pic2ViewHolder)holder).feelings.setText(itemBean.getFeelings());
@@ -189,7 +196,9 @@ public class FirstpageAdapter2 extends RecyclerView.Adapter<RecyclerView.ViewHol
                 ((Pic3ViewHolder)holder).tag2.setVisibility(View.VISIBLE);
             }
             ((Pic3ViewHolder)holder).oldTime.setText(itemBean.getDayTime());
-            ((Pic3ViewHolder)holder).time.setText(itemBean.getDay()+"/"+itemBean.getMonth()+"\n周五");
+            ((Pic3ViewHolder)holder).time.setText(itemBean.getDay()+"");
+            ((Pic3ViewHolder)holder).month.setText("/"+itemBean.getMonth());
+            ((Pic3ViewHolder)holder).week.setText( GetTime.getWeekOfDate(itemBean.getYear()+"",itemBean.getMonth()+"",itemBean.getDay()+""));
             ((Pic3ViewHolder)holder).content.setText(itemBean.getContent());
             ((Pic3ViewHolder)holder).weather.setText(itemBean.getWeather());
             ((Pic3ViewHolder)holder).feelings.setText(itemBean.getFeelings());
@@ -236,7 +245,9 @@ public class FirstpageAdapter2 extends RecyclerView.Adapter<RecyclerView.ViewHol
                 ((Pic4ViewHolder)holder).tag2.setVisibility(View.VISIBLE);
             }
             ((Pic4ViewHolder)holder).oldTime.setText(itemBean.getDayTime());
-            ((Pic4ViewHolder)holder).time.setText(itemBean.getDay()+"/"+itemBean.getMonth()+"\n周五");
+            ((Pic4ViewHolder)holder).time.setText(itemBean.getDay()+"");
+            ((Pic4ViewHolder)holder).month.setText("/"+itemBean.getMonth());
+            ((Pic4ViewHolder)holder).week.setText( GetTime.getWeekOfDate(itemBean.getYear()+"",itemBean.getMonth()+"",itemBean.getDay()+""));
             ((Pic4ViewHolder)holder).content.setText(itemBean.getContent());
             ((Pic4ViewHolder)holder).weather.setText(itemBean.getWeather());
             ((Pic4ViewHolder)holder).feelings.setText(itemBean.getFeelings());
@@ -295,6 +306,7 @@ public class FirstpageAdapter2 extends RecyclerView.Adapter<RecyclerView.ViewHol
     class Pic0ViewHolder extends RecyclerView.ViewHolder {
 
         TextView time,content,oldTime,tag1,tag2,tag3,weather,feelings;
+        TextView month,week;
         LinearLayout fpLL;
 
         public Pic0ViewHolder(View itemView) {
@@ -308,6 +320,8 @@ public class FirstpageAdapter2 extends RecyclerView.Adapter<RecyclerView.ViewHol
             weather = (TextView) itemView.findViewById(R.id.fp_0pic_weather);
             feelings = (TextView) itemView.findViewById(R.id.fp_0pic_feelings);
             fpLL = (LinearLayout) itemView.findViewById(R.id.fp_0pic_ll);
+            month = (TextView) itemView.findViewById(R.id.fp_0pic_month);
+            week = (TextView) itemView.findViewById(R.id.fp_0pic_week);
         }
     }
 
@@ -315,6 +329,7 @@ public class FirstpageAdapter2 extends RecyclerView.Adapter<RecyclerView.ViewHol
         TextView time,content,oldTime,tag1,tag2,tag3,weather,feelings;
         ImageView iv;
         LinearLayout fpLL;
+        TextView month,week;
 
         public Pic1ViewHolder(View itemView) {
             super(itemView);
@@ -328,6 +343,8 @@ public class FirstpageAdapter2 extends RecyclerView.Adapter<RecyclerView.ViewHol
             weather = (TextView) itemView.findViewById(R.id.fp_1pic_weather);
             feelings = (TextView) itemView.findViewById(R.id.fp_1pic_feelings);
             fpLL = (LinearLayout) itemView.findViewById(R.id.fp_1pic_ll);
+            month = (TextView) itemView.findViewById(R.id.fp_1pic_month);
+            week = (TextView) itemView.findViewById(R.id.fp_1pic_week);
         }
     }
 
@@ -335,6 +352,7 @@ public class FirstpageAdapter2 extends RecyclerView.Adapter<RecyclerView.ViewHol
         TextView time,content,oldTime,tag1,tag2,tag3,weather,feelings;
         ImageView iv1,iv2;
         LinearLayout fpLL;
+        TextView month,week;
 
         public Pic2ViewHolder(View itemView) {
             super(itemView);
@@ -349,6 +367,8 @@ public class FirstpageAdapter2 extends RecyclerView.Adapter<RecyclerView.ViewHol
             weather = (TextView)itemView.findViewById(R.id.fp_2pic_weather);
             feelings = (TextView)itemView.findViewById(R.id.fp_2pic_feelings);
             fpLL = (LinearLayout) itemView.findViewById(R.id.fp_2pic_ll);
+            month = (TextView) itemView.findViewById(R.id.fp_2pic_month);
+            week = (TextView) itemView.findViewById(R.id.fp_2pic_week);
         }
     }
 
@@ -356,7 +376,7 @@ public class FirstpageAdapter2 extends RecyclerView.Adapter<RecyclerView.ViewHol
         TextView time,content,oldTime,tag1,tag2,tag3,weather,feelings;
         ImageView iv1,iv2,iv3;
         LinearLayout fpLL;
-
+        TextView month,week;
         public Pic3ViewHolder(View itemView) {
             super(itemView);
             time = (TextView) itemView.findViewById(R.id.fp_3pic_time);
@@ -371,6 +391,8 @@ public class FirstpageAdapter2 extends RecyclerView.Adapter<RecyclerView.ViewHol
             weather = (TextView)itemView.findViewById(R.id.fp_3pic_weather);
             feelings = (TextView)itemView.findViewById(R.id.fp_3pic_feelings);
             fpLL = (LinearLayout) itemView.findViewById(R.id.fp_3pic_ll);
+            month = (TextView) itemView.findViewById(R.id.fp_3pic_month);
+            week = (TextView) itemView.findViewById(R.id.fp_3pic_week);
         }
     }
 
@@ -378,7 +400,7 @@ public class FirstpageAdapter2 extends RecyclerView.Adapter<RecyclerView.ViewHol
         TextView time,content,oldTime,tag1,tag2,tag3,weather,feelings;
         ImageView iv1,iv2,iv3,iv4;
         LinearLayout fpLL;
-
+        TextView month,week;
         public Pic4ViewHolder(View itemView) {
             super(itemView);
             time = (TextView) itemView.findViewById(R.id.fp_4pic_time);
@@ -394,6 +416,8 @@ public class FirstpageAdapter2 extends RecyclerView.Adapter<RecyclerView.ViewHol
             weather = (TextView)itemView.findViewById(R.id.fp_4pic_weather);
             feelings = (TextView)itemView.findViewById(R.id.fp_4pic_feelings);
             fpLL = (LinearLayout) itemView.findViewById(R.id.fp_4pic_ll);
+            month = (TextView) itemView.findViewById(R.id.fp_4pic_month);
+            week = (TextView) itemView.findViewById(R.id.fp_4pic_week);
         }
     }
 }

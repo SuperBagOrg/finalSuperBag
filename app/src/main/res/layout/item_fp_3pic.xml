@@ -4,13 +4,48 @@
     android:id="@+id/fp_3pic_ll"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
-    <TextView
+    <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/fp_3pic_time"
-        android:text="26/06\n周日"
         android:paddingLeft="10dp"
-        android:paddingTop="12dp"/>
+        android:paddingTop="10dp">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="bottom"
+            android:id="@+id/left_ll"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/fp_3pic_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="14"
+                android:textColor="@color/new_primary"
+                android:textSize="20sp"
+                />
+
+            <TextView
+                android:id="@+id/fp_3pic_month"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/fp_3pic_time"
+                android:textColor="@color/new_primary"
+                android:text="/08" />
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/orange"
+            android:id="@+id/fp_3pic_week"
+            android:paddingLeft="5dp"
+            android:textSize="13sp"
+            android:layout_below="@+id/left_ll"
+            android:text="周日"/>
+    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -19,21 +54,21 @@
         <View
             android:layout_width="2dp"
             android:layout_height="20dp"
-            android:background="@color/gray"
-            android:layout_marginLeft="5dp">
+            android:background="@color/new_primary"
+            android:layout_marginLeft="8dp">
         </View>
 
         <View
             android:layout_width="10dp"
             android:layout_height="10dp"
-            android:layout_marginLeft="1dp"
+            android:layout_marginLeft="4dp"
             android:background="@drawable/green_dot"></View>
 
         <View
             android:layout_width="2dp"
             android:layout_height="match_parent"
-            android:background="@color/gray"
-            android:layout_marginLeft="5dp"></View>
+            android:background="@color/new_primary"
+            android:layout_marginLeft="8dp"></View>
 
     </LinearLayout>
 
@@ -53,6 +88,7 @@
                 android:layout_height="20dp"
                 android:id="@+id/fp_3pic_weather"
                 android:text="晴"
+                android:textColor="@color/white"
                 android:padding="4dp"
                 android:textSize="10sp"
                 android:background="@drawable/weather_background" />
@@ -64,6 +100,7 @@
                 android:id="@+id/fp_3pic_feelings"
                 android:layout_marginLeft="18dp"
                 android:padding="4dp"
+                android:textColor="@color/white"
                 android:textSize="10sp"
                 android:background="@drawable/feelings_background"
                 />

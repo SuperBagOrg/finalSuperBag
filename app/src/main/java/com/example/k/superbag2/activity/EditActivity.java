@@ -46,8 +46,8 @@ public class EditActivity extends BaseActivity implements View.OnClickListener,
 
     private Button backBT, saveBT, picBT, weatherBT, feelingsBT;
     //    private EditText contentET;
-    private ImageView headIcon;
-    private TextView oldTime;
+//    private ImageView headIcon;
+//    private TextView oldTime;
     private LinearLayout backLL, saveLL;
     private Button addTagBT;
     private TextView tag1TV, tag2TV, tag3TV;
@@ -56,6 +56,7 @@ public class EditActivity extends BaseActivity implements View.OnClickListener,
     private CheckBox happyCK, sweetCK, unforgettableCK, calmCK, angryCk, aggrievedCK, sadCK, noFeelingsCK;
     private AlertDialog feelingsDialog;
     private RichTextEditor contentET;
+    private TextView editTitle;
 
     private boolean hasSaved = false;
     private String tag1 = "", tag2 = "", tag3 = "";
@@ -103,8 +104,8 @@ public class EditActivity extends BaseActivity implements View.OnClickListener,
         picBT = (Button) findViewById(R.id.edit_pic_bt);
         weatherBT = (Button) findViewById(R.id.edit_weather_bt);
         contentET = (RichTextEditor) findViewById(R.id.edit_et);
-        headIcon = (ImageView) findViewById(R.id.edit_head_icon);
-        oldTime = (TextView) findViewById(R.id.edit_time);
+//        headIcon = (ImageView) findViewById(R.id.edit_head_icon);
+//        oldTime = (TextView) findViewById(R.id.edit_time);
         backLL = (LinearLayout) findViewById(R.id.edit_back_ll);
         saveLL = (LinearLayout) findViewById(R.id.edit_save_ll);
         tag1TV = (TextView) findViewById(R.id.edit_tag1);
@@ -112,11 +113,12 @@ public class EditActivity extends BaseActivity implements View.OnClickListener,
         tag3TV = (TextView) findViewById(R.id.edit_tag3);
         addTagBT = (Button) findViewById(R.id.add_tag_bt);
         feelingsBT = (Button) findViewById(R.id.edit_feelings_bt);
+        editTitle = (TextView)findViewById(R.id.edit_title);
         //设置头像
-        Bitmap head = GetImageUtils.getBMFromUri(this, Constant.HEAD_ICON_URI);
-        if (head != null) {
-            headIcon.setImageBitmap(head);
-        }
+//        Bitmap head = GetImageUtils.getBMFromUri(this, Constant.HEAD_ICON_URI);
+//        if (head != null) {
+//            headIcon.setImageBitmap(head);
+//        }
 
     }
 
@@ -134,7 +136,9 @@ public class EditActivity extends BaseActivity implements View.OnClickListener,
     private void initData() {
         GetTime gt = new GetTime();
         oldtime = gt.getYear() + "-" + gt.getMonth() + "-" + gt.getDay();
-        oldTime.setText(oldtime);
+//        oldTime.setText(oldtime);
+
+        editTitle.setText(gt.getMonthEn()+" "+gt.getDay()+" ,  "+gt.getHour()+"."+gt.getMin());
 
         uriList = new ArrayList<>(Arrays.asList("", "", "", ""));
         picIndex = new ArrayList<>(Arrays.asList(-1, -1, -1, -1));
