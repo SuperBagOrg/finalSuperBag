@@ -9,10 +9,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import cn.bmob.v3.BmobObject;
+
 /**
  * Created by K on 2016/6/26.
  */
-public class ItemBean extends DataSupport {
+public class UploadItembean extends BmobObject {
 
     private String tag1 = "",tag2 = "",tag3 = "";
     private String content;
@@ -20,9 +22,7 @@ public class ItemBean extends DataSupport {
     private String weather;
     private String feelings;
     private int importance;
-    //新增，为了能再次编辑，所以要保存位置
-    private int pic1Index = -1,pic2Index = -1,pic3Index = -1,pic4Index = -1;
-    private List<Integer> picIndex;
+    private String phone;
     private float updateTime;
 
     public float getUpdateTime() {
@@ -32,6 +32,18 @@ public class ItemBean extends DataSupport {
     public void setUpdateTime(float updateTime) {
         this.updateTime = updateTime;
     }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    //新增，为了能再次编辑，所以要保存位置
+    private int pic1Index = -1,pic2Index = -1,pic3Index = -1,pic4Index = -1;
+    private List<Integer> picIndex;
 
     private String pic1 = "",pic2 = "",pic3 = "",pic4 = "";
     private List<String> picList;

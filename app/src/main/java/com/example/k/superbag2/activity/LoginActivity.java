@@ -8,10 +8,17 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-
 import com.example.k.superbag2.MainActivity;
 import com.example.k.superbag2.R;
+import com.example.k.superbag2.bean.User;
 import com.example.k.superbag2.utils.LoginUtils;
+
+import java.util.List;
+
+import cn.bmob.v3.Bmob;
+import cn.bmob.v3.BmobQuery;
+import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.FindListener;
 
 /**
  * Created by K on 2016/8/13.
@@ -28,6 +35,9 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_login);
 
+        Bmob.initialize(this, "\n" +
+                "\n" +
+                "0d5d5ee39c0f5cb5c525213c1d5ee9f4");
         initView();
         initListener();
     }
@@ -58,16 +68,46 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
                 break;
             case R.id.login_bt:
-                String passwordInput = passwordET.getText().toString();
+                final String passwordInput = passwordET.getText().toString();
+                String phoneInput = phoneET.getText().toString();
                 if (passwordInput.equals("")){
                     Toast.makeText(LoginActivity.this,"请输入密码",Toast.LENGTH_SHORT).show();
                 } else {
-                    if (LoginUtils.isRightPass(passwordInput)){
-                        LoginUtils.setLoginStatus(true);
-                        startActivity(new Intent(LoginActivity.this, MainActivity.class));
-                    } else {
-                        Toast.makeText(LoginActivity.this,"密码错误",Toast.LENGTH_SHORT).show();
+                    //先判断与本地的账号密码是否一致
+                    if (LoginUtils.getPhoneNumber().equals(phoneInput)){
+                        if (LoginUtils.isRightPass(passwordInput)){
+                            LoginUtils.setLoginStatus(true);
+                            startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                            finish();
+                        } else {
+                            Toast.makeText(LoginActivity.this,"密码错误",Toast.LENGTH_SHORT).show();
+                        }
+                    }else {
+                        //判断与网络上数据库里存储的账号密码是否一致
+                        BmobQuery<User> query = new BmobQuery<User>();
+                        query.addWhereEqualTo("name", phoneInput);
+                        query.findObjects(new FindListener<User>() {
+                            @Override
+                            public void done(List<User> list, BmobException e) {
+                                if (e==null){
+                                    User user = new User();
+                                    user.getName();
+                                    user.getPassword();
+                                    if (user.getPassword().equals(passwordInput)){
+                                        //在本地存储当前密码
+                                        LoginUtils.setPassword(user.getPassword());
+                                        LoginUtils.setPhoneNumber(user.getName());
+                                        LoginUtils.setLoginStatus(true);
+                                        startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                                        finish();
+                                    }
+                                }else {
+                                    Toast.makeText(LoginActivity.this,"密码错误",Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
                     }
+
                 }
                 break;
             case R.id.login_no_bt:

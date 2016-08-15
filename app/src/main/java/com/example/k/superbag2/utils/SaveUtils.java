@@ -13,7 +13,6 @@ public class SaveUtils {
     public static String getPassword() {
         SharedPreferences sp =
                 MyApplication.getContext().getSharedPreferences("lock_password",Context.MODE_PRIVATE);
-        Log.d("shared","get"+sp.getString("password",""));
         return sp.getString("lock_password","");
     }
     public static void setPassword(String pass) {
@@ -22,8 +21,21 @@ public class SaveUtils {
         SharedPreferences.Editor editor = sp.edit();
         editor.putString("lock_password",pass);
         editor.apply();
-        Log.d("shared","set"+pass);
-    }public static String getPasswordnum() {
+    }
+    //更新时间
+    public static float getUpdateTime() {
+        SharedPreferences sp =
+                MyApplication.getContext().getSharedPreferences("updateTime",Context.MODE_PRIVATE);
+        return sp.getFloat("updateTime",0);
+    }
+    public static void setUpdateTime(float pass) {
+        SharedPreferences sp =
+                MyApplication.getContext().getSharedPreferences("updateTime", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putFloat("updateTime",pass);
+        editor.apply();
+    }
+    public static String getPasswordnum() {
         SharedPreferences sp =
                 MyApplication.getContext().getSharedPreferences("passwordnum",Context.MODE_PRIVATE);
         Log.d("shared","get"+sp.getString("password",""));

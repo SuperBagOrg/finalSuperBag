@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,11 +19,30 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.example.k.superbag2.MyApplication;
 import com.example.k.superbag2.R;
 import com.example.k.superbag2.activity.ChooseLockActivity;
+import com.example.k.superbag2.activity.LoginActivity;
+import com.example.k.superbag2.bean.ItemBean;
+import com.example.k.superbag2.bean.MemoItem;
+import com.example.k.superbag2.bean.UploadItembean;
+import com.example.k.superbag2.bean.UploadMemoItem;
+import com.example.k.superbag2.others.Constant;
+import com.example.k.superbag2.utils.LoginUtils;
+import com.example.k.superbag2.utils.SaveUtils;
+
+import org.litepal.crud.DataSupport;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import cn.bmob.v3.BmobQuery;
+import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.FindListener;
+import cn.bmob.v3.listener.QueryListener;
+import cn.bmob.v3.listener.SaveListener;
 
 /**
  * Created by K on 2016/7/26.
@@ -67,14 +87,196 @@ public class SettingsLeftFragment extends Fragment {
             }
         });
         uploadLL.setOnClickListener(new View.OnClickListener() {
+            private UploadMemoItem uploadMemoItem;
+            private UploadItembean uploadItembean;
+            private MemoItem memoItem;
+            private ItemBean data;
+
             @Override
             public void onClick(View view) {
+                //在本地记录更新时间，若记录为空，表示没有上传过，此时上传本地所有记录。
+                if (SaveUtils.getUpdateTime() == 0){
+                    List<ItemBean> itemBeen = DataSupport.findAll(ItemBean.class);
+                    //上传查询到的数据。
+                    for (int i = 0;i<itemBeen.size();i++){
+                        data = itemBeen.get(i);
+                        uploadItembean = new UploadItembean();
+                        uploadItembean.setContent(data.getContent());
+                        uploadItembean.setDayTime(data.getDayTime());
+                        uploadItembean.setFeelings(data.getFeelings());
+                        uploadItembean.setImportance(data.getImportance());
+                        uploadItembean.setPic1(data.getPic1());
+                        uploadItembean.setPic2(data.getPic2());
+                        uploadItembean.setPic3(data.getPic3());
+                        uploadItembean.setPic4(data.getPic4());
+                        uploadItembean.setTag1(data.getTag1());
+                        uploadItembean.setTag2(data.getTag2());
+                        uploadItembean.setTag3(data.getTag3());
+                        uploadItembean.setUpdateTime(System.currentTimeMillis());
+                        uploadItembean.setPhone(LoginUtils.getPhoneNumber());
+                        uploadItembean.setWeather(data.getWeather());
+                        uploadItembean.save(new SaveListener<String>(){
+                            @Override
+                            public void done(String s, BmobException e) {
+                                if (e==null){
+                                    //save successful
+                                }else {
+                                    uploadItembean.update();
+                                }
+                            }
+                        });
+                    }
+                    List<MemoItem> memoItemList = DataSupport.findAll(MemoItem.class);
+                    for (int j = 0;j<memoItemList.size();j++){
+                        memoItem = memoItemList.get(j);
+                        uploadMemoItem = new UploadMemoItem();
+                        uploadMemoItem.setImportance(memoItem.getImportance());
+                        uploadMemoItem.setAlarm(memoItem.isAlarm()?true:false);
+                        uploadMemoItem.setAlarmTime(memoItem.getAlarmTime());
+                        uploadMemoItem.setContent(memoItem.getContent());
+                        uploadMemoItem.setDate(memoItem.getDate());
+                        uploadMemoItem.setEditTime(memoItem.getEditTime());
+                        uploadMemoItem.setShake(memoItem.isShake()?true:false);
+                        uploadMemoItem.setSound(memoItem.isSound()?true:false);
+                        uploadMemoItem.setTitle(memoItem.getTitle());
+                        uploadMemoItem.setPhone(LoginUtils.getPhoneNumber());
+                        uploadMemoItem.setUpdateTime(System.currentTimeMillis());
+                        uploadMemoItem.save(new SaveListener<String>() {
+                            @Override
+                            public void done(String s, BmobException e) {
+                                if (e==null){
 
+                                }else {
+                                    uploadMemoItem.update();
+                                }
+                            }
+                        });
+                    }
+                    //记录更新时间。
+                    SaveUtils.setUpdateTime(System.currentTimeMillis());
+                }else {
+                    //否则，从本地数据库筛选出创建时间晚于上传时间的记录，上传这些记录。
+                    float date = System.currentTimeMillis();
+                    List<ItemBean> itemBeanList = DataSupport.where("updateTime>?","date").find(ItemBean.class);
+                    for (int i = 0;i<itemBeanList.size();i++) {
+                        data = itemBeanList.get(i);
+                        uploadItembean = new UploadItembean();
+                        uploadItembean.setContent(data.getContent());
+                        uploadItembean.setDayTime(data.getDayTime());
+                        uploadItembean.setFeelings(data.getFeelings());
+                        uploadItembean.setImportance(data.getImportance());
+                        uploadItembean.setPic1(data.getPic1());
+                        uploadItembean.setPic2(data.getPic2());
+                        uploadItembean.setPic3(data.getPic3());
+                        uploadItembean.setPic4(data.getPic4());
+                        uploadItembean.setTag1(data.getTag1());
+                        uploadItembean.setTag2(data.getTag2());
+                        uploadItembean.setTag3(data.getTag3());
+                        uploadItembean.setUpdateTime(System.currentTimeMillis());
+                        uploadItembean.setPhone(LoginUtils.getPhoneNumber());
+                        uploadItembean.setWeather(data.getWeather());
+                        uploadItembean.save(new SaveListener<String>() {
+                            @Override
+                            public void done(String s, BmobException e) {
+                                if (e == null) {
+                                    //save successful
+                                } else {
+                                    uploadItembean.update();
+                                }
+                            }
+                        });
+                    }
+                    List<MemoItem> memoItemList = DataSupport.where("updateTime>?","date").find(MemoItem.class);
+                    for (int j = 0;j<memoItemList.size();j++){
+                        memoItem = memoItemList.get(j);
+                        uploadMemoItem = new UploadMemoItem();
+                        uploadMemoItem.setImportance(memoItem.getImportance());
+                        uploadMemoItem.setAlarm(memoItem.isAlarm()?true:false);
+                        uploadMemoItem.setAlarmTime(memoItem.getAlarmTime());
+                        uploadMemoItem.setContent(memoItem.getContent());
+                        uploadMemoItem.setDate(memoItem.getDate());
+                        uploadMemoItem.setEditTime(memoItem.getEditTime());
+                        uploadMemoItem.setShake(memoItem.isShake()?true:false);
+                        uploadMemoItem.setSound(memoItem.isSound()?true:false);
+                        uploadMemoItem.setTitle(memoItem.getTitle());
+                        uploadMemoItem.setPhone(LoginUtils.getPhoneNumber());
+                        uploadMemoItem.setUpdateTime(System.currentTimeMillis());
+                        uploadMemoItem.save(new SaveListener<String>() {
+                            @Override
+                            public void done(String s, BmobException e) {
+                                if (e==null){
+
+                                }else {
+                                    uploadMemoItem.update();
+                                }
+                            }
+                        });
+                    }
+                    //记录更新时间。
+                    SaveUtils.setUpdateTime(System.currentTimeMillis());
+                }
+                Toast.makeText(MyApplication.getContext(),"成功上传数据。",Toast.LENGTH_SHORT).show();
             }
         });
         downloadLL.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                BmobQuery<UploadItembean> uploadItembeanBmobQuery = new BmobQuery<UploadItembean>();
+                BmobQuery<UploadMemoItem> uploadMemoItemBmobQuery = new BmobQuery<UploadMemoItem>();
+                uploadItembeanBmobQuery.addWhereEqualTo("phone",LoginUtils.getPhoneNumber());
+                uploadMemoItemBmobQuery.addWhereEqualTo("phone",LoginUtils.getPhoneNumber());
+                uploadItembeanBmobQuery.setLimit(100);
+                uploadMemoItemBmobQuery.setLimit(100);
+                uploadItembeanBmobQuery.findObjects(new FindListener<UploadItembean>() {
+                    private ItemBean itemBean_local;
+                    @Override
+                    public void done(List<UploadItembean> list, BmobException e) {
+                        if (e==null){
+                            for (UploadItembean itembean : list){
+                                itemBean_local = new ItemBean();
+                                itemBean_local.setWeather(itembean.getWeather());
+                                itemBean_local.setUpdateTime(itembean.getUpdateTime());
+                                itemBean_local.setDayTime(itembean.getDayTime());
+                                itemBean_local.setImportance(itembean.getImportance());
+                                itemBean_local.setContent(itembean.getContent());
+                                itemBean_local.setFeelings(itembean.getFeelings());
+                                itemBean_local.setTag1(itembean.getTag1());
+                                itemBean_local.setTag2(itembean.getTag2());
+                                itemBean_local.setTag3(itembean.getTag3());
+                                itemBean_local.setPic1(itembean.getPic1());
+                                itemBean_local.setPic2(itembean.getPic2());
+                                itemBean_local.setPic3(itembean.getPic3());
+                                itemBean_local.setPic4(itembean.getPic4());
+                                itemBean_local.save();
+                            }
+                        }
+                    }
+                });
+                uploadMemoItemBmobQuery.findObjects(new FindListener<UploadMemoItem>() {
+
+                    private MemoItem memoItem_local;
+
+                    @Override
+                    public void done(List<UploadMemoItem> list, BmobException e) {
+                        if (e == null){
+                            for (UploadMemoItem memoItem : list){
+                                memoItem_local = new MemoItem();
+                                memoItem_local.setUpdateTime(memoItem.getUpdateTime());
+                                memoItem_local.setContent(memoItem.getContent());
+                                memoItem_local.setTitle(memoItem.getTitle());
+                                memoItem_local.setAlarm(memoItem.isAlarm());
+                                memoItem_local.setAlarmTime(memoItem.getAlarmTime());
+                                memoItem_local.setDate(memoItem.getDate());
+                                memoItem_local.setEditTime(memoItem.getEditTime());
+                                memoItem_local.setImportance(memoItem.getImportance());
+                                memoItem_local.setShake(memoItem.isShake());
+                                memoItem_local.setSound(memoItem.isSound());
+                                memoItem.save();
+                            }
+                        }
+                    }
+                });
+                Toast.makeText(MyApplication.getContext(),"下载成功",Toast.LENGTH_SHORT).show();
 
             }
         });
