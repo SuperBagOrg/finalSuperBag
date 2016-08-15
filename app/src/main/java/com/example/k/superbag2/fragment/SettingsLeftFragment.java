@@ -293,6 +293,8 @@ public class SettingsLeftFragment extends Fragment{
                         }
                     }
                 });
+                Toast.makeText(MyApplication.getContext(),"下载成功",Toast.LENGTH_SHORT).show();
+
             }
         });
         aboutLL.setOnClickListener(new View.OnClickListener() {
