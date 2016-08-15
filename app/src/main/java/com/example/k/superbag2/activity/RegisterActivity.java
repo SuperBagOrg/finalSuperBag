@@ -26,6 +26,7 @@ import cn.bmob.sms.listener.RequestSMSCodeListener;
 import cn.bmob.sms.listener.VerifySMSCodeListener;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.listener.FindListener;
+import cn.bmob.v3.listener.QueryListener;
 import cn.bmob.v3.listener.SaveListener;
 
 /**
@@ -48,7 +49,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
 
         initView();
         initListener();
-        BmobSMS.initialize(this,"0d5d5ee39c0f5cb5c525213c1d5ee9f4");
+        BmobSMS.initialize(this,"f99570680fbe559ad4c18e8dbd01382d");
     }
 
     private void initView(){
@@ -77,14 +78,45 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                 verCodeInput = vCodeET.getText().toString();
                 password = passwordET.getText().toString();
                 BmobQuery<User> query = new BmobQuery<User>();
+                Log.d("点击了","phone"+phoneNum+password);
+
                 query.addWhereEqualTo("name",phoneNum);
                 //先检测网络数据库中是否有存在的phone，若有则不能注册
                 query.findObjects(new FindListener<User>() {
                     @Override
                     public void done(List<User> list, cn.bmob.v3.exception.BmobException e) {
+                        //是否失败。
                         if (e == null){
-                            Toast.makeText(RegisterActivity.this,"当前账号已经注册",Toast.LENGTH_SHORT).show();
+                            Log.d("点击了","e = null");
+
+                            //查询结果是否为空。
+                            if (list.get(0).getName().equals(phoneNum)){
+                                Toast.makeText(RegisterActivity.this,"当前账号已经注册",Toast.LENGTH_SHORT).show();
+                            }else {
+                                if (!isMobileNO(phoneNum)){
+                                    Toast.makeText(RegisterActivity.this,"请输入正确的手机号",Toast.LENGTH_SHORT).show();
+                                }else if (password.equals("")){
+                                    Toast.makeText(RegisterActivity.this,"请输入密码",Toast.LENGTH_SHORT).show();
+                                } else {
+                                    BmobSMS.requestSMSCode(RegisterActivity.this, phoneNum, "获取验证码",
+                                            new RequestSMSCodeListener() {
+                                                @Override
+                                                public void done(Integer integer, BmobException e) {
+                                                    Log.d("点击了","33333");
+
+                                                    if (e == null) {
+                                                        verCodeGet = integer + "";
+                                                        Log.d("点击了","获取验证码");
+
+                                                    }
+                                                }
+                                            });
+                                    getVCodeBT.setEnabled(false);
+                                }
+                            }
                         }else {
+                            //第一次登陆，user表不存在
+                            Log.d("点击了","33333");
                             if (!isMobileNO(phoneNum)){
                                 Toast.makeText(RegisterActivity.this,"请输入正确的手机号",Toast.LENGTH_SHORT).show();
                             }else if (password.equals("")){
@@ -94,17 +126,35 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                                         new RequestSMSCodeListener() {
                                             @Override
                                             public void done(Integer integer, BmobException e) {
+                                                Log.d("点击了","33333");
+
                                                 if (e == null) {
                                                     verCodeGet = integer + "";
+                                                    Log.d("点击了","获取验证码");
+
                                                 }
                                             }
                                         });
                                 getVCodeBT.setEnabled(false);
                             }
+
                         }
                     }
                 });
-
+//                BmobSMS.requestSMSCode(RegisterActivity.this, phoneNum, "获取验证码",
+//                        new RequestSMSCodeListener() {
+//                            @Override
+//                            public void done(Integer integer, BmobException e) {
+//                                Log.d("点击了","33333");
+//
+//                                if (e == null) {
+//                                    verCodeGet = integer + "";
+//                                    Log.d("点击了","获取验证码");
+//
+//                                }
+//                            }
+//                        });
+//                getVCodeBT.setEnabled(false);
                 break;
 
             case R.id.register_ok:
@@ -116,7 +166,6 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                             @Override
                             public void done(BmobException e) {
                                 if (e == null){
-                                    overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
                                     //在user表中添加手机号，与密码项。
                                     user = new User();
                                     user.setName(phoneNum);

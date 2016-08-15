@@ -39,6 +39,7 @@
             android:launchMode="singleTask"/>
 
 
+        <activity android:name=".activity.ResetPassWord"/>
         <activity android:name=".MainActivity"/>
         <activity android:name=".activity.ChooseLockActivity"/>
         <activity android:name=".activity.ChoosePicActivity"/>

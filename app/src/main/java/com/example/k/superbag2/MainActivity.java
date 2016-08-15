@@ -132,7 +132,7 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
         //第一：默认初始化
         Bmob.initialize(this, "\n" +
                 "\n" +
-                "0d5d5ee39c0f5cb5c525213c1d5ee9f4");
+                "f99570680fbe559ad4c18e8dbd01382d");
         initView();
         setListener();
         setPager();

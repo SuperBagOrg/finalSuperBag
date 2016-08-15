@@ -37,7 +37,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
         Bmob.initialize(this, "\n" +
                 "\n" +
-                "0d5d5ee39c0f5cb5c525213c1d5ee9f4");
+                "f99570680fbe559ad4c18e8dbd01382d");
         initView();
         initListener();
     }
@@ -65,7 +65,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 startActivity(new Intent(LoginActivity.this,RegisterActivity.class));
                 break;
             case R.id.login_forget_bt:
-
                 break;
             case R.id.login_bt:
                 final String passwordInput = passwordET.getText().toString();
