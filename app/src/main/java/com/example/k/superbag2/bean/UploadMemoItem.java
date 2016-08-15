@@ -2,10 +2,12 @@ package com.example.k.superbag2.bean;
 
 import org.litepal.crud.DataSupport;
 
+import cn.bmob.v3.BmobObject;
+
 /**
  * Created by K on 2016/7/28.
  */
-public class MemoItem extends DataSupport{
+public class UploadMemoItem extends BmobObject{
     private String title = "";
     private String content = "";
     private String date = "";
@@ -15,6 +17,7 @@ public class MemoItem extends DataSupport{
     private boolean isShake = false;
     private String alarmTime = "";
     private String editTime = "";
+    private String phone;
     private float updateTime;
 
     public float getUpdateTime() {
@@ -23,6 +26,14 @@ public class MemoItem extends DataSupport{
 
     public void setUpdateTime(float updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
     public String getTitle() {

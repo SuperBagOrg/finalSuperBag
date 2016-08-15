@@ -12,6 +12,20 @@ public class LoginUtils {
 
     private static final String IS_LOGIN = "is_login";
 
+    //存取缓存账号名：即手机号
+    public static String getPhoneNumber() {
+        SharedPreferences sp =
+                MyApplication.getContext().getSharedPreferences("phone_number",Context.MODE_PRIVATE);
+        return sp.getString("phone_number","");
+    }
+    public static void setPhoneNumber(String pass) {
+        SharedPreferences sp =
+                MyApplication.getContext().getSharedPreferences("phone_number", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putString("phone_number",pass);
+        editor.apply();
+    }
+    //存取缓存密码
     public static boolean isRightPass(String passwordInput){
         SharedPreferences sp = MyApplication.getContext().getSharedPreferences("password", Context.MODE_PRIVATE);
         String password_saved = sp.getString("password","");

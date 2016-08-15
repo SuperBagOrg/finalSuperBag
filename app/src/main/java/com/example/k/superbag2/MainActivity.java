@@ -70,6 +70,8 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 
+import cn.bmob.v3.Bmob;
+
 public class MainActivity extends BaseActivity implements ViewPager.OnPageChangeListener
         , View.OnClickListener {
 
@@ -120,6 +122,10 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main);
 
+        //第一：默认初始化
+        Bmob.initialize(this, "\n" +
+                "\n" +
+                "0d5d5ee39c0f5cb5c525213c1d5ee9f4");
         initView();
         setListener();
         setPager();
@@ -587,6 +593,7 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
                         memoItem.setSound(isSound);
                         memoItem.setShake(isShake);
                         memoItem.setAlarmTime(alarmTime);
+                        memoItem.setUpdateTime(System.currentTimeMillis());
                         memoItem.setEditTime(new GetTime().getSpecificTime());
                         memoRecyclerAdapter.addItem(0, memoItem, 0, -1);
                     } else {
@@ -596,6 +603,7 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
                         item.setAlarm(isAlarm);
                         item.setSound(isSound);
                         item.setShake(isShake);
+                        item.setUpdateTime(System.currentTimeMillis());
                         item.setAlarmTime(alarmTime);
                         item.setEditTime(new GetTime().getSpecificTime());
                         // TODO 执行更新操作

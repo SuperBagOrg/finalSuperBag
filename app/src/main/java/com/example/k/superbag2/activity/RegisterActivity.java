@@ -13,11 +13,19 @@ import android.widget.Toast;
 
 import com.example.k.superbag2.MainActivity;
 import com.example.k.superbag2.R;
+import com.example.k.superbag2.bean.User;
+import com.example.k.superbag2.utils.LoginUtils;
+import com.example.k.superbag2.utils.SaveUtils;
+
+import java.util.List;
 
 import cn.bmob.sms.BmobSMS;
 import cn.bmob.sms.exception.BmobException;
 import cn.bmob.sms.listener.RequestSMSCodeListener;
 import cn.bmob.sms.listener.VerifySMSCodeListener;
+import cn.bmob.v3.BmobQuery;
+import cn.bmob.v3.listener.FindListener;
+import cn.bmob.v3.listener.SaveListener;
 
 /**
  * Created by K on 2016/8/13.
@@ -62,45 +70,79 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                 phoneNum = phoneNumET.getText().toString();
                 verCodeInput = vCodeET.getText().toString();
                 password = passwordET.getText().toString();
-                if (!isMobileNO(phoneNum)){
-                    Toast.makeText(RegisterActivity.this,"请输入正确的手机号",Toast.LENGTH_SHORT).show();
-                }else if (password.equals("")){
-                    Toast.makeText(RegisterActivity.this,"请输入密码",Toast.LENGTH_SHORT).show();
-                } else {
-                    BmobSMS.requestSMSCode(RegisterActivity.this, phoneNum, "获取验证码",
-                            new RequestSMSCodeListener() {
-                                @Override
-                                public void done(Integer integer, BmobException e) {
-                                    if (e == null) {
-                                        verCodeGet = integer + "";
-                                    }
+                BmobQuery<User> query = new BmobQuery<User>();
+                query.addWhereEqualTo("name",phoneNum);
+                //先检测网络数据库中是否有存在的phone，若有则不能注册
+                query.findObjects(new FindListener<User>() {
+                    @Override
+                    public void done(List<User> list, cn.bmob.v3.exception.BmobException e) {
+                        if (e == null){
+                            Toast.makeText(RegisterActivity.this,"当前账号已经注册",Toast.LENGTH_SHORT).show();
+                        }else {
+                            if (!isMobileNO(phoneNum)){
+                                Toast.makeText(RegisterActivity.this,"请输入正确的手机号",Toast.LENGTH_SHORT).show();
+                            }else if (password.equals("")){
+                                Toast.makeText(RegisterActivity.this,"请输入密码",Toast.LENGTH_SHORT).show();
+                            } else {
+
+                            }
+                        }
+                    }
+                });
+                BmobSMS.requestSMSCode(RegisterActivity.this, phoneNum, "获取验证码",
+                        new RequestSMSCodeListener() {
+                            @Override
+                            public void done(Integer integer, BmobException e) {
+                                if (e == null) {
+                                    verCodeGet = integer + "";
                                 }
-                            });
-                    getVCodeBT.setEnabled(false);
-                }
+                            }
+                        });
+                getVCodeBT.setEnabled(false);
                 break;
 
             case R.id.register_ok:
+                phoneNum = phoneNumET.getText().toString();
+                password = passwordET.getText().toString();
                 BmobSMS.verifySmsCode(RegisterActivity.this, phoneNum, vCodeET.getText().toString(),
                         new VerifySMSCodeListener() {
+                            private User user;
                             @Override
                             public void done(BmobException e) {
                                 if (e == null){
-                                    Toast.makeText(RegisterActivity.this,"注册成功",Toast.LENGTH_SHORT).show();
-                                    Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
-                                    startActivity(intent);
                                     overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+                                    //在user表中添加手机号，与密码项。
+                                    user = new User();
+                                    user.setName(phoneNum);
+                                    user.setPassword(password);
+                                    user.save(new SaveListener<String>() {
+                                        @Override
+                                        public void done(String s, cn.bmob.v3.exception.BmobException e) {
+                                            if (e==null){
+                                                Log.d("register","successful");
+                                                LoginUtils.setPassword(user.getPassword());
+                                                LoginUtils.setPhoneNumber(user.getName());
+                                                Toast.makeText(RegisterActivity.this,"注册成功",
+                                                        Toast.LENGTH_SHORT).show();
+                                                Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
+                                                startActivity(intent);
+                                                finish();
+                                            }else {
+                                                Log.d("register","unsuccessful");
+
+                                            }
+                                        }
+                                    });
                                 } else {
                                     getVCodeBT.setEnabled(true);
                                     Toast.makeText(RegisterActivity.this,"验证码输入错误，请重试",Toast.LENGTH_SHORT).show();
-                                    Log.d("失败消息",e.getErrorCode()+" --  "+e.getLocalizedMessage());
+                                    Log.d("register",e.getErrorCode()+" --  "+e.getLocalizedMessage());
                                 }
                             }
                         });
                 break;
         }
     }
-
     /**
      * 验证手机格式
      */

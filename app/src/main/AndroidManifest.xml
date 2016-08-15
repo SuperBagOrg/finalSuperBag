@@ -29,10 +29,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity android:name=".MainActivity"
-            android:launchMode="singleTask"/>
-
         <activity android:name=".activity.ScreenLockActivity"
             android:launchMode="singleTask"/>
 
@@ -42,6 +38,7 @@
             android:launchMode="singleTask"/>
 
 
+        <activity android:name=".MainActivity"/>
         <activity android:name=".activity.ChooseLockActivity"/>
         <activity android:name=".activity.ChoosePicActivity"/>
         <activity android:name=".activity.RegisterActivity"/>
