@@ -4,21 +4,26 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
-import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.example.k.superbag2.MainActivity;
 import com.example.k.superbag2.MainActivity;
 import com.example.k.superbag2.MyApplication;
 import com.example.k.superbag2.R;
@@ -29,20 +34,23 @@ import com.example.k.superbag2.bean.MemoItem;
 import com.example.k.superbag2.bean.UploadItembean;
 import com.example.k.superbag2.bean.UploadMemoItem;
 import com.example.k.superbag2.others.Constant;
+import com.example.k.superbag2.utils.GetImageUtils;
 import com.example.k.superbag2.utils.LoginUtils;
 import com.example.k.superbag2.utils.SaveUtils;
+import com.flyco.animation.Attention.Tada;
+import com.flyco.animation.ZoomExit.ZoomOutExit;
+import com.flyco.dialog.listener.OnBtnClickL;
+import com.flyco.dialog.widget.NormalDialog;
 
 import org.litepal.crud.DataSupport;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
-import cn.bmob.v3.listener.QueryListener;
 import cn.bmob.v3.listener.SaveListener;
 
 /**
@@ -52,7 +60,8 @@ public class SettingsLeftFragment extends Fragment {
 
     private LinearLayout changeHeadLL, changeBgLL, uploadLL, downloadLL, aboutLL, lockLL;
     private Uri imageUri;
-
+    private ImageView headIV;
+    private TextView hintTextView;
     private Context context;
 
     @Override
@@ -71,7 +80,19 @@ public class SettingsLeftFragment extends Fragment {
         downloadLL = (LinearLayout) v.findViewById(R.id.download_ll);
         aboutLL = (LinearLayout) v.findViewById(R.id.about_ll);
         lockLL = (LinearLayout) v.findViewById(R.id.password_ll);
+        headIV = (ImageView) v.findViewById(R.id.setting_head);
+        hintTextView = (TextView) v.findViewById(R.id.setting_hint);
 
+        if (LoginUtils.getLoginStatus()){
+            hintTextView.setVisibility(View.GONE);
+            Uri headUri = GetImageUtils.getUri(context, Constant.HEAD_ICON_URI);
+            if (!headUri.toString().equals("")){
+                Glide.with(context)
+                        .load(headUri)
+                        .asBitmap()
+                        .into(headIV);
+            }
+        }
     }
 
     private void initListener() {
@@ -287,6 +308,39 @@ public class SettingsLeftFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(context, ChooseLockActivity.class));
+            }
+        });
+        headIV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final NormalDialog dialog = new NormalDialog(context);
+                dialog.isTitleShow(false)//
+                        .bgColor(Color.parseColor("#383838"))//
+                        .cornerRadius(5)//
+                        .content("退出登录?")//
+                        .contentGravity(Gravity.CENTER)//
+                        .contentTextColor(Color.parseColor("#ffffff"))//
+                        .dividerColor(Color.parseColor("#222222"))//
+                        .btnTextSize(15.5f, 15.5f)//
+                        .btnTextColor(Color.parseColor("#ffffff"), Color.parseColor("#ffffff"))//
+                        .btnPressColor(Color.parseColor("#2B2B2B"))//
+                        .widthScale(0.85f)//
+                        .showAnim(new Tada())//
+                        .dismissAnim(new ZoomOutExit())//
+                        .show();
+                dialog.setOnBtnClickL(new OnBtnClickL() {
+                    @Override
+                    public void onBtnClick() {
+                        dialog.dismiss();
+                    }
+                }, new OnBtnClickL() {
+                    @Override
+                    public void onBtnClick() {
+                        LoginUtils.setLoginStatus(false);
+                        startActivity(new Intent(context, LoginActivity.class));
+                        dialog.dismiss();
+                    }
+                });
             }
         });
     }

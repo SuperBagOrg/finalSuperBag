@@ -65,6 +65,7 @@ public class FirstpageAdapter2 extends RecyclerView.Adapter<RecyclerView.ViewHol
             if (!itemBean.getTag1().equals("")) {
                 ((Pic0ViewHolder)holder).tag1.setText(itemBean.getTag1());
                 ((Pic0ViewHolder)holder).tag1.setVisibility(View.VISIBLE);
+                ((Pic0ViewHolder)holder).tag.setVisibility(View.VISIBLE);
             }
 
             if (!itemBean.getTag2().equals("")){
@@ -103,6 +104,8 @@ public class FirstpageAdapter2 extends RecyclerView.Adapter<RecyclerView.ViewHol
             if (!itemBean.getTag1().equals("")){
                 ((Pic1ViewHolder)holder).tag1.setText(itemBean.getTag1());
                 ((Pic1ViewHolder)holder).tag1.setVisibility(View.VISIBLE);
+                ((Pic1ViewHolder)holder).tag.setVisibility(View.VISIBLE);
+
             }
             if (!itemBean.getTag2().equals("")){
                 ((Pic1ViewHolder)holder).tag2.setVisibility(View.VISIBLE);
@@ -145,6 +148,8 @@ public class FirstpageAdapter2 extends RecyclerView.Adapter<RecyclerView.ViewHol
             if (!itemBean.getTag1().equals("")){
                 ((Pic2ViewHolder)holder).tag1.setText(itemBean.getTag1());
                 ((Pic2ViewHolder)holder).tag1.setVisibility(View.VISIBLE);
+                ((Pic2ViewHolder)holder).tag.setVisibility(View.VISIBLE);
+
             }
             if (!itemBean.getTag2().equals("")){
                 ((Pic2ViewHolder)holder).tag2.setText(itemBean.getTag2());
@@ -190,6 +195,8 @@ public class FirstpageAdapter2 extends RecyclerView.Adapter<RecyclerView.ViewHol
             if (!itemBean.getTag1().equals("")){
                 ((Pic3ViewHolder)holder).tag1.setText(itemBean.getTag1());
                 ((Pic3ViewHolder)holder).tag1.setVisibility(View.VISIBLE);
+                ((Pic3ViewHolder)holder).tag.setVisibility(View.VISIBLE);
+
             }
             if (!itemBean.getTag2().equals("")){
                 ((Pic3ViewHolder)holder).tag2.setText(itemBean.getTag2());
@@ -239,6 +246,7 @@ public class FirstpageAdapter2 extends RecyclerView.Adapter<RecyclerView.ViewHol
             if (!itemBean.getTag1().equals("")){
                 ((Pic4ViewHolder)holder).tag1.setText(itemBean.getTag1());
                 ((Pic4ViewHolder)holder).tag1.setVisibility(View.VISIBLE);
+                ((Pic4ViewHolder)holder).tag.setVisibility(View.VISIBLE);
             }
             if (!itemBean.getTag2().equals("")){
                 ((Pic4ViewHolder)holder).tag2.setText(itemBean.getTag2());
@@ -308,6 +316,7 @@ public class FirstpageAdapter2 extends RecyclerView.Adapter<RecyclerView.ViewHol
         TextView time,content,oldTime,tag1,tag2,tag3,weather,feelings;
         TextView month,week;
         LinearLayout fpLL;
+        ImageView tag;
 
         public Pic0ViewHolder(View itemView) {
             super(itemView);
@@ -322,6 +331,7 @@ public class FirstpageAdapter2 extends RecyclerView.Adapter<RecyclerView.ViewHol
             fpLL = (LinearLayout) itemView.findViewById(R.id.fp_0pic_ll);
             month = (TextView) itemView.findViewById(R.id.fp_0pic_month);
             week = (TextView) itemView.findViewById(R.id.fp_0pic_week);
+            tag = (ImageView) itemView.findViewById(R.id.fp_0pic_tag);
         }
     }
 
@@ -330,6 +340,7 @@ public class FirstpageAdapter2 extends RecyclerView.Adapter<RecyclerView.ViewHol
         ImageView iv;
         LinearLayout fpLL;
         TextView month,week;
+        ImageView tag;
 
         public Pic1ViewHolder(View itemView) {
             super(itemView);
@@ -345,6 +356,7 @@ public class FirstpageAdapter2 extends RecyclerView.Adapter<RecyclerView.ViewHol
             fpLL = (LinearLayout) itemView.findViewById(R.id.fp_1pic_ll);
             month = (TextView) itemView.findViewById(R.id.fp_1pic_month);
             week = (TextView) itemView.findViewById(R.id.fp_1pic_week);
+            tag = (ImageView) itemView.findViewById(R.id.fp_1pic_tag);
         }
     }
 
@@ -353,6 +365,7 @@ public class FirstpageAdapter2 extends RecyclerView.Adapter<RecyclerView.ViewHol
         ImageView iv1,iv2;
         LinearLayout fpLL;
         TextView month,week;
+        ImageView tag;
 
         public Pic2ViewHolder(View itemView) {
             super(itemView);
@@ -369,6 +382,7 @@ public class FirstpageAdapter2 extends RecyclerView.Adapter<RecyclerView.ViewHol
             fpLL = (LinearLayout) itemView.findViewById(R.id.fp_2pic_ll);
             month = (TextView) itemView.findViewById(R.id.fp_2pic_month);
             week = (TextView) itemView.findViewById(R.id.fp_2pic_week);
+            tag = (ImageView) itemView.findViewById(R.id.fp_2pic_tag);
         }
     }
 
@@ -377,6 +391,8 @@ public class FirstpageAdapter2 extends RecyclerView.Adapter<RecyclerView.ViewHol
         ImageView iv1,iv2,iv3;
         LinearLayout fpLL;
         TextView month,week;
+        ImageView tag;
+
         public Pic3ViewHolder(View itemView) {
             super(itemView);
             time = (TextView) itemView.findViewById(R.id.fp_3pic_time);
@@ -393,6 +409,7 @@ public class FirstpageAdapter2 extends RecyclerView.Adapter<RecyclerView.ViewHol
             fpLL = (LinearLayout) itemView.findViewById(R.id.fp_3pic_ll);
             month = (TextView) itemView.findViewById(R.id.fp_3pic_month);
             week = (TextView) itemView.findViewById(R.id.fp_3pic_week);
+            tag = (ImageView) itemView.findViewById(R.id.fp_3pic_tag);
         }
     }
 
@@ -401,6 +418,8 @@ public class FirstpageAdapter2 extends RecyclerView.Adapter<RecyclerView.ViewHol
         ImageView iv1,iv2,iv3,iv4;
         LinearLayout fpLL;
         TextView month,week;
+        ImageView tag;
+
         public Pic4ViewHolder(View itemView) {
             super(itemView);
             time = (TextView) itemView.findViewById(R.id.fp_4pic_time);
@@ -418,6 +437,7 @@ public class FirstpageAdapter2 extends RecyclerView.Adapter<RecyclerView.ViewHol
             fpLL = (LinearLayout) itemView.findViewById(R.id.fp_4pic_ll);
             month = (TextView) itemView.findViewById(R.id.fp_4pic_month);
             week = (TextView) itemView.findViewById(R.id.fp_4pic_week);
+            tag = (ImageView) itemView.findViewById(R.id.fp_4pic_tag);
         }
     }
 }

@@ -27,7 +27,7 @@
                     android:scaleType="centerCrop"
                     android:src="@drawable/pic6" />
 
-                <ImageView
+                <com.example.k.superbag2.view.RecImage
                     android:id="@+id/top_head_icon"
                     android:layout_width="80dp"
                     android:layout_height="80dp"

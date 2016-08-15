@@ -84,6 +84,7 @@
         <Button
             android:layout_width="30dp"
             android:layout_height="30dp"
+            android:layout_centerVertical="true"
             android:id="@+id/add_tag_bt"
             android:layout_toRightOf="@+id/edit_feelings_bt"
             android:layout_marginLeft="20dp"
@@ -91,37 +92,43 @@
             android:background="@drawable/tag" />
         <TextView
             android:layout_width="wrap_content"
-            android:layout_height="30dp"
+            android:layout_height="28dp"
             android:layout_marginLeft="20dp"
             android:id="@+id/edit_tag1"
             android:padding="5dp"
+            android:layout_centerVertical="true"
             android:visibility="gone"
             android:background="@drawable/edit_tag_background"
             android:text=""
-            android:layout_toRightOf="@+id/add_tag_bt"
-            android:gravity="center_vertical"/>
+            android:textSize="13sp"
+            android:textColor="@color/new_primary"
+            android:layout_toRightOf="@+id/add_tag_bt" />
         <TextView
             android:layout_width="wrap_content"
-            android:layout_height="30dp"
+            android:layout_height="28dp"
             android:layout_marginLeft="15dp"
             android:background="@drawable/edit_tag_background"
             android:id="@+id/edit_tag2"
             android:padding="5dp"
             android:text=""
+            android:textColor="@color/new_primary"
+            android:textSize="13sp"
+            android:layout_centerVertical="true"
             android:visibility="gone"
-            android:layout_toRightOf="@+id/edit_tag1"
-            android:gravity="center_vertical"/>
+            android:layout_toRightOf="@+id/edit_tag1" />
         <TextView
             android:layout_width="wrap_content"
-            android:layout_height="30dp"
+            android:layout_height="28dp"
             android:layout_marginLeft="15dp"
             android:background="@drawable/edit_tag_background"
             android:id="@+id/edit_tag3"
+            android:layout_centerVertical="true"
             android:padding="5dp"
+            android:textColor="@color/new_primary"
+            android:textSize="13sp"
             android:visibility="gone"
             android:text=""
-            android:layout_toRightOf="@+id/edit_tag2"
-            android:gravity="center_vertical"/>
+            android:layout_toRightOf="@+id/edit_tag2" />
     </RelativeLayout>
     <View
         android:layout_width="match_parent"

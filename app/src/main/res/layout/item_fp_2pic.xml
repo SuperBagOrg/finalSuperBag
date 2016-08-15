@@ -105,6 +105,14 @@
                 android:textColor="@color/white"
                 android:background="@drawable/feelings_background"
                 />
+
+            <ImageView
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:layout_marginLeft="80dp"
+                android:src="@drawable/tag1"
+                android:visibility="gone"
+                android:id="@+id/fp_2pic_tag"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="20dp"
@@ -112,9 +120,10 @@
                 android:id="@+id/fp_2pic_tag1"
                 android:padding="4dp"
                 android:visibility="gone"
+                android:background="@drawable/edit_tag_background"
+                android:textColor="@color/new_primary"
                 android:textSize="10sp"
-                android:layout_marginLeft="80dp"
-                android:background="@drawable/tag_background"
+                android:layout_marginLeft="18dp"
                 />
             <TextView
                 android:layout_width="wrap_content"
@@ -125,7 +134,8 @@
                 android:layout_marginLeft="18dp"
                 android:padding="4dp"
                 android:textSize="10sp"
-                android:background="@drawable/tag_background"
+                android:background="@drawable/edit_tag_background"
+                android:textColor="@color/new_primary"
                 />
             <TextView
                 android:layout_width="wrap_content"
@@ -136,7 +146,8 @@
                 android:layout_marginLeft="18dp"
                 android:padding="4dp"
                 android:textSize="10sp"
-                android:background="@drawable/tag_background"
+                android:background="@drawable/edit_tag_background"
+                android:textColor="@color/new_primary"
                 />
 
 
