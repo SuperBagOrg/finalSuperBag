@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.example.k.superbag2.MainActivity;
@@ -33,7 +34,8 @@ import cn.bmob.v3.listener.SaveListener;
 public class RegisterActivity extends BaseActivity implements View.OnClickListener {
 
     private EditText phoneNumET,passwordET,vCodeET;
-    private Button getVCodeBT,okBT;
+    private Button getVCodeBT,okBT,backBT;
+    private LinearLayout backLL;
 
     private String phoneNum,verCodeGet,verCodeInput = "";
     private String password = "";
@@ -55,11 +57,15 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         vCodeET = (EditText)findViewById(R.id.register_verification_code);
         getVCodeBT = (Button)findViewById(R.id.register_get_code);
         okBT = (Button)findViewById(R.id.register_ok);
+        backBT = (Button)findViewById(R.id.register_back);
+        backLL = (LinearLayout)findViewById(R.id.register_back_ll);
     }
 
     private void initListener(){
         getVCodeBT.setOnClickListener(this);
         okBT.setOnClickListener(this);
+        backBT.setOnClickListener(this);
+        backLL.setOnClickListener(this);
     }
 
     @Override
@@ -141,6 +147,9 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                             }
                         });
                 break;
+            case R.id.register_back:
+            case R.id.register_back_ll:
+                finish();
         }
     }
     /**

@@ -29,9 +29,8 @@
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                android:background="@color/white"
+                android:background="@color/new_primary"
                 app:popupTheme="@style/AppTheme.PopupOverlay"
-                app:layout_behavior="com.example.k.superbag2.view.ToolbarAlphaBehavior"
                 />
 
         </android.support.design.widget.CoordinatorLayout>

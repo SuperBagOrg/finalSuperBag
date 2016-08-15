@@ -1,21 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
-    android:padding="8dp"
     android:layout_width="320dp"
     android:layout_height="wrap_content">
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="待办事项"
-        android:gravity="center_horizontal"
-        android:textSize="20sp"
-        android:padding="5dp"/>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="47dp"
+        android:background="@color/new_primary"
+        android:gravity="center_vertical"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="待办事项"
+            android:textColor="@color/white"
+            android:gravity="center_horizontal"
+            android:textSize="20sp"
+            android:padding="5dp"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="47dp"
+        android:gravity="center_vertical"
+        android:layout_marginLeft="15dp"
         android:orientation="horizontal"
         android:padding="4dp">
 
@@ -30,10 +39,15 @@
             android:textSize="15sp"
             android:id="@+id/add_memo_title_et"/>
     </LinearLayout>
-
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.8dp"
+        android:background="@color/new_primary"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="47dp"
+        android:gravity="center_vertical"
+        android:layout_marginLeft="15dp"
         android:orientation="horizontal"
         android:padding="4dp">
 
@@ -48,10 +62,15 @@
             android:textSize="15sp"
             android:id="@+id/add_memo_content_et"/>
     </LinearLayout>
-
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.8dp"
+        android:background="@color/new_primary"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="47dp"
+        android:gravity="center_vertical"
+        android:layout_marginLeft="15dp"
         android:orientation="horizontal"
         android:padding="4dp">
 
@@ -69,11 +88,15 @@
             android:gravity="center_horizontal"
             android:padding="8dp"/>
     </LinearLayout>
-
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.8dp"
+        android:background="@color/new_primary"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:layout_marginLeft="15dp"
         android:padding="4dp">
 
         <TextView
@@ -139,13 +162,23 @@
 
         </LinearLayout>
     </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.8dp"
+        android:background="@color/new_primary"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="47dp"
+        android:background="@color/new_primary"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:gravity="center"
+            android:id="@+id/add_memo_ok_bt"
+            android:text="确定"/>
+    </LinearLayout>
 
-    <Button
-        android:layout_width="80dp"
-        android:layout_height="27dp"
-        android:layout_marginTop="8dp"
-        android:layout_gravity="center_horizontal"
-        android:text="确定"
-        android:id="@+id/add_memo_ok_bt"
-        android:background="@drawable/btn_background"/>
 </LinearLayout>

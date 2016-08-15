@@ -28,4 +28,7 @@
     <color name="test">#949494</color>
 
     <color name="blue_back">#5a79ba</color>
+
+    <color name="new_primary">#35C4E5</color>
+    <color name="orange">#ffa000</color>
 </resources>

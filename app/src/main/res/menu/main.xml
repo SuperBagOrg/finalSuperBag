@@ -5,7 +5,7 @@
         android:id="@+id/action_delete"
         android:orderInCategory="100"
         android:title="delete"
-        android:icon="@drawable/delete_black"
+
         android:visible="false"
         app:showAsAction="ifRoom"
         />
@@ -13,7 +13,7 @@
         android:id="@+id/action_search"
         android:orderInCategory="100"
         android:title="search"
-        android:icon="@drawable/search_black"
+        android:icon="@drawable/search_small"
         app:showAsAction="always"
         />
 
@@ -21,7 +21,7 @@
         android:id="@+id/action_edit"
         android:orderInCategory="100"
         android:title="edit"
-        android:icon="@drawable/edit_black"
+        android:icon="@drawable/edit_small"
         app:showAsAction="always" />
 
 </menu>

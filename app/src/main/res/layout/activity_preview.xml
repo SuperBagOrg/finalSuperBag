@@ -6,36 +6,49 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/darkGray"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/new_primary"
         android:padding="10dp">
 
         <LinearLayout
-            android:id="@+id/pre_back_ll"
             android:layout_width="50dp"
+            android:id="@+id/pre_back_ll"
+            android:layout_centerVertical="true"
             android:layout_height="wrap_content">
-
             <Button
-                android:id="@+id/pre_back"
                 android:layout_width="25dp"
                 android:layout_height="25dp"
-                android:background="@drawable/back_white" />
+                android:id="@+id/pre_back"
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/back_white"/>
         </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:id="@+id/edit_title"
+            android:text="时间线"
+            android:paddingLeft="5dp"
+            android:layout_centerVertical="true"
+            android:textColor="@color/white"
+            android:layout_toRightOf="@+id/pre_back_ll"/>
 
         <LinearLayout
-            android:id="@+id/pre_edit_ll"
             android:layout_width="50dp"
-            android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:orientation="horizontal">
-
+            android:orientation="horizontal"
+            android:layout_centerVertical="true"
+            android:id="@+id/pre_edit_ll"
+            android:layout_height="wrap_content">
             <Button
-                android:id="@+id/pre_edit"
                 android:layout_width="25dp"
                 android:layout_height="25dp"
+                android:id="@+id/pre_edit"
                 android:layout_marginLeft="15dp"
-                android:background="@drawable/edit" />
+                android:background="@drawable/edit_small"/>
         </LinearLayout>
+
     </RelativeLayout>
 
     <ScrollView
