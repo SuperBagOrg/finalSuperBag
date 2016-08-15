@@ -7,7 +7,9 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.Window;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.example.k.superbag2.MyApplication;
@@ -22,6 +24,8 @@ public class ChooseLockActivity extends BaseActivity implements View.OnClickList
 
     private RelativeLayout noLockRL,numLockRL,picLockRL;
     private ImageView noLockIV,numLockIV,picLockIV;
+    private Button backBT;
+    private LinearLayout backLL;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -37,9 +41,13 @@ public class ChooseLockActivity extends BaseActivity implements View.OnClickList
         numLockIV = (ImageView)findViewById(R.id.num_lock_right);
         picLockRL = (RelativeLayout)findViewById(R.id.pic_lock_rl);
         picLockIV = (ImageView)findViewById(R.id.pic_lock_right);
+        backBT = (Button)findViewById(R.id.choose_lock_back);
+        backLL = (LinearLayout) findViewById(R.id.choose_lock_back_ll);
         noLockRL.setOnClickListener(this);
         numLockRL.setOnClickListener(this);
         picLockRL.setOnClickListener(this);
+        backBT.setOnClickListener(this);
+        backLL.setOnClickListener(this);
         if (!SaveUtils.getHasSetLock()){
             setNoLockRL();
         }else if (SaveUtils.getLockStyle()){
@@ -79,6 +87,9 @@ public class ChooseLockActivity extends BaseActivity implements View.OnClickList
                 intent1.putExtra("setting",true);
                 startActivity(intent1);
                 break;
+            case R.id.choose_lock_back:
+            case R.id.choose_lock_back_ll:
+                finish();
         }
     }
     private void setNoLockRL(){

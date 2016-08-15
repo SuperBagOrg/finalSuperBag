@@ -7,9 +7,12 @@ import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -42,6 +45,7 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.k.superbag2.activity.AlarmActivity;
 import com.example.k.superbag2.activity.BaseActivity;
 import com.example.k.superbag2.activity.EditActivity;
@@ -71,6 +75,7 @@ import com.flyco.dialog.widget.NormalDialog;
 import com.nineoldandroids.view.ViewHelper;
 
 import org.litepal.crud.DataSupport;
+import org.litepal.util.Const;
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
@@ -217,27 +222,31 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
 
     private void initPicAndSummary(){
         //设置头像背景
-        Bitmap headBM = GetImageUtils.getBMFromUri(this, "headIconUri");
-        if (headBM != null) {
-            fPHeadIconIV.setImageBitmap(headBM);
-            Log.d("设置自定义头像成功", "");
-        } else {
-            fPHeadIconIV.setImageResource(R.drawable.pic4);
+        Uri headUri = GetImageUtils.getUri(this, Constant.HEAD_ICON_URI);
+        if (!headUri.toString().equals("")){
+            Glide.with(MainActivity.this)
+                    .load(headUri)
+                    .asBitmap()
+                    .into(fPHeadIconIV);
         }
 
-        Bitmap bgBM = GetImageUtils.getBMFromUri(this, "bgUri");
-        if (bgBM != null) {
-            fPBackgroundIV.setImageBitmap(bgBM);
-        } else {
-            fPBackgroundIV.setImageResource(R.drawable.pic6);
+        Uri bgUri = GetImageUtils.getUri(this,Constant.BACKGROUND_URI);
+        if (!bgUri.toString().equals("")){
+            Glide.with(MainActivity.this)
+                    .load(bgUri)
+                    .asBitmap()
+                    .into(fPBackgroundIV);
         }
 
         itemBeanList = DataSupport.findAll(ItemBean.class);
-        ItemBean beginItem = itemBeanList.get(0);
-        ItemBean endItem = itemBeanList.get(itemBeanList.size()-1);
+        if (itemBeanList.isEmpty()){
+
+        }
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+        String installTime = sp.getString(Constant.INSTALL_TIME,"2016-08-15");
         GetTime gt = new GetTime();
-        String betweenDay = gt.getBetweenDay(beginItem.getYear()+"-"+beginItem.getMonth()+"-"+beginItem.getDay(),
-                endItem.getYear()+"-"+endItem.getMonth()+"-"+endItem.getDay());
+        String nowTime = gt.getYear()+"-"+gt.getMonth()+"-"+gt.getDay();
+        String betweenDay = gt.getBetweenDay(installTime,nowTime);
         allDayTV.setText(betweenDay);
         allDiaryTV.setText(itemBeanList.size()+"");
         long picNum = 0;
@@ -397,15 +406,11 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
         toolbar.animate().translationY(-toolbar.getHeight()).setInterpolator(new AccelerateInterpolator(2));
         //----
         mainBottomLL.setVisibility(View.GONE);
-        /*FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) mFabButton.getLayoutParams();
-        int fabBottomMargin = lp.bottomMargin;
-        mFabButton.animate().translationY(mFabButton.getHeight()+fabBottomMargin).setInterpolator(new AccelerateInterpolator(2)).start();*/
     }
 
     private void showViews() {
         toolbar.animate().translationY(0).setInterpolator(new DecelerateInterpolator(2));
         mainBottomLL.setVisibility(View.VISIBLE);
-//        mFabButton.animate().translationY(0).setInterpolator(new DecelerateInterpolator(2)).start();
     }
 
     //参数为所点击的项在列表的位置

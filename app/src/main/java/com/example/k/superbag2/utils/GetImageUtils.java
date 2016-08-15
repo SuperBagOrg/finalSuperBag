@@ -35,7 +35,7 @@ public class GetImageUtils {
     public static Uri getUri(Context context,String name){
         SharedPreferences pref =
                 PreferenceManager.getDefaultSharedPreferences(context);
-        String head = pref.getString(name,"no");
+        String head = pref.getString(name,"");
         Uri headUri = Uri.parse(head);
         Log.d(name+"是--",head);
         return headUri;

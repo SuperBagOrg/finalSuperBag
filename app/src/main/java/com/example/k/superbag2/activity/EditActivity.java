@@ -394,7 +394,9 @@ public class EditActivity extends BaseActivity implements View.OnClickListener,
 
                     }
                 });
+        AlertDialog dialog = builder.create();
         builder.show();
+        DialogUtils.setDialog(EditActivity.this,dialog,2,3);
     }
 
     @Override
