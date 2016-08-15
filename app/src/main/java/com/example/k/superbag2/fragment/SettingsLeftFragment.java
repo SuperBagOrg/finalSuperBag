@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.example.k.superbag2.MainActivity;
 import com.example.k.superbag2.MyApplication;
 import com.example.k.superbag2.R;
 import com.example.k.superbag2.activity.ChooseLockActivity;
@@ -91,7 +92,6 @@ public class SettingsLeftFragment extends Fragment {
             private UploadItembean uploadItembean;
             private MemoItem memoItem;
             private ItemBean data;
-
             @Override
             public void onClick(View view) {
                 //在本地记录更新时间，若记录为空，表示没有上传过，此时上传本地所有记录。
@@ -253,9 +253,7 @@ public class SettingsLeftFragment extends Fragment {
                     }
                 });
                 uploadMemoItemBmobQuery.findObjects(new FindListener<UploadMemoItem>() {
-
                     private MemoItem memoItem_local;
-
                     @Override
                     public void done(List<UploadMemoItem> list, BmobException e) {
                         if (e == null){
@@ -277,7 +275,6 @@ public class SettingsLeftFragment extends Fragment {
                     }
                 });
                 Toast.makeText(MyApplication.getContext(),"下载成功",Toast.LENGTH_SHORT).show();
-
             }
         });
         aboutLL.setOnClickListener(new View.OnClickListener() {

@@ -90,21 +90,21 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                             }else if (password.equals("")){
                                 Toast.makeText(RegisterActivity.this,"请输入密码",Toast.LENGTH_SHORT).show();
                             } else {
-
+                                BmobSMS.requestSMSCode(RegisterActivity.this, phoneNum, "获取验证码",
+                                        new RequestSMSCodeListener() {
+                                            @Override
+                                            public void done(Integer integer, BmobException e) {
+                                                if (e == null) {
+                                                    verCodeGet = integer + "";
+                                                }
+                                            }
+                                        });
+                                getVCodeBT.setEnabled(false);
                             }
                         }
                     }
                 });
-                BmobSMS.requestSMSCode(RegisterActivity.this, phoneNum, "获取验证码",
-                        new RequestSMSCodeListener() {
-                            @Override
-                            public void done(Integer integer, BmobException e) {
-                                if (e == null) {
-                                    verCodeGet = integer + "";
-                                }
-                            }
-                        });
-                getVCodeBT.setEnabled(false);
+
                 break;
 
             case R.id.register_ok:

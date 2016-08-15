@@ -80,7 +80,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                             startActivity(new Intent(LoginActivity.this, MainActivity.class));
                             finish();
                         } else {
-                            Toast.makeText(LoginActivity.this,"密码错误",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(LoginActivity.this,"密码错误 本地",Toast.LENGTH_SHORT).show();
                         }
                     }else {
                         //判断与网络上数据库里存储的账号密码是否一致
@@ -90,9 +90,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                             @Override
                             public void done(List<User> list, BmobException e) {
                                 if (e==null){
-                                    User user = new User();
-                                    user.getName();
-                                    user.getPassword();
+                                    User user = list.get(0);
                                     if (user.getPassword().equals(passwordInput)){
                                         //在本地存储当前密码
                                         LoginUtils.setPassword(user.getPassword());
