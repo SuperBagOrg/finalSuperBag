@@ -142,7 +142,7 @@ public class SettingsLeftFragment extends Fragment {
                                 if (e==null){
                                     //save successful
                                 }else {
-                                    uploadItembean.update();
+                                    Log.d("upload","diary upload error");
                                 }
                             }
                         });
@@ -168,7 +168,7 @@ public class SettingsLeftFragment extends Fragment {
                                 if (e==null){
 
                                 }else {
-                                    uploadMemoItem.update();
+                                    Log.d("upload"," memo upload error");
                                 }
                             }
                         });

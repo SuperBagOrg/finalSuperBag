@@ -53,12 +53,13 @@ public class SearchActivity extends BaseActivity {
     private Message msg;
     private int type;
     private MyRecyclerView rv_search;
+    private MyRecyclerView rv_search1;
     private MemoRecyclerAdapter adapter_memo;
     private Button bt_back;
     private EditText et_search;
     private Intent get_intent;
     private String[] type_diary = {"内容","标签","天气","心情"};
-    private String[] type_memo = {"内容","标题"};
+    private String[] type_memo = {"备注","标题"};
     private String[] sort_search = {"时间逆序","时间顺序","内容逆序","内容顺序"};
     private String SORT_TYPE = "updateTime";
     private String SORT_TAG = "asc";
@@ -72,22 +73,13 @@ public class SearchActivity extends BaseActivity {
             if (msg.what == 1){
                 Log.d("search","receive");
                 adapter_diary = new FirstpageAdapter2(MyApplication.getContext(),list_diary);
-                rv_search = (MyRecyclerView) findViewById(R.id.search_rv);
-                rv_search.setLayoutManager(new LinearLayoutManager(SearchActivity.this));
-                //添加分割线
-                rv_search.addItemDecoration(new DividerItemDecoration(MyApplication.getContext(),DividerItemDecoration.VERTICAL_LIST));
-                rv_search.setFocusable(false);
-                rv_search.setItemAnimator(new DefaultItemAnimator());
                 rv_search.setAdapter(adapter_diary);
+                adapter_diary.notifyDataSetChanged();
                 msg.what = NOT_READY;
             }else if (msg.what == 2){
-                rv_search = (MyRecyclerView) findViewById(R.id.search_rv);
-                rv_search.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
                 adapter_memo = new MemoRecyclerAdapter(MyApplication.getContext(),list_memo);
-                rv_search.addItemDecoration(new GridDividerDecoration(MyApplication.getContext()));
-                //设置默认动画
-                rv_search.setItemAnimator(new DefaultItemAnimator());
-                rv_search.setAdapter(adapter_memo);
+                rv_search1.setAdapter(adapter_memo);
+                adapter_memo.notifyDataSetChanged();
                 msg.what = NOT_READY;
             }
         }
@@ -116,8 +108,21 @@ public class SearchActivity extends BaseActivity {
         type = get_intent.getIntExtra("type",9);
         type_from = (EditText) findViewById(R.id.type_from);
         type_sort = (EditText) findViewById(R.id.type_sort);
-
-
+        if (type == 0){
+            rv_search = (MyRecyclerView) findViewById(R.id.search_rv);
+            rv_search.setLayoutManager(new LinearLayoutManager(SearchActivity.this));
+            //添加分割线
+            rv_search.addItemDecoration(new DividerItemDecoration(MyApplication.getContext(),DividerItemDecoration.VERTICAL_LIST));
+            rv_search.setFocusable(false);
+            rv_search.setItemAnimator(new DefaultItemAnimator());
+        }else {
+            type_from.setText("备注");
+            rv_search1 = (MyRecyclerView) findViewById(R.id.search_rv);
+            rv_search1.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
+            rv_search1.addItemDecoration(new GridDividerDecoration(MyApplication.getContext()));
+            //设置默认动画
+            rv_search1.setItemAnimator(new DefaultItemAnimator());
+        }
     }
 
     private void initAction(){
@@ -247,7 +252,6 @@ public class SearchActivity extends BaseActivity {
                 });
             }
             tld.setTitleText("选择查询方式");
-
         }
         tld.dialog.show();
     }

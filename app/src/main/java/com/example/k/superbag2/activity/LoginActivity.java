@@ -12,6 +12,7 @@ import com.example.k.superbag2.MainActivity;
 import com.example.k.superbag2.R;
 import com.example.k.superbag2.bean.User;
 import com.example.k.superbag2.utils.LoginUtils;
+import com.example.k.superbag2.utils.MD5Utils;
 
 import java.util.List;
 
@@ -77,6 +78,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                     //先判断与本地的账号密码是否一致
                     if (LoginUtils.getPhoneNumber().equals(phoneInput)){
                         if (LoginUtils.isRightPass(passwordInput)){
+//                        if (LoginUtils.isRightPass(MD5Utils.GetMD5Code(passwordInput))){
                             LoginUtils.setLoginStatus(true);
                             startActivity(new Intent(LoginActivity.this, MainActivity.class));
                             finish();
@@ -92,6 +94,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                             public void done(List<User> list, BmobException e) {
                                 if (e==null){
                                     User user = list.get(0);
+//                                    if (user.getPassword().equals(MD5Utils.GetMD5Code(passwordInput))){
                                     if (user.getPassword().equals(passwordInput)){
                                         //在本地存储当前密码
                                         LoginUtils.setPassword(user.getPassword());

@@ -5,6 +5,7 @@ import android.drm.DrmStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.k.superbag2.R;
@@ -14,7 +15,7 @@ import com.flyco.dialog.widget.base.BaseDialog;
  * Created by K on 2016/8/14.
  */
 public class MemoDialog extends BaseDialog {
-    Button preDelete, preEdit;
+    TextView preDelete, preEdit;
     private Context context;
 
     private dialogClickListener listener;
@@ -37,8 +38,8 @@ public class MemoDialog extends BaseDialog {
     @Override
     public View onCreateView() {
         View preview = LayoutInflater.from(context).inflate(R.layout.preview_memo, null);
-        preDelete = (Button) preview.findViewById(R.id.pre_memo_delete_bt);
-        preEdit = (Button) preview.findViewById(R.id.pre_memo_edit_bt);
+        preDelete = (TextView) preview.findViewById(R.id.pre_memo_delete_bt);
+        preEdit = (TextView) preview.findViewById(R.id.pre_memo_edit_bt);
         return preview;
     }
 

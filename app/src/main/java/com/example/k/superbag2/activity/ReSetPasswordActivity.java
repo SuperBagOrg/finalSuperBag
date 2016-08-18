@@ -16,6 +16,7 @@ import com.example.k.superbag2.MainActivity;
 import com.example.k.superbag2.R;
 import com.example.k.superbag2.bean.User;
 import com.example.k.superbag2.utils.LoginUtils;
+import com.example.k.superbag2.utils.MD5Utils;
 
 import java.util.List;
 
@@ -124,6 +125,7 @@ public class ReSetPasswordActivity extends BaseActivity implements View.OnClickL
                                     //在user表中更新手机号，与密码项。
                                     user = new User();
                                     user.setName(phoneNum);
+//                                    user.setPassword(MD5Utils.GetMD5Code(password));
                                     user.setPassword(password);
                                     //id
                                     user.update(id, new UpdateListener() {

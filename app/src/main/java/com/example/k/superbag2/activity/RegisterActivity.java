@@ -16,6 +16,7 @@ import com.example.k.superbag2.MainActivity;
 import com.example.k.superbag2.R;
 import com.example.k.superbag2.bean.User;
 import com.example.k.superbag2.utils.LoginUtils;
+import com.example.k.superbag2.utils.MD5Utils;
 import com.example.k.superbag2.utils.SaveUtils;
 
 import java.util.List;
@@ -107,7 +108,6 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                             }
                         }else {
                             //第一次登陆，user表不存在
-                            Log.d("点击了","33333");
                             if (!isMobileNO(phoneNum)){
                                 Toast.makeText(RegisterActivity.this,"请输入正确的手机号",Toast.LENGTH_SHORT).show();
                             }else if (password.equals("")){
@@ -140,6 +140,8 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                                     //在user表中添加手机号，与密码项。
                                     user = new User();
                                     user.setName(phoneNum);
+                                    //考虑把密码MD5加密
+//                                    user.setPassword(MD5Utils.GetMD5Code(password));
                                     user.setPassword(password);
                                     user.save(new SaveListener<String>() {
                                         @Override
