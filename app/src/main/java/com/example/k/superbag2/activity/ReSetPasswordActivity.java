@@ -16,7 +16,6 @@ import com.example.k.superbag2.MainActivity;
 import com.example.k.superbag2.R;
 import com.example.k.superbag2.bean.User;
 import com.example.k.superbag2.utils.LoginUtils;
-import com.example.k.superbag2.utils.SaveUtils;
 
 import java.util.List;
 
@@ -26,13 +25,13 @@ import cn.bmob.sms.listener.RequestSMSCodeListener;
 import cn.bmob.sms.listener.VerifySMSCodeListener;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.listener.FindListener;
-import cn.bmob.v3.listener.QueryListener;
 import cn.bmob.v3.listener.SaveListener;
+import cn.bmob.v3.listener.UpdateListener;
 
 /**
  * Created by K on 2016/8/13.
  */
-public class RegisterActivity extends BaseActivity implements View.OnClickListener {
+public class ReSetPasswordActivity extends BaseActivity implements View.OnClickListener {
 
     private EditText phoneNumET,passwordET,vCodeET;
     private Button getVCodeBT,okBT,backBT;
@@ -40,12 +39,13 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
 
     private String phoneNum,verCodeGet,verCodeInput = "";
     private String password = "";
+    private String id;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(R.layout.activity_register);
+        setContentView(R.layout.activity_resetpassword);
 
         initView();
         initListener();
@@ -73,56 +73,40 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.register_get_code:
-                getVCodeBT.setEnabled(false);
+                Log.d("点击了","注册按钮");
                 phoneNum = phoneNumET.getText().toString();
                 verCodeInput = vCodeET.getText().toString();
                 password = passwordET.getText().toString();
+                if (!isMobileNO(phoneNum)){
+                    Toast.makeText(ReSetPasswordActivity.this,"请输入正确的手机号",Toast.LENGTH_SHORT).show();
+                }else if (password.equals("")){
+                    Toast.makeText(ReSetPasswordActivity.this,"请输入密码",Toast.LENGTH_SHORT).show();
+                } else {
+                    BmobSMS.requestSMSCode(ReSetPasswordActivity.this, phoneNum, "获取验证码",
+                            new RequestSMSCodeListener() {
+                                @Override
+                                public void done(Integer integer, BmobException e) {
+                                    Log.d("点击了","33333");
+
+                                    if (e == null) {
+                                        verCodeGet = integer + "";
+                                        Log.d("点击了","获取验证码");
+
+                                    }
+                                }
+                            });
+                    getVCodeBT.setEnabled(false);
+                }
+                //获取当前手机号对应的id。用以下面更新。
                 BmobQuery<User> query = new BmobQuery<User>();
                 query.addWhereEqualTo("name",phoneNum);
-                //先检测网络数据库中是否有存在的phone，若有则不能注册
                 query.findObjects(new FindListener<User>() {
                     @Override
                     public void done(List<User> list, cn.bmob.v3.exception.BmobException e) {
-                        //是否失败：失败的原因为表或者字段不存在，若存在即查询成功，但不保证是不是空值。
-                        if (e == null){
-                            //查询结果是否为空。
-                            if (list.get(0).getName().equals(phoneNum)){
-                                Toast.makeText(RegisterActivity.this,"当前账号已经注册",Toast.LENGTH_SHORT).show();
-                            }else {
-                                if (!isMobileNO(phoneNum)){
-                                    Toast.makeText(RegisterActivity.this,"请输入正确的手机号",Toast.LENGTH_SHORT).show();
-                                }else if (password.equals("")){
-                                    Toast.makeText(RegisterActivity.this,"请输入密码",Toast.LENGTH_SHORT).show();
-                                } else {
-                                    BmobSMS.requestSMSCode(RegisterActivity.this, phoneNum, "获取验证码",
-                                            new RequestSMSCodeListener() {
-                                                @Override
-                                                public void done(Integer integer, BmobException e) {
-                                                    if (e == null) {
-                                                        verCodeGet = integer + "";
-                                                    }
-                                                }
-                                            });
-                                }
-                            }
+                        if (e == null && !list.get(0).getName().equals(null)){
+                            id = list.get(0).getObjectId();
                         }else {
-                            //第一次登陆，user表不存在
-                            Log.d("点击了","33333");
-                            if (!isMobileNO(phoneNum)){
-                                Toast.makeText(RegisterActivity.this,"请输入正确的手机号",Toast.LENGTH_SHORT).show();
-                            }else if (password.equals("")){
-                                Toast.makeText(RegisterActivity.this,"请输入密码",Toast.LENGTH_SHORT).show();
-                            } else {
-                                BmobSMS.requestSMSCode(RegisterActivity.this, phoneNum, "获取验证码",
-                                        new RequestSMSCodeListener() {
-                                            @Override
-                                            public void done(Integer integer, BmobException e) {
-                                                if (e == null) {
-                                                    verCodeGet = integer + "";
-                                                }
-                                            }
-                                        });
-                            }
+
                         }
                     }
                 });
@@ -131,36 +115,37 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
             case R.id.register_ok:
                 phoneNum = phoneNumET.getText().toString();
                 password = passwordET.getText().toString();
-                BmobSMS.verifySmsCode(RegisterActivity.this, phoneNum, vCodeET.getText().toString(),
+                BmobSMS.verifySmsCode(ReSetPasswordActivity.this, phoneNum, vCodeET.getText().toString(),
                         new VerifySMSCodeListener() {
                             private User user;
                             @Override
                             public void done(BmobException e) {
                                 if (e == null){
-                                    //在user表中添加手机号，与密码项。
+                                    //在user表中更新手机号，与密码项。
                                     user = new User();
                                     user.setName(phoneNum);
                                     user.setPassword(password);
-                                    user.save(new SaveListener<String>() {
+                                    //id
+                                    user.update(id, new UpdateListener() {
                                         @Override
-                                        public void done(String s, cn.bmob.v3.exception.BmobException e) {
+                                        public void done(cn.bmob.v3.exception.BmobException e) {
                                             if (e==null){
+                                                Log.d("register","successful");
                                                 LoginUtils.setPassword(user.getPassword());
                                                 LoginUtils.setPhoneNumber(user.getName());
-                                                Toast.makeText(RegisterActivity.this,"注册成功",
+                                                Toast.makeText(ReSetPasswordActivity.this,"修改成功",
                                                         Toast.LENGTH_SHORT).show();
-                                                Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
+                                                Intent intent = new Intent(ReSetPasswordActivity.this, MainActivity.class);
                                                 startActivity(intent);
                                                 finish();
                                             }else {
-                                                Log.d("register","保存失败");
+                                                user.save();
                                             }
                                         }
                                     });
                                 } else {
-                                    //验证码错误
                                     getVCodeBT.setEnabled(true);
-                                    Toast.makeText(RegisterActivity.this,"验证码输入错误，请重试",Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(ReSetPasswordActivity.this,"验证码输入错误，请重试",Toast.LENGTH_SHORT).show();
                                     Log.d("register",e.getErrorCode()+" --  "+e.getLocalizedMessage());
                                 }
                             }

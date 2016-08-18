@@ -52,6 +52,7 @@ import com.example.k.superbag2.activity.EditActivity;
 import com.example.k.superbag2.activity.NumLockActivity;
 import com.example.k.superbag2.activity.PreviewActivity;
 import com.example.k.superbag2.activity.RegisterActivity;
+import com.example.k.superbag2.activity.SearchActivity;
 import com.example.k.superbag2.activity.SplashActivity;
 import com.example.k.superbag2.adapter.FirstpageAdapter2;
 import com.example.k.superbag2.adapter.MainPagerAdapter;
@@ -189,7 +190,9 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
                 }
                 break;
             case R.id.action_search:
-                startActivity(new Intent(MainActivity.this, SplashActivity.class));
+                Intent search_intent = new Intent(this,SearchActivity.class);
+                search_intent.putExtra("type",viewPager.getCurrentItem());
+                startActivity(search_intent);
                 break;
         }
         return true;

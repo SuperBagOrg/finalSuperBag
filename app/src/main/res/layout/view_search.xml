@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:paddingTop="15dp"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/new_primary"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp">
+
+        <LinearLayout
+            android:layout_width="50dp"
+            android:layout_weight="1"
+            android:id="@+id/edit_back_ll"
+            android:layout_centerVertical="true"
+            android:layout_height="wrap_content">
+            <Button
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:id="@+id/search_back"
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/back_white"/>
+        </LinearLayout>
+
+        <EditText
+            android:layout_weight="5"
+            android:textAlignment="center"
+            android:minWidth="200dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/search_et"
+            android:hint="input"
+            android:textColor="@color/white" />
+
+        <LinearLayout
+            android:layout_weight="1"
+            android:layout_width="50dp"
+            android:layout_alignParentRight="true"
+            android:orientation="horizontal"
+            android:layout_centerVertical="true"
+            android:id="@+id/edit_save_ll"
+            android:layout_height="wrap_content">
+            <Button
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:id="@+id/search_go"
+                android:layout_marginLeft="20dp"
+                android:background="@drawable/search_small"/>
+        </LinearLayout>
+
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/search_type_ll"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/new_primary"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="35dp"
+                />
+            <EditText
+                android:textAlignment="center"
+                android:id="@+id/type_from"
+                android:layout_width="0dp"
+                android:layout_weight="2"
+                android:layout_height="35dip"
+                android:background="@color/new_primary"
+                android:drawableRight="@drawable/type_select"
+                android:focusable="false"
+                android:gravity="center_vertical"
+                android:hint="内容"
+                android:paddingLeft="8dip"
+                android:paddingRight="8dip"
+                android:singleLine="true" />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="35dp"
+                />
+            <EditText
+                android:textAlignment="center"
+                android:id="@+id/type_sort"
+                android:layout_width="0dp"
+                android:layout_weight="2"
+                android:layout_height="35dip"
+                android:background="@color/new_primary"
+                android:drawableRight="@drawable/type_select"
+                android:focusable="false"
+                android:gravity="center_vertical"
+                android:hint="排序"
+                android:paddingLeft="8dip"
+                android:paddingRight="8dip"
+                android:singleLine="true" />
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="35dp"
+                />
+        </LinearLayout>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <com.example.k.superbag2.view.MyRecyclerView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:clipToPadding="false"
+                    android:id="@+id/search_rv">
+
+                </com.example.k.superbag2.view.MyRecyclerView>
+            </LinearLayout>
+
+        </ScrollView>
+    </LinearLayout>
+
+
+
+</LinearLayout>
