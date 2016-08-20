@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.k.superbag2">
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.MANAGE_DOCUMENTS"/>
     <uses-permission android:name="android.permission.BIND_SCREENING_SERVICE"/>
     <uses-permission android:name="android.permission.GET_TASKS" />
@@ -35,7 +35,8 @@
             android:launchMode="singleTask"/>
         <activity android:name=".activity.SearchActivity"/>
         <activity android:name=".activity.ReSetPasswordActivity"/>
-        <activity android:name=".MainActivity"/>
+        <activity android:name=".MainActivity"
+            android:launchMode="singleTask"/>
         <activity android:name=".activity.ChooseLockActivity"/>
         <activity android:name=".activity.ChoosePicActivity"/>
         <activity android:name=".activity.RegisterActivity"/>

@@ -29,4 +29,6 @@ public class Constant {
 
     public static final String BACKGROUND_URI = "background_uri";
 
+    public static final String QUIT_LOGIN = "quit_login";
+
 }

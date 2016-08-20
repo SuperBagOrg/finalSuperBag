@@ -247,6 +247,7 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
                     .into(fPBackgroundIV);
         }
 
+        itemBeanList = new ArrayList<>();
         itemBeanList = DataSupport.findAll(ItemBean.class);
         if (itemBeanList.isEmpty()){
 
@@ -266,13 +267,13 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
     }
 
     private void initDiaryListView(){
+        itemBeanList = new ArrayList<>();
         itemBeanList = DataSupport.findAll(ItemBean.class);
         Collections.reverse(itemBeanList);//反转列表
         diaryAdapter = new FirstpageAdapter2(MainActivity.this,itemBeanList);
         fpRecyclerView.setAdapter(diaryAdapter);
         fpRecyclerView.setFocusable(false);
         fpRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        diaryAdapter.notifyDataSetChanged();
 
         diaryAdapter.setOnItemClickListener(new FirstpageAdapter2.OnItemClickListener() {
             @Override
@@ -281,7 +282,6 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
                 intent.putExtra(Constant.LINE_INDEX, position);
                 startActivity(intent);
             }
-
 
             @Override
             public void onItemLongClick(View view, final int position) {
@@ -329,6 +329,7 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
                     public void onBtnClick() {
                         DataSupport.delete(ItemBean.class, DataSupport.count(ItemBean.class) - position);
                         Toast.makeText(MainActivity.this, "删除成功", Toast.LENGTH_SHORT).show();
+                        diaryAdapter.removeData(DataSupport.count(ItemBean.class) - position);
                         setDiaryView();
                         dialog.dismiss();
                     }
@@ -780,6 +781,15 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
                 firstClickTime = secondClickTime;
                 Toast.makeText(MainActivity.this,"再按一次退出",Toast.LENGTH_SHORT).show();
             }
+        }
+    }
+
+    //
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        if (intent.getBooleanExtra(Constant.QUIT_LOGIN,false)){
+            finish();
         }
     }
 

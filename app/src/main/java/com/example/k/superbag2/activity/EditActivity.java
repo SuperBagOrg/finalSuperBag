@@ -1,11 +1,15 @@
 package com.example.k.superbag2.activity;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -220,8 +224,16 @@ public class EditActivity extends BaseActivity implements View.OnClickListener,
                 }
                 break;
             case R.id.edit_pic_bt:
-                Intent intent = new Intent(EditActivity.this, ChoosePicActivity.class);
-                startActivityForResult(intent, 2);
+                //使用兼容库就无需判断系统版本
+                int hasWriteContactsPermission = ContextCompat.checkSelfPermission(getApplication(), Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                if (hasWriteContactsPermission == PackageManager.PERMISSION_GRANTED) {
+                    Intent intent = new Intent(EditActivity.this, ChoosePicActivity.class);
+                    startActivityForResult(intent, 2);
+                }
+                //需要弹出dialog让用户手动赋予权限
+                else{
+                    ActivityCompat.requestPermissions(EditActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 3);
+                }
                 break;
             case R.id.cancel_bt:
                 break;

@@ -41,6 +41,11 @@ public class FirstpageAdapter2 extends RecyclerView.Adapter<RecyclerView.ViewHol
         void onItemLongClick(View view,int position);
     }
 
+    public void removeData(int position){
+        itemBeanList.remove(position);
+        notifyItemRemoved(position);
+    }
+
     private OnItemClickListener onItemClickListener = null;
 
     @Override

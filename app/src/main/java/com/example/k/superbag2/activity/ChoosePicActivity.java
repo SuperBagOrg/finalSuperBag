@@ -212,8 +212,8 @@ public class ChoosePicActivity extends Activity implements ListImageDirPopupWind
                         imageFloder.setDir(dirPath);
                         imageFloder.setFirstImagePath(path);
                     }
-
-                    int picSize = parentFile.list(new FilenameFilter() {
+                    int picSize = 0;
+                    if ( parentFile.list(new FilenameFilter() {
                         @Override
                         public boolean accept(File dir, String filename) {
                             if (filename.endsWith(".jpg")
@@ -222,7 +222,18 @@ public class ChoosePicActivity extends Activity implements ListImageDirPopupWind
                                 return true;
                             return false;
                         }
-                    }).length;
+                    }) != null) {
+                        picSize = parentFile.list(new FilenameFilter() {
+                            @Override
+                            public boolean accept(File dir, String filename) {
+                                if (filename.endsWith(".jpg")
+                                        || filename.endsWith(".png")
+                                        || filename.endsWith(".jpeg"))
+                                    return true;
+                                return false;
+                            }
+                        }).length;
+                    }
                     totalCount += picSize;
 
                     imageFloder.setCount(picSize);

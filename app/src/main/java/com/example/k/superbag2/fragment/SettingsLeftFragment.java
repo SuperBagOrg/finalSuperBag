@@ -337,7 +337,9 @@ public class SettingsLeftFragment extends Fragment {
                     @Override
                     public void onBtnClick() {
                         LoginUtils.setLoginStatus(false);
-                        startActivity(new Intent(context, LoginActivity.class));
+                        Intent intent = new Intent(context, LoginActivity.class);
+                        intent.putExtra(Constant.QUIT_LOGIN,true);
+                        startActivity(intent);
                         dialog.dismiss();
                     }
                 });

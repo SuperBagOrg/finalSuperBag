@@ -11,6 +11,7 @@ import android.widget.Toast;
 import com.example.k.superbag2.MainActivity;
 import com.example.k.superbag2.R;
 import com.example.k.superbag2.bean.User;
+import com.example.k.superbag2.others.Constant;
 import com.example.k.superbag2.utils.LoginUtils;
 import com.example.k.superbag2.utils.MD5Utils;
 
@@ -29,6 +30,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     private EditText phoneET,passwordET;
     private Button registerBT,forgetBT,loginBT;
     private Button noLoginBT;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -116,6 +118,16 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 startActivity(new Intent(LoginActivity.this, MainActivity.class));
                 finish();
                 break;
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        if(getIntent().getBooleanExtra(Constant.QUIT_LOGIN,false)){
+            Intent intent = new Intent(LoginActivity.this,MainActivity.class);
+            intent.putExtra(Constant.QUIT_LOGIN,true);
+            startActivity(intent);
         }
     }
 }
