@@ -15,13 +15,13 @@ public class MemoItem extends DataSupport{
     private boolean isShake = false;
     private String alarmTime = "";
     private String editTime = "";
-    private float updateTime;
+    private long updateTime;
 
-    public float getUpdateTime() {
+    public long getUpdateTime() {
         return updateTime;
     }
 
-    public void setUpdateTime(float updateTime) {
+    public void setUpdateTime(long updateTime) {
         this.updateTime = updateTime;
     }
 

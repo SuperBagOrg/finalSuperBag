@@ -18,13 +18,13 @@ public class UploadMemoItem extends BmobObject{
     private String alarmTime = "";
     private String editTime = "";
     private String phone;
-    private float updateTime;
+    private long updateTime;
 
-    public float getUpdateTime() {
+    public long getUpdateTime() {
         return updateTime;
     }
 
-    public void setUpdateTime(float updateTime) {
+    public void setUpdateTime(long updateTime) {
         this.updateTime = updateTime;
     }
 

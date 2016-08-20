@@ -116,6 +116,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 break;
             case R.id.login_no_bt:
                 startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                LoginUtils.setLoginStatus(false);
                 finish();
                 break;
         }
