@@ -23,13 +23,13 @@ public class ItemBean extends DataSupport {
     //新增，为了能再次编辑，所以要保存位置
     private int pic1Index = -1,pic2Index = -1,pic3Index = -1,pic4Index = -1;
     private List<Integer> picIndex;
-    private float updateTime;
+    private long updateTime;
 
-    public float getUpdateTime() {
+    public long getUpdateTime() {
         return updateTime;
     }
 
-    public void setUpdateTime(float updateTime) {
+    public void setUpdateTime(long updateTime) {
         this.updateTime = updateTime;
     }
 

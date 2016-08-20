@@ -5,14 +5,20 @@ import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.PendingIntent;
 import android.app.TimePickerDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.preference.PreferenceManager;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -122,6 +128,10 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
     private boolean isShake = false;
     private String alarmTime = "";
 
+    //本地广播
+    public LocalReceiver localReceiver;
+    public static LocalBroadcastManager localBroadcastManager;
+    public IntentFilter intentFilter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -140,8 +150,16 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
         setDiaryView();
         setMemoView();
         initEvents();
+        initLocalReceiver();
     }
 
+    private void initLocalReceiver(){
+        localReceiver = new LocalReceiver();
+        localBroadcastManager = LocalBroadcastManager.getInstance(MyApplication.getContext());
+        intentFilter = new IntentFilter();
+        intentFilter.addAction("local.broadcast");
+        localBroadcastManager.registerReceiver(localReceiver, intentFilter);
+    }
     private void initView() {
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mainDiaryBT = (Button) findViewById(R.id.main_diary_BT);
@@ -305,6 +323,7 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
                         .setCancelable(true)
                         .show();*/
                 final NormalDialog dialog = new NormalDialog(MainActivity.this);
+                Log.d("delete","position"+position);
                 dialog.isTitleShow(false)//
                         .bgColor(Color.parseColor("#383838"))//
                         .cornerRadius(5)//
@@ -327,7 +346,10 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
                 }, new OnBtnClickL() {
                     @Override
                     public void onBtnClick() {
-                        DataSupport.delete(ItemBean.class, DataSupport.count(ItemBean.class) - position);
+                        Log.d("delete","itemBeanList.get(position).getUpdateTime()"+position+" "+itemBeanList.get(position).getDayTime());
+                        String target = String.valueOf(itemBeanList.get(position).getUpdateTime());
+                        DataSupport.deleteAll(ItemBean.class,"updateTime = ?",target);
+
                         Toast.makeText(MainActivity.this, "删除成功", Toast.LENGTH_SHORT).show();
                         setDiaryView();
                         dialog.dismiss();
@@ -552,6 +574,7 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
         OKBT.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                GetTime gt = new GetTime();
                 if (titleET.getText().toString().trim().equals("")) {
                     Toast.makeText(MainActivity.this, "不能为空呦", Toast.LENGTH_SHORT).show();
                 } else {
@@ -564,7 +587,8 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
                         memoItem.setSound(isSound);
                         memoItem.setShake(isShake);
                         memoItem.setAlarmTime(alarmTime);
-                        memoItem.setUpdateTime(System.currentTimeMillis());
+                        String daytime = gt.getSpecificTime().replace("-","").replace(" ","").replace(":","");
+                        memoItem.setUpdateTime(Integer.parseInt(daytime));
                         memoItem.setEditTime(new GetTime().getSpecificTime());
                         memoRecyclerAdapter.addItem(0, memoItem, 0, -1);
                     } else {
@@ -574,7 +598,8 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
                         item.setAlarm(isAlarm);
                         item.setSound(isSound);
                         item.setShake(isShake);
-                        item.setUpdateTime(System.currentTimeMillis());
+                        String daytime = gt.getSpecificTime().replace("-","").replace(" ","").replace(":","");
+                        item.setUpdateTime(Long.parseLong(daytime));
                         item.setAlarmTime(alarmTime);
                         item.setEditTime(new GetTime().getSpecificTime());
                         // TODO 执行更新操作
@@ -782,5 +807,10 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
             }
         }
     }
-
+    class LocalReceiver extends BroadcastReceiver{
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            initDiaryListView();
+        }
+    }
 }

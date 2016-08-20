@@ -457,7 +457,8 @@ public class EditActivity extends BaseActivity implements View.OnClickListener,
         newItem.setPic2Index(picIndex.get(1));
         newItem.setPic3Index(picIndex.get(2));
         newItem.setPic4Index(picIndex.get(3));
-        newItem.setUpdateTime(System.currentTimeMillis());
+        String daytime = gt.getSpecificTime().replace("-","").replace(" ","").replace(":","");
+        newItem.setUpdateTime(Long.parseLong(daytime));
         if (whichToSave == -1) {
             newItem.save();
             Log.d("新建保存", "");

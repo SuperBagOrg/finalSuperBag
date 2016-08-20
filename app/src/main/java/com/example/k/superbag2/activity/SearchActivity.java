@@ -72,6 +72,7 @@ public class SearchActivity extends BaseActivity {
             //根据数据结构的不同，采用不同的adapter。
             if (msg.what == 1){
                 Log.d("search","receive");
+
                 adapter_diary = new FirstpageAdapter2(MyApplication.getContext(),list_diary);
                 rv_search.setAdapter(adapter_diary);
                 adapter_diary.notifyDataSetChanged();
@@ -210,7 +211,7 @@ public class SearchActivity extends BaseActivity {
                                 break;
                             case 1:
                                 type_from.setText(type_diary[position]);
-                                SORT_CONTENT = "tag1 or tag2 tag3";
+                                SORT_CONTENT = "tag1 or tag2 or tag3";
                                 break;
                             case 2:
                                 type_from.setText(type_diary[position]);
@@ -265,8 +266,13 @@ public class SearchActivity extends BaseActivity {
                 msg.what = READY_DIARY;
                 Log.d("search","click");
             }else {
-                list_memo = DataSupport.where(SORT_CONTENT+" "+"like ?","%"+target+"%")
-                        .order(SORT_TYPE+" "+SORT_TAG).find(MemoItem.class);
+                if (SORT_CONTENT.equals("tag1 or tag2 or tag3")){
+                    list_memo = DataSupport.where(SORT_CONTENT + " " + "= ?", target,target,target)
+                            .order(SORT_TYPE + " " + SORT_TAG).find(MemoItem.class);
+                }else {
+                    list_memo = DataSupport.where(SORT_CONTENT + " " + "like ?", "%" + target + "%")
+                            .order(SORT_TYPE + " " + SORT_TAG).find(MemoItem.class);
+                }
                 msg.what = READY_MEMO;
             }
             hd.sendMessage(msg);
