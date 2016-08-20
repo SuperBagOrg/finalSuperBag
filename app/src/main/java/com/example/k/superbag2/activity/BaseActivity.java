@@ -1,6 +1,7 @@
 package com.example.k.superbag2.activity;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
@@ -21,7 +22,9 @@ public class BaseActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        getWindow().setNavigationBarColor(getResources().getColor(R.color.new_primary));
+        if (Build.VERSION.SDK_INT > 21) {
+            getWindow().setNavigationBarColor(getResources().getColor(R.color.new_primary));
+        }
         if (SaveUtils.getHasSetLock()&&SaveUtils.getIsLocked()) {
             if (SaveUtils.getLockStyle()){
                 intent = new Intent(this, NumLockActivity.class);

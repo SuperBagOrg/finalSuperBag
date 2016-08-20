@@ -569,11 +569,11 @@ public class SettingsLeftFragment extends Fragment {
         SharedPreferences.Editor editor =
                 PreferenceManager.getDefaultSharedPreferences(context).edit();
         if (i == 1) {
-            editor.putString("headIconUri", imageUri.toString());
+            editor.putString(Constant.HEAD_ICON_URI, imageUri.toString());
             editor.putBoolean("HEAD_CHANGED", true);
             Toast.makeText(context, "头像更换成功！", Toast.LENGTH_SHORT).show();
         } else {
-            editor.putString("bgUri", imageUri.toString());
+            editor.putString(Constant.BACKGROUND_URI, imageUri.toString());
             editor.putBoolean("BG_CHANGED", true);
             Toast.makeText(context, "背景更换成功！", Toast.LENGTH_SHORT).show();
         }

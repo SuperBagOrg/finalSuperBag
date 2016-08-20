@@ -74,7 +74,7 @@ public class RoundImageView extends ImageView {
         circlePaint.setAntiAlias(true);
         circlePaint.setColor(Color.WHITE);
         circlePaint.setStyle(Paint.Style.STROKE);
-        circlePaint.setStrokeWidth(3);
+        circlePaint.setStrokeWidth(2);
 
         int w = getPaddingLeft() + getPaddingRight();
         int r = (getWidth() - w) / 2;

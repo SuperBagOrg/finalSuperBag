@@ -33,21 +33,21 @@ public class SplashActivity extends Activity {
     }
 
     private void setEvents() {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+        if (sp.getBoolean(Constant.FIRST_OPEN,true)){
+            GetTime gt = new GetTime();
+            SharedPreferences.Editor editor = sp.edit();
+            String installTime = gt.getYear()+"-"+gt.getMonth()+"-"+gt.getDay();
+            editor.putString(Constant.INSTALL_TIME,installTime);
+            editor.putBoolean(Constant.FIRST_OPEN,false);
+            editor.apply();
+        }
         if (LoginUtils.getLoginStatus()) {
             //主界面
             handler.sendEmptyMessageDelayed(1, 2500);
         } else {
             //登录界面
             handler.sendEmptyMessageDelayed(2, 2500);
-        }
-
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
-        if (sp.getBoolean(Constant.FIRST_OPEN,true)){
-            GetTime gt = new GetTime();
-            String installTime = gt.getYear()+"-"+gt.getMonth()+"-"+gt.getDay();
-            sp.edit().putString(Constant.INSTALL_TIME,installTime);
-            sp.edit().putBoolean(Constant.FIRST_OPEN,false);
-            sp.edit().apply();
         }
     }
 

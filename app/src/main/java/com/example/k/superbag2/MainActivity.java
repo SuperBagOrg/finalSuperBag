@@ -292,6 +292,7 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
         fpRecyclerView.setAdapter(diaryAdapter);
         fpRecyclerView.setFocusable(false);
         fpRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        diaryAdapter.notifyDataSetChanged();
 
         diaryAdapter.setOnItemClickListener(new FirstpageAdapter2.OnItemClickListener() {
             @Override
@@ -809,7 +810,7 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
         }
     }
 
-    //
+    //为了退出登录后，在login界面点击返回直接退出应用，而不是再次返回首页
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
