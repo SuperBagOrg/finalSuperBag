@@ -440,61 +440,6 @@ public class SettingsLeftFragment extends Fragment {
                                 memoItem_local.setImportance(memoItem.getImportance());
                                 memoItem_local.setShake(memoItem.isShake());
                                 memoItem_local.setSound(memoItem.isSound());
-                                memoItem.save();
-                            }
-                        }
-                    }
-                });
-                Toast.makeText(MyApplication.getContext(),"下载成功",Toast.LENGTH_SHORT).show();
-            }
-        });
-        aboutLL.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(context, "两个大帅比的作品", Toast.LENGTH_SHORT).show();
-            }
-        });
-        lockLL.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(context, ChooseLockActivity.class));
-            }
-        });
-        headIV.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                final NormalDialog dialog = new NormalDialog(context);
-                dialog.isTitleShow(false)//
-                        .bgColor(Color.parseColor("#383838"))//
-                        .cornerRadius(5)//
-                        .content("退出登录?")//
-                        .contentGravity(Gravity.CENTER)//
-                        .contentTextColor(Color.parseColor("#ffffff"))//
-                        .dividerColor(Color.parseColor("#222222"))//
-                        .btnTextSize(15.5f, 15.5f)//
-                        .btnTextColor(Color.parseColor("#ffffff"), Color.parseColor("#ffffff"))//
-                        .btnPressColor(Color.parseColor("#2B2B2B"))//
-                        .widthScale(0.85f)//
-                        .showAnim(new Tada())//
-                        .dismissAnim(new ZoomOutExit())//
-                        .show();
-                dialog.setOnBtnClickL(new OnBtnClickL() {
-                    @Override
-                    public void onBtnClick() {
-                        dialog.dismiss();
-                    }
-                }, new OnBtnClickL() {
-                    @Override
-                    public void onBtnClick() {
-                        LoginUtils.setLoginStatus(false);
-                        Intent intent = new Intent(context, LoginActivity.class);
-                        intent.putExtra(Constant.QUIT_LOGIN,true);
-                        startActivity(intent);
-                        dialog.dismiss();
-                    }
-                });
-            }
-        });
                                 memoItem_local.save();
                                 j++;
                             }else if (list_diary.get(i).getUpdateTime() == list.get(j).getUpdateTime()){
@@ -515,7 +460,6 @@ public class SettingsLeftFragment extends Fragment {
                             memoItem_local.setSound(memoItem.isSound());
                             memoItem_local.save();
                             j++;
-
                         }
 
                         if (j == list.size()){
@@ -528,6 +472,7 @@ public class SettingsLeftFragment extends Fragment {
         });
         Toast.makeText(MyApplication.getContext(),"下载成功",Toast.LENGTH_SHORT).show();
     }
+
     /**
      * 从相册选取,参数用于确定头像还是背景
      *
