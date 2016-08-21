@@ -31,6 +31,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -75,6 +76,7 @@ import com.example.k.superbag2.view.GridDividerDecoration;
 import com.example.k.superbag2.view.HidingScrollListener;
 import com.example.k.superbag2.view.MemoDialog;
 import com.example.k.superbag2.view.MyRecyclerView;
+import com.example.k.superbag2.view.MyScrollview;
 import com.flyco.animation.Attention.Tada;
 import com.flyco.animation.BounceEnter.BounceEnter;
 import com.flyco.animation.ZoomExit.ZoomOutExit;
@@ -109,6 +111,8 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
     private ListView fPListView;
     //----
     private MyRecyclerView fpRecyclerView;
+    private MyScrollview scrollview;
+
 //    private FirstpageAdapter diaryAdapter;
     private FirstpageAdapter2 diaryAdapter;
     private List<ItemBean> itemBeanList;
@@ -236,6 +240,7 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
         fPHeadIconIV = (ImageView) diaryView.findViewById(R.id.top_head_icon);
         fPSummaryTV = (TextView) diaryView.findViewById(R.id.top_summary);
         fpRecyclerView = (MyRecyclerView) diaryView.findViewById(R.id.first_page_rv);
+        scrollview = (MyScrollview) diaryView.findViewById(R.id.fp_scroll_view);
         //日记总览
         allDayTV = (TextView)diaryView.findViewById(R.id.fp_all_day);
         allDiaryTV = (TextView)diaryView.findViewById(R.id.fp_all_diary);
@@ -366,6 +371,7 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
             @Override
             public void onHide() {
                 hideViews();
+                Log.d("隐藏执行","---------");
             }
 
             @Override
@@ -373,6 +379,18 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
                 showViews();
             }
         });
+
+        /*scrollview.setOnScrollChangeListener(new View.OnScrollChangeListener() {
+            @Override
+            public void onScrollChange(View view, int i, int i1, int i2, int i3) {
+                if (i3 - i1 > 50){
+                    showViews();
+                }
+                if (i3 - i1 < -50){
+                    hideViews();
+                }
+            }
+        });*/
     }
 
     private void setMemoView() {
@@ -765,7 +783,7 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
             //设置toolbar的新建图标
 //            toolbar.getMenu().getItem(1).setIcon(getResources().getDrawable(R.drawable.edit_black));
             mainDiaryBT.setBackground(getResources().getDrawable(R.drawable.diary_blue));
-            mainDiaryTV.setTextColor(getResources().getColor(R.color.light_blue));
+            mainDiaryTV.setTextColor(getResources().getColor(R.color.new_primary));
             mainMemoBT.setBackground(getResources().getDrawable(R.drawable.memo_black));
             mainMemoTV.setTextColor(getResources().getColor(R.color.gray));
         } else {
@@ -773,7 +791,7 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
             mainDiaryBT.setBackground(getResources().getDrawable(R.drawable.diary_black));
             mainDiaryTV.setTextColor(getResources().getColor(R.color.gray));
             mainMemoBT.setBackground(getResources().getDrawable(R.drawable.memo_blue));
-            mainMemoTV.setTextColor(getResources().getColor(R.color.light_blue));
+            mainMemoTV.setTextColor(getResources().getColor(R.color.new_primary));
         }
     }
 
