@@ -66,6 +66,7 @@ import com.example.k.superbag2.adapter.MemoRecyclerAdapter;
 import com.example.k.superbag2.bean.ItemBean;
 import com.example.k.superbag2.bean.MemoItem;
 import com.example.k.superbag2.others.Constant;
+import com.example.k.superbag2.receiver.AlarmReceiver;
 import com.example.k.superbag2.utils.DialogUtils;
 import com.example.k.superbag2.utils.GetImageUtils;
 import com.example.k.superbag2.utils.GetTime;
@@ -127,6 +128,7 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
     private boolean isSound = false;
     private boolean isShake = false;
     private String alarmTime = "";
+    private String alarmTimeShow = "";
 
     //本地广播
     public LocalReceiver localReceiver;
@@ -468,13 +470,14 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
         if (!memoItem.isAlarm()) {
             preAlarm.setText("无");
         } else {
-            String str = memoItem.getAlarmTime();
+            String str = memoItem.getAlarmTimeShow();
             if (memoItem.isSound()) {
                 str = str + "\n提示音";
             }
             if (memoItem.isShake()) {
                 str = str + "  震动";
             }
+            preAlarm.setText(str);
         }
         preDelete.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -530,7 +533,7 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
             soundSC.setChecked(item.isAlarm());
             shakeSC.setChecked(item.isShake());
             if (item.isAlarm()) {
-                alarmTimeTV.setText(item.getAlarmTime());
+                alarmTimeTV.setText(item.getAlarmTimeShow());
                 alarmTimeTV.setClickable(true);
                 soundSC.setClickable(true);
                 shakeSC.setClickable(true);
@@ -569,7 +572,9 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
         alarmTimeTV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                alarmTime = setTime();
+                String[] time = setTime(alarmTimeTV);
+                alarmTime = time[0];
+                alarmTimeShow = time[1];
             }
         });
         OKBT.setOnClickListener(new View.OnClickListener() {
@@ -588,8 +593,9 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
                         memoItem.setSound(isSound);
                         memoItem.setShake(isShake);
                         memoItem.setAlarmTime(alarmTime);
-                        String daytime = gt.getSpecificTime().replace("-","").replace(" ","").replace(":","");
-                        memoItem.setUpdateTime(Integer.parseInt(daytime));
+                        memoItem.setAlarmTimeShow(alarmTimeShow);
+                        String daytime = gt.getSpecificTime2Second();
+                        memoItem.setUpdateTime(Long.parseLong(daytime));
                         memoItem.setEditTime(new GetTime().getSpecificTime());
                         memoRecyclerAdapter.addItem(0, memoItem, 0, -1);
                     } else {
@@ -599,9 +605,10 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
                         item.setAlarm(isAlarm);
                         item.setSound(isSound);
                         item.setShake(isShake);
-                        String daytime = gt.getSpecificTime().replace("-","").replace(" ","").replace(":","");
+                        String daytime = gt.getSpecificTime2Second();
                         item.setUpdateTime(Long.parseLong(daytime));
                         item.setAlarmTime(alarmTime);
+                        item.setAlarmTimeShow(alarmTimeShow);
                         item.setEditTime(new GetTime().getSpecificTime());
                         // TODO 执行更新操作
                         memoRecyclerAdapter.addItem(0, item, 1, index);
@@ -614,9 +621,21 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
         addMemoDialog.show();
     }
 
+    //参数为 需要提醒的具体item
+    private void setAlarm(MemoItem item){
+        //启动广播接收，发出通知
+        Intent intent = new Intent(MainActivity.this, AlarmReceiver.class);
+        intent.putExtra(Constant.SET_SOUND,item.isSound());
+        intent.putExtra(Constant.SET_SHAKE,item.isShake());
+        PendingIntent pt = PendingIntent.getBroadcast(MainActivity.this, 0, intent, 0);
+        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        alarmManager.set(AlarmManager.RTC_WAKEUP, Long.parseLong(item.getAlarmTime()), pt);
+    }
+
 
     //设置提醒时间
-    private String setTime() {
+    //返回值数组，第一个是具体时间（数字）,第二个是用于显示的时间
+    private String[] setTime(final TextView textView) {
         Calendar calendar = Calendar.getInstance();
         final Calendar c = Calendar.getInstance();
         c.setTimeInMillis(System.currentTimeMillis());
@@ -625,15 +644,20 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
                 new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int i, int i1) {
-
+                        Log.d("小时是：",i+"");
+                        Log.d("分钟是:",i1+"");
+                        //得到的时间是24小时制
                         c.set(Calendar.HOUR_OF_DAY, i);
                         c.set(Calendar.MINUTE, i1);
-                        Intent intent = new Intent(MainActivity.this, AlarmActivity.class);
+                        /*//启动广播接收，发出通知
+                        Intent intent = new Intent(MainActivity.this, AlarmReceiver.class);
                         intent.putExtra(Constant.SET_SOUND,isSound);
                         intent.putExtra(Constant.SET_SHAKE,isShake);
-                        PendingIntent pt = PendingIntent.getActivity(MainActivity.this, 0, intent, 0);
+                        PendingIntent pt = PendingIntent.getBroadcast(MainActivity.this, 0, intent, 0);
                         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-                        alarmManager.set(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), pt);
+                        alarmManager.set(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), pt);*/
+
+                        textView.setText(c.get(Calendar.YEAR)+"-"+c.get(Calendar.MONTH)+"-"+c.get(Calendar.DAY_OF_MONTH)+"  "+c.get(Calendar.HOUR_OF_DAY)+"-"+c.get(Calendar.MINUTE));
                         Toast.makeText(MainActivity.this, "提醒设置成功", Toast.LENGTH_SHORT).show();
                     }
                 }, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), false);
@@ -644,12 +668,15 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
                     @Override
                     public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
                         c.set(i, i1, i2);
+                        Log.d("年月日：",i+"-"+i1+"-"+i2);
                     }
                 }, calendar.get(Calendar.YEAR),
                 calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
         datePicker.show();
 
-        return c.getTimeInMillis() + "";
+//        return c.getTimeInMillis() + "";
+        String[] res = {c.getTimeInMillis()+"",c.get(Calendar.YEAR)+"-"+c.get(Calendar.MONTH)+"-"+c.get(Calendar.DAY_OF_MONTH)+"  "+c.get(Calendar.HOUR_OF_DAY)+"-"+c.get(Calendar.MINUTE)};
+        return res;
     }
 
     //设置抽屉。。

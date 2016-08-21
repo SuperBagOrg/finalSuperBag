@@ -10,6 +10,7 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Vibrator;
+import android.util.Log;
 
 import com.example.k.superbag2.others.Constant;
 
@@ -23,6 +24,7 @@ public class AlarmActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d("提醒了。。。","sdfafd");
         new AlertDialog.Builder(this).setTitle("有提醒")
                 .setMessage("今天跟奥巴马约好了喝茶呦!")
                 .setPositiveButton("确定", new DialogInterface.OnClickListener() {

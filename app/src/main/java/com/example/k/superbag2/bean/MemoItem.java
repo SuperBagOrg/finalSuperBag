@@ -13,9 +13,12 @@ public class MemoItem extends DataSupport{
     private boolean isAlarm = false;
     private boolean isSound = false;
     private boolean isShake = false;
+    //表示数字，用于提醒
     private String alarmTime = "";
     private String editTime = "";
     private long updateTime;
+    //用于显示
+    private String alarmTimeShow = "";
 
     public long getUpdateTime() {
         return updateTime;
@@ -111,5 +114,13 @@ public class MemoItem extends DataSupport{
 
     public String getHourMIn(){
         return editTime.substring(11);
+    }
+
+    public String getAlarmTimeShow() {
+        return alarmTimeShow;
+    }
+
+    public void setAlarmTimeShow(String alarmTimeShow) {
+        this.alarmTimeShow = alarmTimeShow;
     }
 }

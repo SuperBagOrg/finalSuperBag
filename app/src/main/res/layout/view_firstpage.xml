@@ -3,7 +3,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <ScrollView
+    <com.example.k.superbag2.view.MyScrollview
         android:layout_width="match_parent"
         android:layout_marginTop="?attr/actionBarSize"
         android:layout_height="wrap_content">
@@ -95,5 +95,5 @@
                 android:id="@+id/first_page_rv"></com.example.k.superbag2.view.MyRecyclerView>
         </LinearLayout>
 
-    </ScrollView>
+    </com.example.k.superbag2.view.MyScrollview>
 </LinearLayout>
