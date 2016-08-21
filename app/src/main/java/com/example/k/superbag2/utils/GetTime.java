@@ -80,7 +80,7 @@ public class GetTime {
 
     public String getSpecificTime2Second(){
         GetTime gt = new GetTime();
-        return gt.getYear()+gt.getMonth()+gt.getDay()+gt.getMin()+gt.getSec();
+        return gt.getYear()+gt.getMonth()+gt.getDay()+gt.getHour()+gt.getMin()+gt.getSec();
     }
 
     /**

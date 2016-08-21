@@ -212,26 +212,38 @@ public class EditActivity extends BaseActivity implements View.OnClickListener,
             case R.id.edit_save:
                 //存储
                 List<EditData> editDatas = contentET.getData();
+//                for (EditData data:editDatas){
+//
+//                }
+                Log.d("rich_edit","uriLIst"+": "+editDatas.size());
+                StringBuilder sb = new StringBuilder();
                 int count = 0;
                 for (EditData save_rich:editDatas){
+                    sb.append(save_rich.getInputStr());
+                    //ImageView
+                    Log.d("rich_edit","uriLIst"+": "+uriList.get(count));
+
+                    if (editDatas.get(count).getInputStr() == ""){
+                        save_rich.setImagePath(uriList.get(count));
+
+                    }
+                    Log.d("rich_edit","editDatas"+": "+editDatas.get(count).getImagePath());
+                    Log.d("rich_edit","save_rich"+": "+save_rich.getImagePath());
+
                     save_rich.setUpdateTime(creatTime);
-                    save_rich.setImagePath(uriList.get(count));
                     save_rich.save();
                     count++;
                 }
 
-                StringBuilder sb = new StringBuilder();
-                int temp = 0;
-                for (int i = 0; i < editDatas.size(); i++) {
-                    EditData ed = editDatas.get(i);
-                    sb.append(ed.getInputStr());
-                    if (!ed.getImagePath().equals("")) {
-                        uriList.set(temp, ed.getImagePath());
-                        picIndex.add(temp, i);
-                        sb.append("/-/");
-                        temp++;
-                    }
-                }
+//                int temp = 0;
+//                for (int i = 0; i < editDatas.size(); i++) {
+//                    EditData ed = editDatas.get(i);
+//                    if (!ed.getImagePath().equals("")) {
+//                        uriList.set(temp, ed.getImagePath());
+//                        picIndex.add(temp, i);
+//                        temp++;
+//                    }
+//                }
                 content = sb.toString();
                 if (content.trim().equals("")) {
                     Toast.makeText(EditActivity.this, "内容不能为空呦", Toast.LENGTH_SHORT).show();
@@ -415,7 +427,12 @@ public class EditActivity extends BaseActivity implements View.OnClickListener,
                     for (int i = 0; i < tempPics.size(); i++) {
                         //ImageView插入操作
                         uriList.set(i, tempPics.get(i));
+                        Log.d("rich_edit","onActivityResult"+i+" "+GetImageUtils.getRealFilePath(this, Uri.parse(uriList.get(i))));
+                        Log.d("result","tempPics onActivityResult"+i+" "+tempPics.get(i));
+                        Log.d("result","tempPics onActivityResult"+i+" "+uriList.get(i));
+
                         insertBitmap(GetImageUtils.getRealFilePath(this, Uri.parse(uriList.get(i))));
+//                        insertBitmap(tempPics.get(i));
                     }
                 }
                 break;

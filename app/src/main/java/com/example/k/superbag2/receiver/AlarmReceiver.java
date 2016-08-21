@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 import com.example.k.superbag2.MainActivity;
 import com.example.k.superbag2.MyApplication;
@@ -30,6 +31,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
+        Log.d("clock",":"+"receiver");
 
         NotificationManager manager = (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
 
@@ -48,8 +50,9 @@ public class AlarmReceiver extends BroadcastReceiver {
         SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
         editor.putBoolean(Constant.HAS_SET_ALARM,false);
         editor.apply();
-
-        context.startService(new Intent(context, AlarmService.class));
+        //设置下一个提醒。
+        AlarmUtils alarmUtils = new AlarmUtils();
+        alarmUtils.setAlarmAfterReceive();
     }
 
 

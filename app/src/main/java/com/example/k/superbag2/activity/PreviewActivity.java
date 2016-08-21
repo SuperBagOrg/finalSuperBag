@@ -146,6 +146,8 @@ public class PreviewActivity extends BaseActivity implements View.OnClickListene
         Intent intent = getIntent();
         //获取到点击条目的创建时间。
         lineNum = intent.getLongExtra(Constant.LINE_INDEX,-1L);
+        Log.d("rich_edit",""+lineNum+"");
+
         if (lineNum != -1){
             //根据创建时间从数据库拿到条目记录
             //拿到RichEdit的结构信息。
@@ -158,16 +160,14 @@ public class PreviewActivity extends BaseActivity implements View.OnClickListene
             int index = 0;
             Log.d("rich_edit",""+list_richedit.size());
             for (EditData editData:list_richedit){
-                if (editData.getInputStr().equals(null)){
+                if (editData.getInputStr().equals("")){
                     //插入ImageView
-
-                    preContent.insertImage(GetImageUtils.getRealFilePath(this, Uri.parse(editData.getImagePath())));
-                    Log.d("rich_edit",""+index+": "+editData.getBitmap()+": "+editData.getImagePath().toString());
-
+                    Log.d("rich_edit","preContent width"+PreviewActivity.width);
+                    preContent.insertImage(editData.getImagePath());
                 }else {
                     //插入EditText
                     preContent.addEditTextAtIndex(index,editData.getInputStr());
-                    Log.d("rich_edit",""+index+": "+editData.getInputStr());
+                    Log.d("rich_edit",""+index+": "+editData.getInputStr()+editData.getImagePath());
 
                 }
                 index++;

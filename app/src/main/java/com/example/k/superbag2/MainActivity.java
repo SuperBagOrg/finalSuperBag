@@ -51,24 +51,17 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
-
 import com.bumptech.glide.Glide;
-import com.example.k.superbag2.activity.AlarmActivity;
 import com.example.k.superbag2.activity.BaseActivity;
 import com.example.k.superbag2.activity.EditActivity;
-import com.example.k.superbag2.activity.NumLockActivity;
 import com.example.k.superbag2.activity.PreviewActivity;
-import com.example.k.superbag2.activity.RegisterActivity;
 import com.example.k.superbag2.activity.SearchActivity;
-import com.example.k.superbag2.activity.SplashActivity;
 import com.example.k.superbag2.adapter.FirstpageAdapter2;
 import com.example.k.superbag2.adapter.MainPagerAdapter;
 import com.example.k.superbag2.adapter.MemoRecyclerAdapter;
 import com.example.k.superbag2.bean.ItemBean;
 import com.example.k.superbag2.bean.MemoItem;
 import com.example.k.superbag2.others.Constant;
-import com.example.k.superbag2.receiver.AlarmReceiver;
-import com.example.k.superbag2.service.AlarmService;
 import com.example.k.superbag2.utils.AlarmUtils;
 import com.example.k.superbag2.utils.DialogUtils;
 import com.example.k.superbag2.utils.GetImageUtils;
@@ -76,25 +69,18 @@ import com.example.k.superbag2.utils.GetTime;
 import com.example.k.superbag2.view.DividerItemDecoration;
 import com.example.k.superbag2.view.GridDividerDecoration;
 import com.example.k.superbag2.view.HidingScrollListener;
-import com.example.k.superbag2.view.MemoDialog;
 import com.example.k.superbag2.view.MyRecyclerView;
 import com.example.k.superbag2.view.MyScrollview;
 import com.flyco.animation.Attention.Tada;
-import com.flyco.animation.BounceEnter.BounceEnter;
 import com.flyco.animation.ZoomExit.ZoomOutExit;
 import com.flyco.dialog.listener.OnBtnClickL;
 import com.flyco.dialog.widget.NormalDialog;
 import com.nineoldandroids.view.ViewHelper;
-
 import org.litepal.crud.DataSupport;
-import org.litepal.util.Const;
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
-
 import cn.bmob.v3.Bmob;
 
 public class MainActivity extends BaseActivity implements ViewPager.OnPageChangeListener
@@ -140,6 +126,8 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
     public LocalReceiver localReceiver;
     public static LocalBroadcastManager localBroadcastManager;
     public IntentFilter intentFilter;
+    private String[] res;
+    private Calendar c;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -414,34 +402,33 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
             @Override
             public void onItemClick(View view, int position) {
                 //查看
-                previewMemo(position);
+                previewMemo(position,memoLists.get(position).getUpdateTime());
             }
 
             //长按，删除
             @Override
             public void onItemLongClick(View view, final int position) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                builder.setMessage("删除此条备忘？")
-                        .setCancelable(true)
-                        .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-
-                            }
-                        })
-                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                memoRecyclerAdapter.removeItem(position);
-                                String target = String.valueOf(memoLists.get(position).getUpdateTime());
-                                DataSupport.deleteAll(MemoItem.class,"updateTime = ?",target);
-                                Toast.makeText(MainActivity.this, "删除成功", Toast.LENGTH_SHORT).show();
-                            }
-                        });
-                AlertDialog dialog = builder.create();
-                WindowManager.LayoutParams params = dialog.getWindow().getAttributes();
-                params.windowAnimations = R.style.fade_in_out;
-                dialog.show();
+//                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+//                builder.setMessage("删除此条备忘？")
+//                        .setCancelable(true)
+//                        .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+//                            @Override
+//                            public void onClick(DialogInterface dialogInterface, int i) {
+//
+//                            }
+//                        })
+//                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+//                            @Override
+//                            public void onClick(DialogInterface dialogInterface, int i) {
+//                                memoRecyclerAdapter.removeItem(position);
+//                                DataSupport.deleteAll(MemoItem.class,"updateTime = ?",memoLists.get(position).getUpdateTime()+"");
+//                                Toast.makeText(MainActivity.this, "删除成功", Toast.LENGTH_SHORT).show();
+//                            }
+//                        });
+//                AlertDialog dialog = builder.create();
+//                WindowManager.LayoutParams params = dialog.getWindow().getAttributes();
+//                params.windowAnimations = R.style.fade_in_out;
+//                dialog.show();
             }
         });
 
@@ -470,25 +457,26 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
     }
 
     //参数为所点击的项在列表的位置
-    private void previewMemo(final int i) {
+    private void previewMemo(final int i, final long updateTime) {
         View preview = LayoutInflater.from(MainActivity.this).inflate(R.layout.preview_memo, null);
-        TextView preTitle, preContent, preAlarm;
+        TextView preTitle, preContent, preDate,preAlarm;
         TextView preDelete, preEdit;
+
         preTitle = (TextView) preview.findViewById(R.id.pre_memo_title_tv);
         preContent = (TextView) preview.findViewById(R.id.pre_memo_content_tv);
         preAlarm = (TextView) preview.findViewById(R.id.pre_memo_alarm_tv);
         preDelete = (TextView) preview.findViewById(R.id.pre_memo_delete_bt);
         preEdit = (TextView) preview.findViewById(R.id.pre_memo_edit_bt);
-
+        preDate = (TextView) findViewById(R.id.pre_memo_alarm_data);
         final AlertDialog preMemoDialog = new AlertDialog.Builder(MainActivity.this).create();
         preMemoDialog.setView(preview);
         preMemoDialog.setCancelable(true);
 
         //设置数据
-        int record_num = DataSupport.count(MemoItem.class);
-        final MemoItem memoItem = DataSupport.find(MemoItem.class, record_num - i);
-        preTitle.setText(memoItem.getTitle());
+        final MemoItem memoItem = DataSupport.where("updateTime = ?",""+updateTime).find(MemoItem.class).get(0);
+        preTitle.setText(memoItem.getTitle());//
         preContent.setText(memoItem.getContent());
+//        preDate.setText(memoItem.getAlarmTimeShow());
         if (!memoItem.isAlarm()) {
             preAlarm.setText("无");
         } else {
@@ -506,7 +494,12 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
             public void onClick(View view) {
                 // TODO 删除
                 memoRecyclerAdapter.removeItem(i);
-                DataSupport.delete(MemoItem.class, DataSupport.count(MemoItem.class) - i);
+                DataSupport.deleteAll(MemoItem.class,"updateTime = ?",""+updateTime);
+
+                //搜索看有没设置提醒时间的memo，有：取最近的设置提醒。
+                AlarmUtils alarmUtils = new AlarmUtils();
+                alarmUtils.setAlarm();
+
                 preMemoDialog.dismiss();
                 Toast.makeText(MainActivity.this, "删除成功", Toast.LENGTH_SHORT).show();
             }
@@ -594,15 +587,16 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
         alarmTimeTV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String[] time = setTime(alarmTimeTV);
-                alarmTime = time[0];
-                alarmTimeShow = time[1];
+                setTime(alarmTimeTV);
+
             }
         });
         OKBT.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 GetTime gt = new GetTime();
+                alarmTime = c.getTimeInMillis()+"";
+                alarmTimeShow = c.get(Calendar.YEAR)+"-"+ c.get(Calendar.MONTH)+"-"+ c.get(Calendar.DAY_OF_MONTH)+"  "+ c.get(Calendar.HOUR_OF_DAY)+"-"+ c.get(Calendar.MINUTE);
                 if (titleET.getText().toString().trim().equals("")) {
                     Toast.makeText(MainActivity.this, "不能为空呦", Toast.LENGTH_SHORT).show();
                 } else {
@@ -636,6 +630,9 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
                         memoRecyclerAdapter.addItem(0, item, 1, index);
                         setMemoView();
                     }
+                    //搜索看有没设置提醒时间的memo，有：取最近的设置提醒。
+                    AlarmUtils alarmUtils = new AlarmUtils();
+                    alarmUtils.setAlarm();
                 }
                 addMemoDialog.dismiss();
             }
@@ -646,50 +643,32 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
 
     //设置提醒时间
     //返回值数组，第一个是具体时间（数字）,第二个是用于显示的时间
-    private String[] setTime(final TextView textView) {
+    private void setTime(final TextView textView) {
         Calendar calendar = Calendar.getInstance();
-        final Calendar c = Calendar.getInstance();
-        c.setTimeInMillis(System.currentTimeMillis());
+        c = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
         //要把timePicker写在前面，才会先显示datePicker,原因不知。。。
+        //原因是：先show TimePicker。再show DataPicker。。。。覆盖了。。
         TimePickerDialog timePicker = new TimePickerDialog(this, 0,
                 new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int i, int i1) {
-                        Log.d("小时是：",i+"");
-                        Log.d("分钟是:",i1+"");
                         //得到的时间是24小时制
                         c.set(Calendar.HOUR_OF_DAY, i);
                         c.set(Calendar.MINUTE, i1);
-                        /*//启动广播接收，发出通知
-                        Intent intent = new Intent(MainActivity.this, AlarmReceiver.class);
-                        intent.putExtra(Constant.SET_SOUND,isSound);
-                        intent.putExtra(Constant.SET_SHAKE,isShake);
-                        PendingIntent pt = PendingIntent.getBroadcast(MainActivity.this, 0, intent, 0);
-                        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-                        alarmManager.set(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), pt);*/
-                        if (isAlarm){
-                            startService(new Intent(MainActivity.this, AlarmService.class));
-                        }
-                        textView.setText(c.get(Calendar.YEAR)+"-"+c.get(Calendar.MONTH)+"-"+c.get(Calendar.DAY_OF_MONTH)+"  "+c.get(Calendar.HOUR_OF_DAY)+"-"+c.get(Calendar.MINUTE));
+                        textView.setText(c.get(Calendar.YEAR)+"-"+ c.get(Calendar.MONTH)+"-"+ c.get(Calendar.DAY_OF_MONTH)+"  "+ c.get(Calendar.HOUR_OF_DAY)+"-"+ c.get(Calendar.MINUTE));
                         Toast.makeText(MainActivity.this, "提醒设置成功", Toast.LENGTH_SHORT).show();
                     }
                 }, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), false);
-        timePicker.show();
-
-        DatePickerDialog datePicker = new DatePickerDialog(this, 0,
-                new DatePickerDialog.OnDateSetListener() {
+        DatePickerDialog datePicker = new DatePickerDialog(this, 0, new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
                         c.set(i, i1, i2);
-                        Log.d("年月日：",i+"-"+i1+"-"+i2);
                     }
                 }, calendar.get(Calendar.YEAR),
                 calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+        timePicker.show();
         datePicker.show();
-
-//        return c.getTimeInMillis() + "";
-        String[] res = {c.getTimeInMillis()+"",c.get(Calendar.YEAR)+"-"+c.get(Calendar.MONTH)+"-"+c.get(Calendar.DAY_OF_MONTH)+"  "+c.get(Calendar.HOUR_OF_DAY)+"-"+c.get(Calendar.MINUTE)};
-        return res;
     }
 
     //设置抽屉。。

@@ -17,15 +17,19 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import com.example.k.superbag2.R;
+import com.example.k.superbag2.activity.PreviewActivity;
 import com.example.k.superbag2.bean.DataImageView;
 import com.example.k.superbag2.bean.EditBean;
 import com.example.k.superbag2.bean.EditData;
+import com.example.k.superbag2.utils.ScreenUtils;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -197,9 +201,9 @@ public class RichTextEditor extends ScrollView {
      * @param imagePath
      */
     public void insertImage(String imagePath) {
+        Log.d("rich_edit------ ","insertImage(String imagePath)");
         Bitmap bmp = getScaledBitmap(imagePath, getWidth());
         insertImage(bmp, imagePath);
-        Log.d("rich_edit------ ","insertImage(String imagePath)");
     }
 
     /**
@@ -295,13 +299,18 @@ public class RichTextEditor extends ScrollView {
      * @param width view的宽度
      */
     private Bitmap getScaledBitmap(String filePath, int width) {
-        Log.d("rich_edit------ ","getScaledBitmap(String filePath, int width)");
+        Log.d("rich_edit------ ","getScaledBitmap(String filePath, int width)"+width);
 
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
         BitmapFactory.decodeFile(filePath, options);
+        //采样率
         int sampleSize;
 
+        if (width ==0){
+            width = options.outWidth;
+            Log.d("rich_edit------ ","activity.width"+width);
+        }
         sampleSize = options.outWidth > width ? options.outWidth / width
                 + 1 : 1;
 
@@ -436,10 +445,10 @@ public class RichTextEditor extends ScrollView {
                 EditText item = (EditText) itemView;
                 itemData.setInputStr(item.getText().toString());
             } else if (itemView instanceof RelativeLayout) {
-//                DataImageView item = (DataImageView) itemView
-//                        .findViewById(R.id.edit_imageView);
-//                itemData.setImagePath(item.getAbsolutePath());
-//                itemData.setBitmap(item.getBitmap());
+                DataImageView item = (DataImageView) itemView
+                        .findViewById(R.id.edit_imageView);
+                itemData.setImagePath(item.getAbsolutePath());
+                itemData.setBitmap(item.getBitmap());
             }
             dataList.add(itemData);
         }
