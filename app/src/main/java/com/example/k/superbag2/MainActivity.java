@@ -68,6 +68,7 @@ import com.example.k.superbag2.bean.ItemBean;
 import com.example.k.superbag2.bean.MemoItem;
 import com.example.k.superbag2.others.Constant;
 import com.example.k.superbag2.receiver.AlarmReceiver;
+import com.example.k.superbag2.utils.AlarmUtils;
 import com.example.k.superbag2.utils.DialogUtils;
 import com.example.k.superbag2.utils.GetImageUtils;
 import com.example.k.superbag2.utils.GetTime;
@@ -305,7 +306,7 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
             @Override
             public void onItemClick(View view, int position) {
                 Intent intent = new Intent(MainActivity.this, PreviewActivity.class);
-                intent.putExtra(Constant.LINE_INDEX, position);
+                intent.putExtra(Constant.LINE_INDEX, itemBeanList.get(position).getUpdateTime());
                 startActivity(intent);
             }
 
@@ -398,7 +399,7 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
         //必须设置，设置为StaggeredGridL...即为瀑布流布局
         recyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
 
-        List<MemoItem> memoLists = DataSupport.findAll(MemoItem.class);
+        final List<MemoItem> memoLists = DataSupport.findAll(MemoItem.class);
         Collections.reverse(memoLists);
 
         memoRecyclerAdapter = new MemoRecyclerAdapter(MainActivity.this, memoLists);
@@ -430,7 +431,8 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 memoRecyclerAdapter.removeItem(position);
-                                DataSupport.delete(MemoItem.class, DataSupport.count(MemoItem.class) - position);
+                                String target = String.valueOf(memoLists.get(position).getUpdateTime());
+                                DataSupport.deleteAll(MemoItem.class,"updateTime = ?",target);
                                 Toast.makeText(MainActivity.this, "删除成功", Toast.LENGTH_SHORT).show();
                             }
                         });

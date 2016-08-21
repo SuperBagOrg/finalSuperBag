@@ -69,15 +69,11 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 break;
             case R.id.login_forget_bt:
                 startActivity(new Intent(LoginActivity.this,ReSetPasswordActivity.class));
-
                 break;
             case R.id.login_bt:
 
                 final String passwordInput = passwordET.getText().toString();
                 String phoneInput = phoneET.getText().toString();
-                if (passwordInput.equals("")){
-                    Toast.makeText(LoginActivity.this,"请输入密码",Toast.LENGTH_SHORT).show();
-                } else {
                     //先判断与本地的账号密码是否一致
                     if (LoginUtils.getPhoneNumber().equals(phoneInput)){
                         if (LoginUtils.isRightPass(passwordInput)){
@@ -86,7 +82,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                             startActivity(new Intent(LoginActivity.this, MainActivity.class));
                             finish();
                         } else {
-                            Toast.makeText(LoginActivity.this,"密码错误 本地",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(LoginActivity.this,"密码错误",Toast.LENGTH_SHORT).show();
                         }
                     }else {
                         //判断与网络上数据库里存储的账号密码是否一致
@@ -100,20 +96,20 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 //                                    if (user.getPassword().equals(MD5Utils.GetMD5Code(passwordInput))){
                                     if (user.getPassword().equals(passwordInput)){
                                         //在本地存储当前密码
+                                        startActivity(new Intent(LoginActivity.this, MainActivity.class));
                                         LoginUtils.setPassword(user.getPassword());
                                         LoginUtils.setPhoneNumber(user.getName());
                                         LoginUtils.setLoginStatus(true);
-                                        startActivity(new Intent(LoginActivity.this, MainActivity.class));
                                         finish();
+                                    }else {
+                                        Toast.makeText(LoginActivity.this,"密码错误",Toast.LENGTH_SHORT).show();
                                     }
                                 }else {
-                                    Toast.makeText(LoginActivity.this,"密码错误",Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(LoginActivity.this,"请确保网络畅通",Toast.LENGTH_SHORT).show();
                                 }
                             }
                         });
                     }
-
-                }
                 break;
             case R.id.login_no_bt:
                 startActivity(new Intent(LoginActivity.this, MainActivity.class));

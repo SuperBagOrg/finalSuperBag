@@ -24,6 +24,15 @@ public class ItemBean extends DataSupport {
     private int pic1Index = -1,pic2Index = -1,pic3Index = -1,pic4Index = -1;
     private List<Integer> picIndex;
     private long updateTime;
+    private String edit_order;
+
+    public String getEdit_order() {
+        return edit_order;
+    }
+
+    public void setEdit_order(String edit_order) {
+        this.edit_order = edit_order;
+    }
 
     public long getUpdateTime() {
         return updateTime;

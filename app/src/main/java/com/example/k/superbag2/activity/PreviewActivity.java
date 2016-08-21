@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.k.superbag2.R;
+import com.example.k.superbag2.bean.EditData;
 import com.example.k.superbag2.bean.ItemBean;
 import com.example.k.superbag2.others.Constant;
 import com.example.k.superbag2.utils.DialogUtils;
@@ -39,13 +40,14 @@ public class PreviewActivity extends BaseActivity implements View.OnClickListene
     private LinearLayout preBackLL,preEditLL;
     private ImageView preHeadIcon;
     private TextView preMonth,preWeather,preFeelings,preTag1,preTag2,preTag3,preMin;
-    private ImageView prePic1,prePic2,prePic3,prePic4;
-    private TextView preContent;
-//    private RichTextEditor preContent;
+//    private ImageView prePic1,prePic2,prePic3,prePic4;
+//    private TextView preContent;
+    private RichTextEditor preContent;
 
     private ItemBean item;
     public static int width;
-    private int lineNum = 0;
+    private Long lineNum;
+    private List<EditData> list_richedit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,13 +74,13 @@ public class PreviewActivity extends BaseActivity implements View.OnClickListene
         preTag1 = (TextView)findViewById(R.id.pre_tag1);
         preTag2 = (TextView)findViewById(R.id.pre_tag2);
         preTag3 = (TextView)findViewById(R.id.pre_tag3);
-        preContent = (TextView)findViewById(R.id.pre_content);
-//        preContent = (RichTextEditor)findViewById(R.id.pre_content);
-        preMin = (TextView)findViewById(R.id.pre_min);
-        prePic1 = (ImageView)findViewById(R.id.pre_iv1);
-        prePic2 = (ImageView) findViewById(R.id.pre_iv2);
-        prePic3 = (ImageView)findViewById(R.id.pre_iv3);
-        prePic4 = (ImageView)findViewById(R.id.pre_iv4);
+//        preContent = (TextView)findViewById(R.id.pre_content);
+        preContent = (RichTextEditor)findViewById(R.id.pre_content);
+//        preMin = (TextView)findViewById(R.id.pre_min);
+//        prePic1 = (ImageView)findViewById(R.id.pre_iv1);
+//        prePic2 = (ImageView) findViewById(R.id.pre_iv2);
+//        prePic3 = (ImageView)findViewById(R.id.pre_iv3);
+//        prePic4 = (ImageView)findViewById(R.id.pre_iv4);
 
         //设置头像
         Bitmap head = GetImageUtils.getBMFromUri(this,Constant.HEAD_ICON_URI);
@@ -93,10 +95,10 @@ public class PreviewActivity extends BaseActivity implements View.OnClickListene
         preBackLL.setOnClickListener(this);
         preEditLL.setOnClickListener(this);
 
-        prePic1.setOnClickListener(this);
-        prePic2.setOnClickListener(this);
-        prePic3.setOnClickListener(this);
-        prePic4.setOnClickListener(this);
+//        prePic1.setOnClickListener(this);
+//        prePic2.setOnClickListener(this);
+//        prePic3.setOnClickListener(this);
+//        prePic4.setOnClickListener(this);
     }
 
     @Override
@@ -114,18 +116,18 @@ public class PreviewActivity extends BaseActivity implements View.OnClickListene
                 //跳转后关闭当前活动
                 finish();
                 break;
-            case R.id.pre_iv1:
-                showPic(1);
-                break;
-            case R.id.pre_iv2:
-                showPic(2);
-                break;
-            case R.id.pre_iv3:
-                showPic(3);
-                break;
-            case R.id.pre_iv4:
-                showPic(4);
-                break;
+//            case R.id.pre_iv1:
+//                showPic(1);
+//                break;
+//            case R.id.pre_iv2:
+//                showPic(2);
+//                break;
+//            case R.id.pre_iv3:
+//                showPic(3);
+//                break;
+//            case R.id.pre_iv4:
+//                showPic(4);
+//                break;
         }
     }
 
@@ -142,28 +144,35 @@ public class PreviewActivity extends BaseActivity implements View.OnClickListene
 
     private void initData(){
         Intent intent = getIntent();
-        lineNum = intent.getIntExtra(Constant.LINE_INDEX,-1);
+        //获取到点击条目的创建时间。
+        lineNum = intent.getLongExtra(Constant.LINE_INDEX,-1L);
         if (lineNum != -1){
-            int record_num = DataSupport.count(ItemBean.class);
-            Log.d("总数是",record_num+"");
-            item = DataSupport.find(ItemBean.class,record_num-lineNum);
+            //根据创建时间从数据库拿到条目记录
+            //拿到RichEdit的结构信息。
+            list_richedit = DataSupport.where("updateTime = ?",""+lineNum).find(EditData.class);
+            item = DataSupport.where("updateTime = ?",""+lineNum).find(ItemBean.class).get(0);
             if (item == null) {
                 return;
             }
-            if (item.getContent() != null) {
-                preContent.setText(item.getContent());
-            }
-//            preContent.setTextAndImage(item.getListData());
-            /*String[] content = item.getCon();
-            int temp = 0;
-            for (int i = 0; i < content.length; i++){
-                preContent.addEditTextAtIndex(i,content[i]);
-                if (!item.getPicList().get(temp).equals("")){
-                    preContent.insertImage(item.getPicList().get(temp));
-                    temp++;
-                }
-            }*/
+            //RichEdit数据还原
+            int index = 0;
+            Log.d("rich_edit",""+list_richedit.size());
+            for (EditData editData:list_richedit){
+                if (editData.getInputStr().equals(null)){
+                    //插入ImageView
 
+                    preContent.insertImage(GetImageUtils.getRealFilePath(this, Uri.parse(editData.getImagePath())));
+                    Log.d("rich_edit",""+index+": "+editData.getBitmap()+": "+editData.getImagePath().toString());
+
+                }else {
+                    //插入EditText
+                    preContent.addEditTextAtIndex(index,editData.getInputStr());
+                    Log.d("rich_edit",""+index+": "+editData.getInputStr());
+
+                }
+                index++;
+            }
+            //tag还原
             if (!item.getTag1().equals("")){
                 preTag1.setVisibility(View.VISIBLE);
                 preTag1.setText(item.getTag1());
@@ -172,38 +181,38 @@ public class PreviewActivity extends BaseActivity implements View.OnClickListene
                 preTag2.setVisibility(View.VISIBLE);
                 preTag2.setText(item.getTag2());
             }
-
+            //时间还原
             preMonth.setText(item.getYear()+"-"+item.getMonth()+"-"+item.getDay());
             preFeelings.setText(item.getFeelings());
             preWeather.setText(item.getWeather());
-            preMin.setText(item.getHourMIn());
+//            preMin.setText(item.getHourMIn());
 
-            Log.d("图片是",item.getPic3());
-            //设置图片
-            if (!item.getPic1().equals("")){
-                Glide.with(this)
-                        .load(item.getPic1())
-                        .asBitmap()
-                        .into(prePic1);
-            }
-            if (!item.getPic2().equals("")){
-                Glide.with(this)
-                        .load(item.getPic2())
-                        .asBitmap()
-                        .into(prePic2);
-            }
-            if (!item.getPic3().equals("")){
-                Glide.with(this)
-                        .load(item.getPic3())
-                        .asBitmap()
-                        .into(prePic3);
-            }
-            if (!item.getPic4().equals("")){
-                Glide.with(this)
-                        .load(item.getPic4())
-                        .asBitmap()
-                        .into(prePic4);
-            }
+//            Log.d("图片是",item.getPic3());
+//            //设置图片
+//            if (!item.getPic1().equals("")){
+//                Glide.with(this)
+//                        .load(item.getPic1())
+//                        .asBitmap()
+//                        .into(prePic1);
+//            }
+//            if (!item.getPic2().equals("")){
+//                Glide.with(this)
+//                        .load(item.getPic2())
+//                        .asBitmap()
+//                        .into(prePic2);
+//            }
+//            if (!item.getPic3().equals("")){
+//                Glide.with(this)
+//                        .load(item.getPic3())
+//                        .asBitmap()
+//                        .into(prePic3);
+//            }
+//            if (!item.getPic4().equals("")){
+//                Glide.with(this)
+//                        .load(item.getPic4())
+//                        .asBitmap()
+//                        .into(prePic4);
+//            }
         }
     }
 }

@@ -87,6 +87,8 @@ public class EditActivity extends BaseActivity implements View.OnClickListener,
     private int lineNum = 0;
     private int record_num;
     private String content;
+    private Intent intent;
+    private Long creatTime;
 
 
     @Override
@@ -100,6 +102,38 @@ public class EditActivity extends BaseActivity implements View.OnClickListener,
         initView();
         initListener();
         initData();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //在这儿判断
+        intent = getIntent();
+        //若为-1，表示新建
+
+        lineNum = intent.getIntExtra(Constant.EDIT_DONE, -1);
+        Log.d("edit act", lineNum + "");
+        if (lineNum != -1) {
+            //从列表点击进入。需要初始化数据
+            record_num = DataSupport.count(ItemBean.class);
+            ItemBean item = DataSupport.find(ItemBean.class, record_num - lineNum);
+//            contentET.setText(item.getContent());
+
+            if (!item.getTag1().equals("")) {
+                tag1TV.setVisibility(View.VISIBLE);
+                tag1TV.setText(item.getTag1());
+            }
+            if (!item.getTag2().equals("")) {
+                tag2TV.setVisibility(View.VISIBLE);
+                tag2TV.setText(item.getTag2());
+            }
+            if (!item.getTag3().equals("")) {
+                tag3TV.setVisibility(View.VISIBLE);
+                tag3TV.setText(item.getTag3());
+            }
+
+            uriList = item.getPicList();
+        }
     }
 
     private void initView() {
@@ -123,9 +157,7 @@ public class EditActivity extends BaseActivity implements View.OnClickListener,
 //        if (head != null) {
 //            headIcon.setImageBitmap(head);
 //        }
-
     }
-
     private void initListener() {
         backBT.setOnClickListener(this);
         saveBT.setOnClickListener(this);
@@ -139,6 +171,7 @@ public class EditActivity extends BaseActivity implements View.OnClickListener,
 
     private void initData() {
         GetTime gt = new GetTime();
+        creatTime = Long.parseLong(gt.getSpecificTime2Second());
         oldtime = gt.getYear() + "-" + gt.getMonth() + "-" + gt.getDay();
 //        oldTime.setText(oldtime);
 
@@ -147,30 +180,7 @@ public class EditActivity extends BaseActivity implements View.OnClickListener,
         uriList = new ArrayList<>(Arrays.asList("", "", "", ""));
         picIndex = new ArrayList<>(Arrays.asList(-1, -1, -1, -1));
         //如果是从ListView点击进入活动，则初始化数据;
-        Intent intent = getIntent();
-        //若为-1，表示新建
-        lineNum = intent.getIntExtra(Constant.EDIT_DONE, -1);
-        Log.d("edit act", lineNum + "");
-        if (lineNum != -1) {//从列表点击进入
-            record_num = DataSupport.count(ItemBean.class);
-            ItemBean item = DataSupport.find(ItemBean.class, record_num - lineNum);
-//            contentET.setText(item.getContent());
 
-            if (!item.getTag1().equals("")) {
-                tag1TV.setVisibility(View.VISIBLE);
-                tag1TV.setText(item.getTag1());
-            }
-            if (!item.getTag2().equals("")) {
-                tag2TV.setVisibility(View.VISIBLE);
-                tag2TV.setText(item.getTag2());
-            }
-            if (!item.getTag3().equals("")) {
-                tag3TV.setVisibility(View.VISIBLE);
-                tag3TV.setText(item.getTag3());
-            }
-
-            uriList = item.getPicList();
-        }
     }
 
     @Override
@@ -200,7 +210,16 @@ public class EditActivity extends BaseActivity implements View.OnClickListener,
                 break;
             case R.id.edit_save_ll:
             case R.id.edit_save:
+                //存储
                 List<EditData> editDatas = contentET.getData();
+                int count = 0;
+                for (EditData save_rich:editDatas){
+                    save_rich.setUpdateTime(creatTime);
+                    save_rich.setImagePath(uriList.get(count));
+                    save_rich.save();
+                    count++;
+                }
+
                 StringBuilder sb = new StringBuilder();
                 int temp = 0;
                 for (int i = 0; i < editDatas.size(); i++) {
@@ -336,30 +355,6 @@ public class EditActivity extends BaseActivity implements View.OnClickListener,
         final EditText addTagET = (TagsEditText) v.findViewById(R.id.add_tag2_et);
 
         final AlertDialog.Builder builder = new AlertDialog.Builder(EditActivity.this);
-        /*builder.setTitle("添加标签")
-                .setView(v)
-                .setCancelable(true)
-                .setPositiveButton("完成", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        String content = addTagET.getText().toString().trim();
-                        if (content.equals("")){
-                            Toast.makeText(EditActivity.this,"标签不能为空呦",Toast.LENGTH_SHORT).show();
-
-                        } else {
-                            if (flag % 2 == 1) {
-                                tag1 = content;
-                                tag2TV.setVisibility(View.VISIBLE);
-                                tag2TV.setText(tag1);
-                            } else {
-                                tag2 = content;
-                                tag3TV.setVisibility(View.VISIBLE);
-                                tag3TV.setText(tag2);
-                            }
-                            flag++;
-                        }
-                    }
-                });*/
         builder.setView(v)
                 .setCancelable(true)
                 .setPositiveButton("好", new DialogInterface.OnClickListener() {
@@ -418,6 +413,7 @@ public class EditActivity extends BaseActivity implements View.OnClickListener,
                 if (data != null) {
                     ArrayList<String> tempPics = data.getStringArrayListExtra(Constant.IMAGE_URI_LIST);
                     for (int i = 0; i < tempPics.size(); i++) {
+                        //ImageView插入操作
                         uriList.set(i, tempPics.get(i));
                         insertBitmap(GetImageUtils.getRealFilePath(this, Uri.parse(uriList.get(i))));
                     }
@@ -469,8 +465,7 @@ public class EditActivity extends BaseActivity implements View.OnClickListener,
         newItem.setPic2Index(picIndex.get(1));
         newItem.setPic3Index(picIndex.get(2));
         newItem.setPic4Index(picIndex.get(3));
-        String daytime = gt.getSpecificTime().replace("-","").replace(" ","").replace(":","");
-        newItem.setUpdateTime(Long.parseLong(daytime));
+        newItem.setUpdateTime(creatTime);
         if (whichToSave == -1) {
             newItem.save();
             Log.d("新建保存", "");
@@ -478,5 +473,6 @@ public class EditActivity extends BaseActivity implements View.OnClickListener,
             newItem.update(record_num - lineNum);
             Log.d("更新操作", "");
         }
+
     }
 }
