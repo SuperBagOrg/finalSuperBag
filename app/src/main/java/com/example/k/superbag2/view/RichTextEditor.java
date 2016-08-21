@@ -22,12 +22,10 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
-
 import com.example.k.superbag2.R;
-import com.example.k.superbag2.activity.PreviewActivity;
 import com.example.k.superbag2.bean.DataImageView;
+import com.example.k.superbag2.bean.EditBean;
 import com.example.k.superbag2.bean.EditData;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,7 +38,6 @@ import java.util.List;
 public class RichTextEditor extends ScrollView {
     private static final int EDIT_PADDING = 10; // edittext常规padding是10dp
     private static final int EDIT_FIRST_PADDING_TOP = 10; // 第一个EditText的paddingTop值
-
     private int viewTagIndex = 1; // 新生的view都会打一个tag，对每个view来说，这个tag是唯一的。
     private LinearLayout allLayout; // 这个是所有子view的容器，scrollView内部的唯一一个ViewGroup
     private LayoutInflater inflater;
@@ -51,18 +48,15 @@ public class RichTextEditor extends ScrollView {
     private LayoutTransition mTransitioner; // 只在图片View添加或remove时，触发transition动画
     private int editNormalPadding = 0; //
     private int disappearingImageIndex = 0;
-
     private Context context;
 
     public RichTextEditor(Context context) {
         this(context, null);
         this.context = context;
     }
-
     public RichTextEditor(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
-
     public RichTextEditor(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         inflater = LayoutInflater.from(context);
@@ -101,7 +95,7 @@ public class RichTextEditor extends ScrollView {
                 onImageCloseClick(parentView);
             }
         };
-
+        //监听
         focusListener = new OnFocusChangeListener() {
 
             @Override
@@ -120,7 +114,6 @@ public class RichTextEditor extends ScrollView {
         allLayout.addView(firstEdit, firstEditParam);
         lastFocusEdit = firstEdit;
     }
-
     /**
      * 处理软键盘backSpace回退事件
      *
@@ -206,12 +199,15 @@ public class RichTextEditor extends ScrollView {
     public void insertImage(String imagePath) {
         Bitmap bmp = getScaledBitmap(imagePath, getWidth());
         insertImage(bmp, imagePath);
+        Log.d("rich_edit------ ","insertImage(String imagePath)");
     }
 
     /**
      * 插入一张图片
      */
     private void insertImage(Bitmap bitmap, String imagePath) {
+        Log.d("rich_edit------ ","insertImage(Bitmap bitmap, String imagePath)");
+
         String lastEditStr = lastFocusEdit.getText().toString();
         int cursorIndex = lastFocusEdit.getSelectionStart();
         String editStr1 = lastEditStr.substring(0, cursorIndex).trim();
@@ -252,6 +248,8 @@ public class RichTextEditor extends ScrollView {
      * @param editStr EditText显示的文字
      */
     public void addEditTextAtIndex(final int index, String editStr) {
+        Log.d("rich_edit------ ","addEditTextAtIndex(final int index, String editStr)");
+
         EditText editText2 = createEditText("", getResources()
                 .getDimensionPixelSize(R.dimen.edit_padding_top));
         editText2.setText(editStr);
@@ -267,6 +265,8 @@ public class RichTextEditor extends ScrollView {
      */
     public void addImageViewAtIndex(final int index, Bitmap bmp,
                                     String imagePath) {
+        Log.d("rich_edit------ ","addImageViewAtIndex(final int index, Bitmap bmp,String imagePath)");
+
         final RelativeLayout imageLayout = createImageLayout();
         DataImageView imageView = (DataImageView) imageLayout
                 .findViewById(R.id.edit_imageView);
@@ -295,6 +295,8 @@ public class RichTextEditor extends ScrollView {
      * @param width view的宽度
      */
     private Bitmap getScaledBitmap(String filePath, int width) {
+        Log.d("rich_edit------ ","getScaledBitmap(String filePath, int width)");
+
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
         BitmapFactory.decodeFile(filePath, options);
@@ -326,6 +328,8 @@ public class RichTextEditor extends ScrollView {
      * 根据Uri获取图片文件的绝对路径
      */
     public String getRealFilePath(final Uri uri) {
+        Log.d("rich_edit------ ","getRealFilePath(final Uri uri)");
+
         if (null == uri) {
             return null;
         }
@@ -432,10 +436,10 @@ public class RichTextEditor extends ScrollView {
                 EditText item = (EditText) itemView;
                 itemData.setInputStr(item.getText().toString());
             } else if (itemView instanceof RelativeLayout) {
-                DataImageView item = (DataImageView) itemView
-                        .findViewById(R.id.edit_imageView);
-                itemData.setImagePath(item.getAbsolutePath());
-                itemData.setBitmap(item.getBitmap());
+//                DataImageView item = (DataImageView) itemView
+//                        .findViewById(R.id.edit_imageView);
+//                itemData.setImagePath(item.getAbsolutePath());
+//                itemData.setBitmap(item.getBitmap());
             }
             dataList.add(itemData);
         }

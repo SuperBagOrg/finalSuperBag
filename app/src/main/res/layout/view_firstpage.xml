@@ -92,7 +92,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:clipToPadding="false"
-                android:id="@+id/first_page_rv"></com.example.k.superbag2.view.MyRecyclerView>
+                android:id="@+id/first_page_rv">
+            </com.example.k.superbag2.view.MyRecyclerView>
         </LinearLayout>
 
     </com.example.k.superbag2.view.MyScrollview>

@@ -163,54 +163,54 @@
                 android:layout_height="2dp"
                 android:background="@color/gray"></View>
 
-            <TextView
+            <!--<TextView-->
+                <!--android:id="@+id/pre_content"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:padding="10dp"-->
+                <!--android:text="这是测试内容" />-->
+
+            <com.example.k.superbag2.view.RichTextEditor
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:id="@+id/pre_content"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="10dp"
-                android:text="这是测试内容" />
+                />
 
-            <!--<com.example.k.superbag2.view.RichTextEditor
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/pre_content"
-                />-->
+            <!--<ImageView-->
+                <!--android:id="@+id/pre_iv1"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:padding="10dp"-->
+                <!--android:scaleType="centerInside" />-->
 
-            <ImageView
-                android:id="@+id/pre_iv1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="10dp"
-                android:scaleType="centerInside" />
+            <!--<ImageView-->
+                <!--android:id="@+id/pre_iv2"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:padding="10dp"-->
+                <!--android:scaleType="centerInside" />-->
 
-            <ImageView
-                android:id="@+id/pre_iv2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="10dp"
-                android:scaleType="centerInside" />
+            <!--<ImageView-->
+                <!--android:id="@+id/pre_iv3"-->
+                <!--android:padding="10dp"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:scaleType="centerInside" />-->
 
-            <ImageView
-                android:id="@+id/pre_iv3"
-                android:padding="10dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:scaleType="centerInside" />
+            <!--<ImageView-->
+                <!--android:id="@+id/pre_iv4"-->
+                <!--android:padding="10dp"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:scaleType="centerInside" />-->
 
-            <ImageView
-                android:id="@+id/pre_iv4"
-                android:padding="10dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:scaleType="centerInside" />
-
-            <TextView
-                android:id="@+id/pre_min"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:padding="10dp"
-                android:text="18:13" />
+            <!--<TextView-->
+                <!--android:id="@+id/pre_min"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginTop="10dp"-->
+                <!--android:padding="10dp"-->
+                <!--android:text="18:13" />-->
         </LinearLayout>
     </ScrollView>
 </LinearLayout>
