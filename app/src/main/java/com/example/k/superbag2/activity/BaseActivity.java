@@ -22,7 +22,8 @@ public class BaseActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (Build.VERSION.SDK_INT > 21) {
+        //5.0以上才可以使用该功能
+        if (Build.VERSION.SDK_INT >= 21) {
             getWindow().setNavigationBarColor(getResources().getColor(R.color.new_primary));
         }
         if (SaveUtils.getHasSetLock()&&SaveUtils.getIsLocked()) {

@@ -40,6 +40,7 @@ import com.example.k.superbag2.utils.GetImageUtils;
 import com.example.k.superbag2.utils.GetTime;
 import com.example.k.superbag2.utils.LoginUtils;
 import com.example.k.superbag2.utils.SaveUtils;
+import com.example.k.superbag2.view.RoundImageView;
 import com.flyco.animation.Attention.Tada;
 import com.flyco.animation.ZoomExit.ZoomOutExit;
 import com.flyco.dialog.listener.OnBtnClickL;
@@ -86,7 +87,7 @@ public class SettingsLeftFragment extends Fragment {
         downloadLL = (LinearLayout) v.findViewById(R.id.download_ll);
         aboutLL = (LinearLayout) v.findViewById(R.id.about_ll);
         lockLL = (LinearLayout) v.findViewById(R.id.password_ll);
-        headIV = (ImageView) v.findViewById(R.id.setting_head);
+        headIV = (RoundImageView) v.findViewById(R.id.setting_head);
         hintTextView = (TextView) v.findViewById(R.id.setting_hint);
 
         if (LoginUtils.getLoginStatus()){

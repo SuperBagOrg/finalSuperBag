@@ -350,7 +350,6 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
                         Log.d("delete","itemBeanList.get(position).getUpdateTime()"+position+" "+itemBeanList.get(position).getDayTime());
                         String target = String.valueOf(itemBeanList.get(position).getUpdateTime());
                         DataSupport.deleteAll(ItemBean.class,"updateTime = ?",target);
-
                         Toast.makeText(MainActivity.this, "删除成功", Toast.LENGTH_SHORT).show();
                         diaryAdapter.removeData(DataSupport.count(ItemBean.class) - position);
                         setDiaryView();

@@ -22,6 +22,7 @@ public class GetTime {
     private int day;
     private int hour;
     private int min;
+    private int sec;
 
     private Time t;
 
@@ -33,6 +34,7 @@ public class GetTime {
         min = t.minute;
         hour = t.hour;
         day = t.monthDay;
+        sec = t.second;
     }
 
     public String getMin() {
@@ -67,9 +69,18 @@ public class GetTime {
         return day+"";
     }
 
+    public int getSec(){
+        return sec;
+    }
+
     public String getSpecificTime(){
         GetTime gt = new GetTime();
         return gt.getYear()+"-"+gt.getMonth()+"-"+gt.getDay()+" "+gt.getHour()+":"+gt.getMin();
+    }
+
+    public String getSpecificTime2Second(){
+        GetTime gt = new GetTime();
+        return gt.getYear()+gt.getMonth()+gt.getDay()+gt.getMin()+gt.getSec();
     }
 
     /**

@@ -72,6 +72,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
                 break;
             case R.id.login_bt:
+
                 final String passwordInput = passwordET.getText().toString();
                 String phoneInput = phoneET.getText().toString();
                 if (passwordInput.equals("")){
