@@ -31,4 +31,6 @@ public class Constant {
 
     public static final String QUIT_LOGIN = "quit_login";
 
+    public static final String HAS_SET_ALARM = "has_set_alarm";
+
 }

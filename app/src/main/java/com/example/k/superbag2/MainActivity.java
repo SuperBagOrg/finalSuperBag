@@ -68,6 +68,7 @@ import com.example.k.superbag2.bean.ItemBean;
 import com.example.k.superbag2.bean.MemoItem;
 import com.example.k.superbag2.others.Constant;
 import com.example.k.superbag2.receiver.AlarmReceiver;
+import com.example.k.superbag2.service.AlarmService;
 import com.example.k.superbag2.utils.AlarmUtils;
 import com.example.k.superbag2.utils.DialogUtils;
 import com.example.k.superbag2.utils.GetImageUtils;
@@ -147,6 +148,7 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main);
 
+        Log.d("现在时间是：",System.currentTimeMillis()+"");
         //第一：默认初始化
         Bmob.initialize(this, "\n" +
                 "\n" +
@@ -641,17 +643,6 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
         addMemoDialog.show();
     }
 
-    //参数为 需要提醒的具体item
-    private void setAlarm(MemoItem item){
-        //启动广播接收，发出通知
-        Intent intent = new Intent(MainActivity.this, AlarmReceiver.class);
-        intent.putExtra(Constant.SET_SOUND,item.isSound());
-        intent.putExtra(Constant.SET_SHAKE,item.isShake());
-        PendingIntent pt = PendingIntent.getBroadcast(MainActivity.this, 0, intent, 0);
-        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-        alarmManager.set(AlarmManager.RTC_WAKEUP, Long.parseLong(item.getAlarmTime()), pt);
-    }
-
 
     //设置提醒时间
     //返回值数组，第一个是具体时间（数字）,第二个是用于显示的时间
@@ -676,7 +667,9 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
                         PendingIntent pt = PendingIntent.getBroadcast(MainActivity.this, 0, intent, 0);
                         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
                         alarmManager.set(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), pt);*/
-
+                        if (isAlarm){
+                            startService(new Intent(MainActivity.this, AlarmService.class));
+                        }
                         textView.setText(c.get(Calendar.YEAR)+"-"+c.get(Calendar.MONTH)+"-"+c.get(Calendar.DAY_OF_MONTH)+"  "+c.get(Calendar.HOUR_OF_DAY)+"-"+c.get(Calendar.MINUTE));
                         Toast.makeText(MainActivity.this, "提醒设置成功", Toast.LENGTH_SHORT).show();
                     }
