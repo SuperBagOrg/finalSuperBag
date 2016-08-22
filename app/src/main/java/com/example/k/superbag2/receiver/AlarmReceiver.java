@@ -14,6 +14,7 @@ import android.util.Log;
 import com.example.k.superbag2.MainActivity;
 import com.example.k.superbag2.MyApplication;
 import com.example.k.superbag2.R;
+import com.example.k.superbag2.activity.PreviewMemoActivity;
 import com.example.k.superbag2.bean.MemoItem;
 import com.example.k.superbag2.others.Constant;
 import com.example.k.superbag2.service.AlarmService;
@@ -32,15 +33,18 @@ public class AlarmReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         Log.d("clock",":"+"receiver");
+        AlarmUtils alarmUtils = new AlarmUtils();
+        MemoItem item = alarmUtils.getAlarmList().get(0);
 
         NotificationManager manager = (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
 
-        Intent intent1 = new Intent(context, MainActivity.class);
+        Intent intent1 = new Intent(context, PreviewMemoActivity.class);
+        intent1.putExtra("update_time",item.getUpdateTime());
         PendingIntent pt = PendingIntent.getActivity(context,0,intent1,0);
         Notification.Builder builder = new Notification.Builder(context);
-        builder.setAutoCancel(false)
+        builder.setAutoCancel(true)
                 .setContentTitle("你有新记事提醒")
-                .setContentText("测试")
+                .setContentText(item.getTitle())
                 .setContentIntent(pt)
                 .setSmallIcon(R.drawable.memo_blue)
                 .setWhen(System.currentTimeMillis());
@@ -51,9 +55,6 @@ public class AlarmReceiver extends BroadcastReceiver {
         editor.putBoolean(Constant.HAS_SET_ALARM,false);
         editor.apply();
         //设置下一个提醒。
-        AlarmUtils alarmUtils = new AlarmUtils();
         alarmUtils.setAlarmAfterReceive();
     }
-
-
 }

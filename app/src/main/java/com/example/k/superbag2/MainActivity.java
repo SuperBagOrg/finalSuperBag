@@ -442,7 +442,7 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
     //参数为所点击的项在列表的位置
     private void previewMemo(final int i, final long updateTime) {
         View preview = LayoutInflater.from(MainActivity.this).inflate(R.layout.preview_memo, null);
-        TextView preTitle, preContent, preData,preAlarm;
+        TextView preTitle, preContent, preDate,preAlarm;
         TextView preDelete, preEdit;
 
         preTitle = (TextView) preview.findViewById(R.id.pre_memo_title_tv);
@@ -450,20 +450,17 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
         preAlarm = (TextView) preview.findViewById(R.id.pre_memo_alarm_tv);
         preDelete = (TextView) preview.findViewById(R.id.pre_memo_delete_bt);
         preEdit = (TextView) preview.findViewById(R.id.pre_memo_edit_bt);
-        preData = (TextView) findViewById(R.id.pre_memo_alarm_data_);
+        preDate = (TextView) preview.findViewById(R.id.pre_memo_alarm_date);
         final AlertDialog preMemoDialog = new AlertDialog.Builder(MainActivity.this).create();
         preMemoDialog.setView(preview);
         preMemoDialog.setCancelable(true);
 
         //设置数据
         final MemoItem memoItem = DataSupport.where("updateTime = ?",""+updateTime).find(MemoItem.class).get(0);
-        preTitle.setText(memoItem.getTitle());//
+        preTitle.setText(memoItem.getTitle());
         preContent.setText(memoItem.getContent());
-//        preData.setText(memoItem.getEditTime());
-//        preDate.setText(memoItem.getAlarmTimeShow());
-        if (!memoItem.isAlarm()) {
-            preAlarm.setText("无");
-        } else {
+        preDate.setText(memoItem.getEditTime());
+        if (memoItem.isAlarm()) {
             String str = memoItem.getAlarmTimeShow();
             if (memoItem.isSound()) {
                 str = str + "\n提示音";
@@ -472,7 +469,10 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
                 str = str + "  震动";
             }
             preAlarm.setText(str);
+        } else {
+            preAlarm.setText("无");
         }
+
         preDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -495,6 +495,44 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
                 preMemoDialog.dismiss();
             }
         });
+        DialogUtils.setDialog(MainActivity.this, preMemoDialog, 2, 3,R.style.fade_in_out);
+        preMemoDialog.show();
+    }
+
+    //参数为所点击的项在列表的位置
+    private void previewMemo(final long updateTime) {
+        View preview = LayoutInflater.from(MainActivity.this).inflate(R.layout.preview_memo, null);
+        TextView preTitle, preContent, preDate,preAlarm;
+        TextView preDelete, preEdit;
+
+        preTitle = (TextView) preview.findViewById(R.id.pre_memo_title_tv);
+        preContent = (TextView) preview.findViewById(R.id.pre_memo_content_tv);
+        preAlarm = (TextView) preview.findViewById(R.id.pre_memo_alarm_tv);
+        preDelete = (TextView) preview.findViewById(R.id.pre_memo_delete_bt);
+        preEdit = (TextView) preview.findViewById(R.id.pre_memo_edit_bt);
+        preDate = (TextView) preview.findViewById(R.id.pre_memo_alarm_date);
+        final AlertDialog preMemoDialog = new AlertDialog.Builder(MainActivity.this).create();
+        preMemoDialog.setView(preview);
+        preMemoDialog.setCancelable(true);
+
+        //设置数据
+        final MemoItem memoItem = DataSupport.where("updateTime = ?",""+updateTime).find(MemoItem.class).get(0);
+        preTitle.setText(memoItem.getTitle());
+        preContent.setText(memoItem.getContent());
+        preDate.setText(memoItem.getEditTime());
+        if (memoItem.isAlarm()) {
+            String str = memoItem.getAlarmTimeShow();
+            if (memoItem.isSound()) {
+                str = str + "\n提示音";
+            }
+            if (memoItem.isShake()) {
+                str = str + "  震动";
+            }
+            preAlarm.setText(str);
+        } else {
+            preAlarm.setText("无");
+        }
+
         DialogUtils.setDialog(MainActivity.this, preMemoDialog, 2, 3,R.style.fade_in_out);
         preMemoDialog.show();
     }
@@ -578,7 +616,7 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
         OKBT.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                GetTime gt = new GetTime();
+
                 if (c == null){
                     alarmTimeShow = alarmTimeTV.getText().toString();
                 }else {
@@ -597,7 +635,9 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
                         memoItem.setSound(isSound);
                         memoItem.setShake(isShake);
                         memoItem.setAlarmTime(alarmTime);
+                        memoItem.setEditTime(new GetTime().getSpecificTime());
                         memoItem.setAlarmTimeShow(alarmTimeShow);
+                        GetTime gt = new GetTime();
                         String daytime = gt.getSpecificTime2Second();
                         memoItem.setUpdateTime(Long.parseLong(daytime));
                         memoItem.setEditTime(new GetTime().getSpecificTime());
@@ -621,11 +661,13 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
                         values.put("isAlarm",isAlarm ? "1":"0");
                         values.put("isShake",isShake ? "1":"0");
                         values.put("isSound",isSound ? "1":"0");
+                        GetTime gt = new GetTime();
                         String daytime = gt.getSpecificTime2Second();
                         values.put("updateTime",Long.parseLong(daytime));
                         values.put("editTime",new GetTime().getSpecificTime());
                         values.put("title",titleET.getText().toString());
                         values.put("content",contentET.getText().toString());
+                        values.put("editTime",new GetTime().getSpecificTime());
 
                         memoRecyclerAdapter.addItem(0, item, 1, index,values);
                         setMemoView();

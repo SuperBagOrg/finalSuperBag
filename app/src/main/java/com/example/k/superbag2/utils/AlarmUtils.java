@@ -68,4 +68,8 @@ public class AlarmUtils {
         values.put("isAlarm", "0");
         DataSupport.updateAll(MemoItem.class, values, "alarmTime = ?",alarmList.get(0).getAlarmTime());
     }
+
+    public List<MemoItem> getAlarmList(){
+        return alarmList;
+    }
 }

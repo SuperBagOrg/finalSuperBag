@@ -148,9 +148,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:gravity="center"
-            android:text="编辑"
+            android:text="确定"
             android:textColor="@color/white"
             android:id="@+id/pre_memo_edit_bt" />
     </LinearLayout>
-
 </LinearLayout>
