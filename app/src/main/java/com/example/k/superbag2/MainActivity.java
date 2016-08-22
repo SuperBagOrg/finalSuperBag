@@ -402,8 +402,9 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
                         .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                memoRecyclerAdapter.removeItem(position);
                                 DataSupport.deleteAll(MemoItem.class,"updateTime = ?",""+memoLists.get(position).getUpdateTime());
+                                memoRecyclerAdapter.removeItem(position);
+
                                 Toast.makeText(MainActivity.this, "删除成功", Toast.LENGTH_SHORT).show();
                             }
                         });
