@@ -6,6 +6,7 @@ import android.app.DatePickerDialog;
 import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.BroadcastReceiver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -302,25 +303,6 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
 
             @Override
             public void onItemLongClick(View view, final int position) {
-                //删除日记
-                /*final AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                builder.setMessage("确定删除这篇日记？")
-                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                DataSupport.delete(ItemBean.class, DataSupport.count(ItemBean.class) - position);
-                                Toast.makeText(MainActivity.this, "删除成功", Toast.LENGTH_SHORT).show();
-                                setDiaryView();
-                            }
-                        })
-                        .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-
-                            }
-                        })
-                        .setCancelable(true)
-                        .show();*/
                 final NormalDialog dialog = new NormalDialog(MainActivity.this);
                 Log.d("delete","position"+position);
                 dialog.isTitleShow(false)//
@@ -408,27 +390,27 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
             //长按，删除
             @Override
             public void onItemLongClick(View view, final int position) {
-//                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-//                builder.setMessage("删除此条备忘？")
-//                        .setCancelable(true)
-//                        .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-//                            @Override
-//                            public void onClick(DialogInterface dialogInterface, int i) {
-//
-//                            }
-//                        })
-//                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-//                            @Override
-//                            public void onClick(DialogInterface dialogInterface, int i) {
-//                                memoRecyclerAdapter.removeItem(position);
-//                                DataSupport.deleteAll(MemoItem.class,"updateTime = ?",memoLists.get(position).getUpdateTime()+"");
-//                                Toast.makeText(MainActivity.this, "删除成功", Toast.LENGTH_SHORT).show();
-//                            }
-//                        });
-//                AlertDialog dialog = builder.create();
-//                WindowManager.LayoutParams params = dialog.getWindow().getAttributes();
-//                params.windowAnimations = R.style.fade_in_out;
-//                dialog.show();
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                builder.setMessage("删除此条备忘？")
+                        .setCancelable(true)
+                        .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+
+                            }
+                        })
+                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                memoRecyclerAdapter.removeItem(position);
+                                DataSupport.deleteAll(MemoItem.class,"updateTime = ?",""+memoLists.get(position).getUpdateTime());
+                                Toast.makeText(MainActivity.this, "删除成功", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                AlertDialog dialog = builder.create();
+                WindowManager.LayoutParams params = dialog.getWindow().getAttributes();
+                params.windowAnimations = R.style.fade_in_out;
+                dialog.show();
             }
         });
 
@@ -459,7 +441,7 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
     //参数为所点击的项在列表的位置
     private void previewMemo(final int i, final long updateTime) {
         View preview = LayoutInflater.from(MainActivity.this).inflate(R.layout.preview_memo, null);
-        TextView preTitle, preContent, preDate,preAlarm;
+        TextView preTitle, preContent, preData,preAlarm;
         TextView preDelete, preEdit;
 
         preTitle = (TextView) preview.findViewById(R.id.pre_memo_title_tv);
@@ -467,7 +449,7 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
         preAlarm = (TextView) preview.findViewById(R.id.pre_memo_alarm_tv);
         preDelete = (TextView) preview.findViewById(R.id.pre_memo_delete_bt);
         preEdit = (TextView) preview.findViewById(R.id.pre_memo_edit_bt);
-        preDate = (TextView) findViewById(R.id.pre_memo_alarm_data);
+        preData = (TextView) findViewById(R.id.pre_memo_alarm_data_);
         final AlertDialog preMemoDialog = new AlertDialog.Builder(MainActivity.this).create();
         preMemoDialog.setView(preview);
         preMemoDialog.setCancelable(true);
@@ -476,6 +458,7 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
         final MemoItem memoItem = DataSupport.where("updateTime = ?",""+updateTime).find(MemoItem.class).get(0);
         preTitle.setText(memoItem.getTitle());//
         preContent.setText(memoItem.getContent());
+//        preData.setText(memoItem.getEditTime());
 //        preDate.setText(memoItem.getAlarmTimeShow());
         if (!memoItem.isAlarm()) {
             preAlarm.setText("无");
@@ -540,7 +523,7 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
         alarmTimeTV.setText(new GetTime().getSpecificTime());
         dateTV.setText(new GetTime().getSpecificTime());
 
-        //初始化数据
+        //编辑：初始化数据
         if (temp == 1) {
             titleET.setText(item.getTitle());
             contentET.setText(item.getContent());
@@ -595,8 +578,12 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
             @Override
             public void onClick(View view) {
                 GetTime gt = new GetTime();
-                alarmTime = c.getTimeInMillis()+"";
-                alarmTimeShow = c.get(Calendar.YEAR)+"-"+ c.get(Calendar.MONTH)+"-"+ c.get(Calendar.DAY_OF_MONTH)+"  "+ c.get(Calendar.HOUR_OF_DAY)+"-"+ c.get(Calendar.MINUTE);
+                if (c == null){
+                    alarmTimeShow = alarmTimeTV.getText().toString();
+                }else {
+                    alarmTime = c.getTimeInMillis()+"";
+                    alarmTimeShow = c.get(Calendar.YEAR)+"-"+ c.get(Calendar.MONTH)+"-"+ c.get(Calendar.DAY_OF_MONTH)+"  "+ c.get(Calendar.HOUR_OF_DAY)+"-"+ c.get(Calendar.MINUTE);
+                }
                 if (titleET.getText().toString().trim().equals("")) {
                     Toast.makeText(MainActivity.this, "不能为空呦", Toast.LENGTH_SHORT).show();
                 } else {
@@ -613,21 +600,33 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
                         String daytime = gt.getSpecificTime2Second();
                         memoItem.setUpdateTime(Long.parseLong(daytime));
                         memoItem.setEditTime(new GetTime().getSpecificTime());
-                        memoRecyclerAdapter.addItem(0, memoItem, 0, -1);
+                        memoRecyclerAdapter.addItem(0, memoItem, 0, -1,null);
                     } else {
                         //更新数据
-                        item.setTitle(titleET.getText().toString());
-                        item.setContent(contentET.getText().toString());
-                        item.setAlarm(isAlarm);
-                        item.setSound(isSound);
-                        item.setShake(isShake);
-                        String daytime = gt.getSpecificTime2Second();
-                        item.setUpdateTime(Long.parseLong(daytime));
-                        item.setAlarmTime(alarmTime);
-                        item.setAlarmTimeShow(alarmTimeShow);
-                        item.setEditTime(new GetTime().getSpecificTime());
+//                        item.setTitle(titleET.getText().toString());
+//                        item.setContent(contentET.getText().toString());
+//                        item.setAlarm(isAlarm);
+//                        item.setSound(isSound);
+//                        item.setShake(isShake);
+//                        String daytime = gt.getSpecificTime2Second();
+//                        item.setUpdateTime(Long.parseLong(daytime));
+//                        item.setAlarmTime(alarmTime);
+//                        item.setAlarmTimeShow(alarmTimeShow);
+//                        item.setEditTime(new GetTime().getSpecificTime());
                         // TODO 执行更新操作
-                        memoRecyclerAdapter.addItem(0, item, 1, index);
+                        ContentValues values = new ContentValues();
+                        values.put("alarmTime",alarmTime);
+                        values.put("alarmTimeShow",alarmTimeShow);
+                        values.put("isAlarm",isAlarm ? "1":"0");
+                        values.put("isShake",isShake ? "1":"0");
+                        values.put("isSound",isSound ? "1":"0");
+                        String daytime = gt.getSpecificTime2Second();
+                        values.put("updateTime",Long.parseLong(daytime));
+                        values.put("editTime",new GetTime().getSpecificTime());
+                        values.put("title",titleET.getText().toString());
+                        values.put("content",contentET.getText().toString());
+
+                        memoRecyclerAdapter.addItem(0, item, 1, index,values);
                         setMemoView();
                     }
                     //搜索看有没设置提醒时间的memo，有：取最近的设置提醒。

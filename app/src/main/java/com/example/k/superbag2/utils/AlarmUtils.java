@@ -24,11 +24,6 @@ public class AlarmUtils {
     public AlarmUtils(){
         //从数据库获取设置过提醒的memo记录，按提醒时间从小到大排序。
         alarmList = DataSupport.where("isalarm = ?","1").order("alarmTime asc").find(MemoItem.class);
-        int count = 0;
-        for (MemoItem memoItem:alarmList){
-            Log.d("clock",""+alarmList.get(count).getAlarmTime());
-            count++;
-        }
     }
     //提醒任务更新。在memo数据更改、新建、删除、手机重启时调用。
     public void setAlarm(){

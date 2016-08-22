@@ -83,7 +83,7 @@
             android:layout_height="wrap_content"
             android:text="日 期："/>
         <TextView
-            android:id="@+id/pre_memo_alarm_data"
+            android:id="@+id/pre_memo_alarm_data_"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text=""

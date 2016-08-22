@@ -1,5 +1,6 @@
 package com.example.k.superbag2.adapter;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -110,12 +111,12 @@ public class MemoRecyclerAdapter extends RecyclerView.Adapter<MemoRecyclerAdapte
 
     //temp 为0表示新建时保存，1表示编辑时保存
     //index 表示当编辑时，更新数据库时需要的行号
-    public void addItem(int position,MemoItem memoItem,int temp,int index){
+    public void addItem(int position, MemoItem memoItem, int temp, int index, ContentValues values){
         memoItemList.add(position,memoItem);
         if (temp == 0) {
             memoItem.save();
         } else {
-            memoItem.update(DataSupport.count(MemoItem.class) - index);
+            memoItem.updateAll(MemoItem.class,values,"updateTime = ?",""+memoItemList.get(index).getUpdateTime());
         }
         notifyItemInserted(position);
         // TODO　更新数据库操作
