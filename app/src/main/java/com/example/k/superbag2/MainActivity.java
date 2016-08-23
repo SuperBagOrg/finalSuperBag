@@ -264,7 +264,7 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
                     .into(fPBackgroundIV);
         }
 
-        itemBeanList = new ArrayList<>();
+//        itemBeanList = new ArrayList<>();
         itemBeanList = DataSupport.findAll(ItemBean.class);
         if (itemBeanList.isEmpty()){
 
@@ -499,44 +499,6 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
         preMemoDialog.show();
     }
 
-    //参数为所点击的项在列表的位置
-    private void previewMemo(final long updateTime) {
-        View preview = LayoutInflater.from(MainActivity.this).inflate(R.layout.preview_memo, null);
-        TextView preTitle, preContent, preDate,preAlarm;
-        TextView preDelete, preEdit;
-
-        preTitle = (TextView) preview.findViewById(R.id.pre_memo_title_tv);
-        preContent = (TextView) preview.findViewById(R.id.pre_memo_content_tv);
-        preAlarm = (TextView) preview.findViewById(R.id.pre_memo_alarm_tv);
-        preDelete = (TextView) preview.findViewById(R.id.pre_memo_delete_bt);
-        preEdit = (TextView) preview.findViewById(R.id.pre_memo_edit_bt);
-        preDate = (TextView) preview.findViewById(R.id.pre_memo_alarm_date);
-        final AlertDialog preMemoDialog = new AlertDialog.Builder(MainActivity.this).create();
-        preMemoDialog.setView(preview);
-        preMemoDialog.setCancelable(true);
-
-        //设置数据
-        final MemoItem memoItem = DataSupport.where("updateTime = ?",""+updateTime).find(MemoItem.class).get(0);
-        preTitle.setText(memoItem.getTitle());
-        preContent.setText(memoItem.getContent());
-        preDate.setText(memoItem.getEditTime());
-        if (memoItem.isAlarm()) {
-            String str = memoItem.getAlarmTimeShow();
-            if (memoItem.isSound()) {
-                str = str + "\n提示音";
-            }
-            if (memoItem.isShake()) {
-                str = str + "  震动";
-            }
-            preAlarm.setText(str);
-        } else {
-            preAlarm.setText("无");
-        }
-
-        DialogUtils.setDialog(MainActivity.this, preMemoDialog, 2, 3,R.style.fade_in_out);
-        preMemoDialog.show();
-    }
-
     /**
      * 新建备忘
      *
@@ -621,7 +583,7 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
                     alarmTimeShow = alarmTimeTV.getText().toString();
                 }else {
                     alarmTime = c.getTimeInMillis()+"";
-                    alarmTimeShow = c.get(Calendar.YEAR)+"-"+ c.get(Calendar.MONTH)+"-"+ c.get(Calendar.DAY_OF_MONTH)+"  "+ c.get(Calendar.HOUR_OF_DAY)+"-"+ c.get(Calendar.MINUTE);
+                    alarmTimeShow = c.get(Calendar.YEAR)+"-"+ c.get(Calendar.MONTH)+"-"+ c.get(Calendar.DAY_OF_MONTH)+"  "+ c.get(Calendar.HOUR_OF_DAY)+":"+ c.get(Calendar.MINUTE);
                 }
                 if (titleET.getText().toString().trim().equals("")) {
                     Toast.makeText(MainActivity.this, "不能为空呦", Toast.LENGTH_SHORT).show();
@@ -698,7 +660,7 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
                         //得到的时间是24小时制
                         c.set(Calendar.HOUR_OF_DAY, i);
                         c.set(Calendar.MINUTE, i1);
-                        textView.setText(c.get(Calendar.YEAR)+"-"+ c.get(Calendar.MONTH)+"-"+ c.get(Calendar.DAY_OF_MONTH)+"  "+ c.get(Calendar.HOUR_OF_DAY)+"-"+ c.get(Calendar.MINUTE));
+                        textView.setText(c.get(Calendar.YEAR)+"-"+ c.get(Calendar.MONTH)+"-"+ c.get(Calendar.DAY_OF_MONTH)+"  "+ c.get(Calendar.HOUR_OF_DAY)+":"+ c.get(Calendar.MINUTE));
                         Toast.makeText(MainActivity.this, "提醒设置成功", Toast.LENGTH_SHORT).show();
                     }
                 }, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), false);

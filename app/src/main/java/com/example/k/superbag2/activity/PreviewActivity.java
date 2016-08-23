@@ -1,12 +1,9 @@
 package com.example.k.superbag2.activity;
 
-import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.view.Window;
@@ -15,17 +12,15 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.k.superbag2.R;
 import com.example.k.superbag2.bean.EditData;
 import com.example.k.superbag2.bean.ItemBean;
 import com.example.k.superbag2.others.Constant;
-import com.example.k.superbag2.utils.DialogUtils;
 import com.example.k.superbag2.utils.GetImageUtils;
 import com.example.k.superbag2.view.LookPicDialog;
-import com.example.k.superbag2.view.RichTextEditor;
+import com.example.k.superbag2.view.RichTextEditor3;
 
 import org.litepal.crud.DataSupport;
 
@@ -40,14 +35,13 @@ public class PreviewActivity extends BaseActivity implements View.OnClickListene
     private LinearLayout preBackLL,preEditLL;
     private ImageView preHeadIcon;
     private TextView preMonth,preWeather,preFeelings,preTag1,preTag2,preTag3,preMin;
-//    private ImageView prePic1,prePic2,prePic3,prePic4;
-//    private TextView preContent;
-    private RichTextEditor preContent;
+    private RichTextEditor3 preContent;
 
     private ItemBean item;
-    public static int width;
+    public static int width = 0;
     private Long lineNum;
     private List<EditData> list_richedit;
+    private List<ImageView> imageViewList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,8 +52,16 @@ public class PreviewActivity extends BaseActivity implements View.OnClickListene
         initView();
         setListener();
         initData();
+        imageViewList = preContent.getImageViews();
+        setPicClick();
+    }
 
-        width = getWindowManager().getDefaultDisplay().getWidth();
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        if (hasFocus){
+            width = preContent.getMeasuredWidth();
+        }
     }
 
     private void initView(){
@@ -74,18 +76,16 @@ public class PreviewActivity extends BaseActivity implements View.OnClickListene
         preTag1 = (TextView)findViewById(R.id.pre_tag1);
         preTag2 = (TextView)findViewById(R.id.pre_tag2);
         preTag3 = (TextView)findViewById(R.id.pre_tag3);
-//        preContent = (TextView)findViewById(R.id.pre_content);
-        preContent = (RichTextEditor)findViewById(R.id.pre_content);
-//        preMin = (TextView)findViewById(R.id.pre_min);
-//        prePic1 = (ImageView)findViewById(R.id.pre_iv1);
-//        prePic2 = (ImageView) findViewById(R.id.pre_iv2);
-//        prePic3 = (ImageView)findViewById(R.id.pre_iv3);
-//        prePic4 = (ImageView)findViewById(R.id.pre_iv4);
+        preContent = (RichTextEditor3)findViewById(R.id.pre_content);
+        preMin = (TextView)findViewById(R.id.pre_min);
 
         //设置头像
-        Bitmap head = GetImageUtils.getBMFromUri(this,Constant.HEAD_ICON_URI);
-        if (head != null){
-            preHeadIcon.setImageBitmap(head);
+        Uri headUri = GetImageUtils.getUri(this, Constant.HEAD_ICON_URI);
+        if (!headUri.toString().equals("")){
+            Glide.with(this)
+                    .load(headUri)
+                    .asBitmap()
+                    .into(preHeadIcon);
         }
     }
 
@@ -94,11 +94,6 @@ public class PreviewActivity extends BaseActivity implements View.OnClickListene
         preEdit.setOnClickListener(this);
         preBackLL.setOnClickListener(this);
         preEditLL.setOnClickListener(this);
-
-//        prePic1.setOnClickListener(this);
-//        prePic2.setOnClickListener(this);
-//        prePic3.setOnClickListener(this);
-//        prePic4.setOnClickListener(this);
     }
 
     @Override
@@ -116,18 +111,6 @@ public class PreviewActivity extends BaseActivity implements View.OnClickListene
                 //跳转后关闭当前活动
                 finish();
                 break;
-//            case R.id.pre_iv1:
-//                showPic(1);
-//                break;
-//            case R.id.pre_iv2:
-//                showPic(2);
-//                break;
-//            case R.id.pre_iv3:
-//                showPic(3);
-//                break;
-//            case R.id.pre_iv4:
-//                showPic(4);
-//                break;
         }
     }
 
@@ -146,7 +129,6 @@ public class PreviewActivity extends BaseActivity implements View.OnClickListene
         Intent intent = getIntent();
         //获取到点击条目的创建时间。
         lineNum = intent.getLongExtra(Constant.LINE_INDEX,-1L);
-        Log.d("rich_edit",""+lineNum+"");
 
         if (lineNum != -1){
             //根据创建时间从数据库拿到条目记录
@@ -156,22 +138,16 @@ public class PreviewActivity extends BaseActivity implements View.OnClickListene
             if (item == null) {
                 return;
             }
-            //RichEdit数据还原
-            int index = 0;
-            Log.d("rich_edit",""+list_richedit.size());
             for (EditData editData:list_richedit){
-                if (editData.getInputStr().equals("")){
-                    //插入ImageView
-                    Log.d("rich_edit","preContent width"+PreviewActivity.width);
-                    preContent.insertImage(editData.getImagePath());
-                }else {
-                    //插入EditText
-                    preContent.addEditTextAtIndex(index,editData.getInputStr());
-                    Log.d("rich_edit",""+index+": "+editData.getInputStr()+editData.getImagePath());
-
+                if (!editData.getImagePath().equals("")){
+                    //设置图片
+                    Bitmap bp = preContent.getScaledBitmap(editData.getImagePath(),0);
+                    preContent.addImageViewAtIndex(editData.getPosition(),bp,editData.getImagePath());
+                } else if (!editData.getInputStr().trim().equals("")){
+                    preContent.addTextViewAtIndex(editData.getPosition(),editData.getInputStr());
                 }
-                index++;
             }
+
             //tag还原
             if (!item.getTag1().equals("")){
                 preTag1.setVisibility(View.VISIBLE);
@@ -185,34 +161,20 @@ public class PreviewActivity extends BaseActivity implements View.OnClickListene
             preMonth.setText(item.getYear()+"-"+item.getMonth()+"-"+item.getDay());
             preFeelings.setText(item.getFeelings());
             preWeather.setText(item.getWeather());
-//            preMin.setText(item.getHourMIn());
+            preMin.setText(item.getHourMIn());
 
-//            Log.d("图片是",item.getPic3());
-//            //设置图片
-//            if (!item.getPic1().equals("")){
-//                Glide.with(this)
-//                        .load(item.getPic1())
-//                        .asBitmap()
-//                        .into(prePic1);
-//            }
-//            if (!item.getPic2().equals("")){
-//                Glide.with(this)
-//                        .load(item.getPic2())
-//                        .asBitmap()
-//                        .into(prePic2);
-//            }
-//            if (!item.getPic3().equals("")){
-//                Glide.with(this)
-//                        .load(item.getPic3())
-//                        .asBitmap()
-//                        .into(prePic3);
-//            }
-//            if (!item.getPic4().equals("")){
-//                Glide.with(this)
-//                        .load(item.getPic4())
-//                        .asBitmap()
-//                        .into(prePic4);
-//            }
+        }
+    }
+
+    private void setPicClick(){
+        for (int i = 0; i < imageViewList.size();i++){
+            ImageView imageView = imageViewList.get(i);
+            imageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    showPic(1);
+                }
+            });
         }
     }
 }

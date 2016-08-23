@@ -1,6 +1,5 @@
 package com.example.k.superbag2.receiver;
 
-import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -11,18 +10,11 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
-import com.example.k.superbag2.MainActivity;
-import com.example.k.superbag2.MyApplication;
 import com.example.k.superbag2.R;
 import com.example.k.superbag2.activity.PreviewMemoActivity;
 import com.example.k.superbag2.bean.MemoItem;
 import com.example.k.superbag2.others.Constant;
-import com.example.k.superbag2.service.AlarmService;
 import com.example.k.superbag2.utils.AlarmUtils;
-
-import org.litepal.crud.DataSupport;
-
-import java.util.List;
 
 /**
  * Created by K on 2016/8/21.

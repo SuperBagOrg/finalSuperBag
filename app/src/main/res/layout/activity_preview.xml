@@ -67,14 +67,14 @@
                 android:layout_height="wrap_content"
                 android:padding="10dp">
 
-                <ImageView
+                <com.example.k.superbag2.view.RoundImageView
                     android:id="@+id/pre_head_icon"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/pic4" />
+                    android:src="@drawable/pic3" />
 
                 <TextView
                     android:id="@+id/pre_month"
@@ -82,7 +82,8 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_toRightOf="@+id/pre_head_icon"
-                    android:paddingLeft="5dp"
+                    android:paddingLeft="12dp"
+                    android:textSize="13sp"
                     android:text="2016-06-26  周日"
                     android:textColor="@color/light_green" />
 
@@ -104,12 +105,14 @@
                     android:background="@drawable/weather_background"
                     android:padding="8dp"
                     android:text="晴"
+                    android:textColor="@color/white"
                     android:textSize="12sp" />
 
                 <TextView
                     android:id="@+id/pre_feelings_TV"
                     android:layout_width="wrap_content"
                     android:layout_height="30dp"
+                    android:textColor="@color/white"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="10dp"
                     android:layout_toRightOf="@+id/pre_weather_TV"
@@ -163,54 +166,19 @@
                 android:layout_height="2dp"
                 android:background="@color/gray"></View>
 
-            <!--<TextView-->
-                <!--android:id="@+id/pre_content"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:padding="10dp"-->
-                <!--android:text="这是测试内容" />-->
-
-            <com.example.k.superbag2.view.RichTextEditor
+            <com.example.k.superbag2.view.RichTextEditor3
                 android:layout_width="match_parent"
+                android:paddingTop="8dp"
                 android:layout_height="wrap_content"
                 android:id="@+id/pre_content"
                 />
 
-            <!--<ImageView-->
-                <!--android:id="@+id/pre_iv1"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:padding="10dp"-->
-                <!--android:scaleType="centerInside" />-->
-
-            <!--<ImageView-->
-                <!--android:id="@+id/pre_iv2"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:padding="10dp"-->
-                <!--android:scaleType="centerInside" />-->
-
-            <!--<ImageView-->
-                <!--android:id="@+id/pre_iv3"-->
-                <!--android:padding="10dp"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:scaleType="centerInside" />-->
-
-            <!--<ImageView-->
-                <!--android:id="@+id/pre_iv4"-->
-                <!--android:padding="10dp"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:scaleType="centerInside" />-->
-
-            <!--<TextView-->
-                <!--android:id="@+id/pre_min"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_marginTop="10dp"-->
-                <!--android:padding="10dp"-->
-                <!--android:text="18:13" />-->
+            <TextView
+                android:id="@+id/pre_min"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="12dp"
+                android:text="18:13" />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

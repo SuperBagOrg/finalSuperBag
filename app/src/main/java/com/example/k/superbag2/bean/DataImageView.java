@@ -15,8 +15,6 @@ public class DataImageView extends ImageView {
 	
 	private String absolutePath;
 
-	private Bitmap bitmap;
-
 	public DataImageView(Context context) {
 		this(context, null);
 	}
@@ -35,14 +33,6 @@ public class DataImageView extends ImageView {
 
 	public void setAbsolutePath(String absolutePath) {
 		this.absolutePath = absolutePath;
-	}
-
-	public Bitmap getBitmap() {
-		return bitmap;
-	}
-
-	public void setBitmap(Bitmap bitmap) {
-		this.bitmap = bitmap;
 	}
 
 }

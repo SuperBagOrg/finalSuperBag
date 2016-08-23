@@ -5,7 +5,6 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
@@ -19,7 +18,6 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,6 +30,7 @@ import com.example.k.superbag2.utils.DialogUtils;
 import com.example.k.superbag2.utils.GetImageUtils;
 import com.example.k.superbag2.utils.GetTime;
 import com.example.k.superbag2.view.RichTextEditor;
+import com.example.k.superbag2.view.RichTextEditor2;
 
 import org.litepal.crud.DataSupport;
 
@@ -171,7 +170,6 @@ public class EditActivity extends BaseActivity implements View.OnClickListener,
 
     private void initData() {
         GetTime gt = new GetTime();
-        creatTime = Long.parseLong(gt.getSpecificTime2Second());
         oldtime = gt.getYear() + "-" + gt.getMonth() + "-" + gt.getDay();
 //        oldTime.setText(oldtime);
 
@@ -212,38 +210,21 @@ public class EditActivity extends BaseActivity implements View.OnClickListener,
             case R.id.edit_save:
                 //存储
                 List<EditData> editDatas = contentET.getData();
-//                for (EditData data:editDatas){
-//
-//                }
-                Log.d("rich_edit","uriLIst"+": "+editDatas.size());
+
+                Log.d("rich_edit","uriLIst大小是"+": "+editDatas.size());
                 StringBuilder sb = new StringBuilder();
                 int count = 0;
                 for (EditData save_rich:editDatas){
                     sb.append(save_rich.getInputStr());
-                    //ImageView
-                    Log.d("rich_edit","uriLIst"+": "+uriList.get(count));
-
-                    if (editDatas.get(count).getInputStr() == ""){
-                        save_rich.setImagePath(uriList.get(count));
-
+                    if (!save_rich.getImagePath().equals("")){
+                        uriList.set(count,save_rich.getImagePath());
+                        count++;
                     }
-                    Log.d("rich_edit","editDatas"+": "+editDatas.get(count).getImagePath());
-                    Log.d("rich_edit","save_rich"+": "+save_rich.getImagePath());
-
+                    creatTime = Long.parseLong(new GetTime().getSpecificTime2Second());
                     save_rich.setUpdateTime(creatTime);
                     save_rich.save();
-                    count++;
                 }
 
-//                int temp = 0;
-//                for (int i = 0; i < editDatas.size(); i++) {
-//                    EditData ed = editDatas.get(i);
-//                    if (!ed.getImagePath().equals("")) {
-//                        uriList.set(temp, ed.getImagePath());
-//                        picIndex.add(temp, i);
-//                        temp++;
-//                    }
-//                }
                 content = sb.toString();
                 if (content.trim().equals("")) {
                     Toast.makeText(EditActivity.this, "内容不能为空呦", Toast.LENGTH_SHORT).show();
@@ -279,6 +260,34 @@ public class EditActivity extends BaseActivity implements View.OnClickListener,
                 break;
         }
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case 2:
+                if (data != null) {
+                    ArrayList<String> tempPics = data.getStringArrayListExtra(Constant.IMAGE_URI_LIST);
+                    for (int i = 0; i < tempPics.size(); i++) {
+                        //ImageView插入操作
+//                        uriList.set(i, tempPics.get(i));
+                        Log.d("edit选取的图片地址是：  ",tempPics.get(i));
+                        insertBitmap(GetImageUtils.getRealFilePath(this, Uri.parse(tempPics.get(i))));
+                    }
+                }
+                break;
+        }
+
+    }
+
+    /**
+     * 添加图片到富文本剪辑器
+     *
+     * @param imagePath
+     */
+    private void insertBitmap(String imagePath) {
+        contentET.insertImage(imagePath);
+    }
+
 
     @Override
     public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
@@ -417,38 +426,6 @@ public class EditActivity extends BaseActivity implements View.OnClickListener,
         builder.show();
         DialogUtils.setDialog(EditActivity.this,dialog,2,3);
     }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (requestCode) {
-            case 2:
-                if (data != null) {
-                    ArrayList<String> tempPics = data.getStringArrayListExtra(Constant.IMAGE_URI_LIST);
-                    for (int i = 0; i < tempPics.size(); i++) {
-                        //ImageView插入操作
-                        uriList.set(i, tempPics.get(i));
-                        Log.d("rich_edit","onActivityResult"+i+" "+GetImageUtils.getRealFilePath(this, Uri.parse(uriList.get(i))));
-                        Log.d("result","tempPics onActivityResult"+i+" "+tempPics.get(i));
-                        Log.d("result","tempPics onActivityResult"+i+" "+uriList.get(i));
-
-                        insertBitmap(GetImageUtils.getRealFilePath(this, Uri.parse(uriList.get(i))));
-//                        insertBitmap(tempPics.get(i));
-                    }
-                }
-                break;
-        }
-
-    }
-
-    /**
-     * 添加图片到富文本剪辑器
-     *
-     * @param imagePath
-     */
-    private void insertBitmap(String imagePath) {
-        contentET.insertImage(imagePath);
-    }
-
 
     //从相册选取
     private void selectFromAlbum() {

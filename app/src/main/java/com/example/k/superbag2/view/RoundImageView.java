@@ -69,7 +69,7 @@ public class RoundImageView extends ImageView {
         setShader();
         canvas.drawCircle(radius,radius,radius,paint);
 
-        //画外围圆圈
+        /*//画外围圆圈
         Paint circlePaint = new Paint();
         circlePaint.setAntiAlias(true);
         circlePaint.setColor(Color.WHITE);
@@ -79,7 +79,7 @@ public class RoundImageView extends ImageView {
         int w = getPaddingLeft() + getPaddingRight();
         int r = (getWidth() - w) / 2;
 
-        canvas.drawCircle(getWidth()/2,getHeight()/2,r,circlePaint);
+        canvas.drawCircle(getWidth()/2,getHeight()/2,r,circlePaint);*/
     }
 
     private Bitmap drawable2Bitmap(Drawable drawable){

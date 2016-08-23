@@ -7,8 +7,10 @@ import org.litepal.crud.DataSupport;
 public class EditData extends DataSupport{
     private String inputStr = "";
     private String imagePath = "";
-    private Bitmap bitmap;
     private long updateTime;
+
+    //表示存储索引
+    private int position;
 
     public long getUpdateTime() {
         return updateTime;
@@ -26,10 +28,6 @@ public class EditData extends DataSupport{
         return imagePath;
     }
 
-    public Bitmap getBitmap(){
-        return bitmap;
-    }
-
     public void setInputStr(String inputStr){
         this.inputStr = inputStr;
     }
@@ -38,7 +36,12 @@ public class EditData extends DataSupport{
         this.imagePath = imagePath;
     }
 
-    public void setBitmap(Bitmap bitmap){
-        this.bitmap = bitmap;
+    public int getPosition() {
+        return position;
     }
+
+    public void setPosition(int position) {
+        this.position = position;
+    }
+
 }

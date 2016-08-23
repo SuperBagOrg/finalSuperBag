@@ -4,7 +4,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-import com.example.k.superbag2.service.AlarmService;
+import com.example.k.superbag2.utils.AlarmUtils;
+
 
 /**
  * Created by Aersasi on 2016/8/22.
@@ -14,7 +15,8 @@ public class BootStartReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         if (intent.getAction().equals(Intent.ACTION_BOOT_COMPLETED)){
-            context.startService(new Intent(context, AlarmService.class));
+            AlarmUtils alarmUtils = new AlarmUtils();
+            alarmUtils.setAlarm();
         }
     }
 }

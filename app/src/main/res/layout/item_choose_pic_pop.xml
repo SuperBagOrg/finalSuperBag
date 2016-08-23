@@ -22,6 +22,7 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_marginLeft="13dp"
+        android:visibility="visible"
         android:layout_toRightOf="@id/id_dir_item_image"
         android:orientation="vertical" >
 
@@ -30,6 +31,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="所有图片"
+            android:textColor="@color/darkGray"
+            android:visibility="visible"
             android:textSize="13sp" />
 
         <TextView
@@ -37,6 +40,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="4723张"
+            android:textColor="@color/gray"
+            android:visibility="visible"
             android:paddingTop="5dp"
             android:textSize="10sp" />
     </LinearLayout>

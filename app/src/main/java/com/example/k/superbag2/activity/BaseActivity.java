@@ -19,6 +19,7 @@ import com.example.k.superbag2.utils.SaveUtils;
  */
 public class BaseActivity extends AppCompatActivity {
     private Intent intent;
+    private int width;
     @Override
     protected void onResume() {
         super.onResume();
@@ -45,5 +46,15 @@ public class BaseActivity extends AppCompatActivity {
         }else {
             SaveUtils.setIsLocked(true);
         }
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        width = getWindowManager().getDefaultDisplay().getWidth();
+    }
+
+    public int getDisplayWidth(){
+        return width;
     }
 }

@@ -130,7 +130,6 @@ public class ChoosePicActivity extends Activity implements ListImageDirPopupWind
         mImageCount.setText(totalCount + "张");
     }
 
-    ;
 
     /**
      * 初始化展示文件夹的popupWindw

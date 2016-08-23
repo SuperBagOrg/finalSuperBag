@@ -5,13 +5,14 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/darkGray"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/new_primary"
         android:padding="10dp"
         android:id="@+id/choose_pic_rl"
         android:layout_alignParentTop="true">
         <LinearLayout
             android:layout_width="50dp"
+            android:layout_centerVertical="true"
             android:id="@+id/choose_pic_back_ll"
             android:layout_height="wrap_content">
             <Button
@@ -30,6 +31,7 @@
         <Button
             android:layout_width="35dp"
             android:layout_height="25dp"
+            android:layout_centerVertical="true"
             android:id="@+id/choose_pic_ok"
             android:layout_alignParentRight="true"
             android:background="@drawable/ok_bt_background"
@@ -58,7 +60,7 @@
         android:layout_width="match_parent"
         android:layout_height="45dip"
         android:layout_alignParentBottom="true"
-        android:background="#e0000000"
+        android:background="@color/new_primary"
         android:clickable="true" >
 
         <Button

@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.k.superbag2.R;
 import com.example.k.superbag2.bean.ItemBean;
 
@@ -82,6 +83,10 @@ public class LookPicDialog extends Dialog {
             String s = itemBean.getPicList().get(position);
             PhotoView photoView = new PhotoView(container.getContext());
             photoView.setImageURI(Uri.parse(s));
+/*            Glide.with(context)
+                    .load(Uri.parse(s))
+                    .asBitmap()
+                    .into(photoView);*/
             photoView.setHorizontalScrollBarEnabled(true);
             photoView.setOnPhotoTapListener(new PhotoViewAttacher.OnPhotoTapListener() {
                 @Override
