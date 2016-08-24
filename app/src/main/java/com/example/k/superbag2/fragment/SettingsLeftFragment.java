@@ -248,7 +248,6 @@ public class SettingsLeftFragment extends Fragment {
                 uploadItembean.setContent(data.getContent());
                 uploadItembean.setDayTime(data.getDayTime());
                 uploadItembean.setFeelings(data.getFeelings());
-                uploadItembean.setImportance(data.getImportance());
                 uploadItembean.setPic1(data.getPic1());
                 uploadItembean.setPic2(data.getPic2());
                 uploadItembean.setPic3(data.getPic3());
@@ -311,7 +310,6 @@ public class SettingsLeftFragment extends Fragment {
                 uploadItembean.setContent(data.getContent());
                 uploadItembean.setDayTime(data.getDayTime());
                 uploadItembean.setFeelings(data.getFeelings());
-                uploadItembean.setImportance(data.getImportance());
                 uploadItembean.setPic1(data.getPic1());
                 uploadItembean.setPic2(data.getPic2());
                 uploadItembean.setPic3(data.getPic3());
@@ -409,7 +407,6 @@ public class SettingsLeftFragment extends Fragment {
                                 itemBean_local.setWeather(itembean.getWeather());
                                 itemBean_local.setUpdateTime(itembean.getUpdateTime());
                                 itemBean_local.setDayTime(itembean.getDayTime());
-                                itemBean_local.setImportance(itembean.getImportance());
                                 itemBean_local.setContent(itembean.getContent());
                                 itemBean_local.setFeelings(itembean.getFeelings());
                                 itemBean_local.setTag1(itembean.getTag1());
@@ -432,7 +429,6 @@ public class SettingsLeftFragment extends Fragment {
                             itemBean_local.setWeather(itembean.getWeather());
                             itemBean_local.setUpdateTime(itembean.getUpdateTime());
                             itemBean_local.setDayTime(itembean.getDayTime());
-                            itemBean_local.setImportance(itembean.getImportance());
                             itemBean_local.setContent(itembean.getContent());
                             itemBean_local.setFeelings(itembean.getFeelings());
                             itemBean_local.setTag1(itembean.getTag1());

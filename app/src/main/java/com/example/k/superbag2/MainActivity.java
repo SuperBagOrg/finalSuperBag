@@ -573,15 +573,22 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
                             shakeSC.setChecked(b);
                         }
                         break;
-                    case R.id.add_memo_sound_sc:
-                        isSound = b;
-                        break;
-                    case R.id.add_memo_shake_sc:
-                        isShake = b;
-                        break;
                 }
             }
         });
+        soundSC.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                isSound = b;
+            }
+        });
+        shakeSC.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                isShake = b;
+            }
+        });
+
         alarmTimeTV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

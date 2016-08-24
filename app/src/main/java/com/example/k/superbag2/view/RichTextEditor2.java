@@ -25,6 +25,7 @@ import android.widget.ScrollView;
 import com.example.k.superbag2.R;
 import com.example.k.superbag2.bean.DataImageView;
 import com.example.k.superbag2.bean.EditData;
+import com.example.k.superbag2.utils.ScreenUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,6 +46,8 @@ public class RichTextEditor2 extends ScrollView {
     private int editNormalPadding = 0; //
     private int disappearingImageIndex = 0;
     private Context context;
+
+    private int imageWidth;
 
     public RichTextEditor2(Context context) {
         this(context, null);
@@ -105,11 +108,20 @@ public class RichTextEditor2 extends ScrollView {
         LinearLayout.LayoutParams firstEditParam = new LinearLayout.LayoutParams(
                 LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
         editNormalPadding = dip2px(EDIT_PADDING);
-        EditText firstEdit = createEditText("input here",
+        EditText firstEdit = createEditText("写点什么吧…",
                 dip2px(EDIT_FIRST_PADDING_TOP));
         allLayout.addView(firstEdit, firstEditParam);
         lastFocusEdit = firstEdit;
     }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasWindowFocus) {
+        super.onWindowFocusChanged(hasWindowFocus);
+        if (hasWindowFocus){
+            imageWidth = getMeasuredWidth();
+        }
+    }
+
     /**
      * 处理软键盘backSpace回退事件
      *
@@ -181,6 +193,7 @@ public class RichTextEditor2 extends ScrollView {
         RelativeLayout layout = (RelativeLayout) inflater.inflate(
                 R.layout.edit_imageview, null);
         layout.setTag(viewTagIndex++);
+
         View closeView = layout.findViewById(R.id.image_close);
         closeView.setTag(layout.getTag());
         closeView.setOnClickListener(btnListener);
@@ -194,16 +207,11 @@ public class RichTextEditor2 extends ScrollView {
      */
     public void insertImage(String imagePath) {
         Log.d("(String imagePath)是",imagePath);
-        Bitmap bmp = getScaledBitmap(imagePath, getMeasuredWidth());
+        Bitmap bmp = getScaledBitmap(imagePath, imageWidth);
         if (bmp == null){
             Log.d("bitmap 位","空的-------------");
             return;
         }
-        /*if (getWidth() == 0){
-            Log.d("insertImage()--","getWidth()为0");
-            return;
-        }*/
-
         insertImage(bmp, imagePath);
     }
 
@@ -312,7 +320,7 @@ public class RichTextEditor2 extends ScrollView {
             Log.d("rich_edit------ ","activity.width"+width);
         }*/
 //        sampleSize = options.outWidth > width ? options.outWidth / width + 1 : 1;
-        sampleSize = calculateInSampleSize(options,300,300);
+        sampleSize = calculateInSampleSize(options,400,400);
 
         options.inJustDecodeBounds = false;
         options.inSampleSize = sampleSize;
@@ -345,20 +353,6 @@ public class RichTextEditor2 extends ScrollView {
         Log.d("缩放是：  ",res+"");
         return res;
     }
-
-    //---------
-    //我自己加的，有问题
-	public void setTextAndImage(List<EditData> dataList){
-        for (int i = 0; i < dataList.size(); i++){
-			EditData data = dataList.get(i);
-			addEditTextAtIndex(i,data.getInputStr());
-			if (!data.getImagePath().equals("")){
-//				addImageViewAtIndex(i,getScaledBitmap(data.getImagePath(),getWidth()),data.getImagePath());
-//				addImageViewAtIndex(i,getScaledBitmap(getRealFilePath(Uri.parse(data.getImagePath())),getWidth()),data.getImagePath());
-				insertImage(getRealFilePath(Uri.parse(data.getImagePath())));
-			}
-		}
-	}
 
     /**
      * 根据Uri获取图片文件的绝对路径
@@ -477,7 +471,7 @@ public class RichTextEditor2 extends ScrollView {
                         .findViewById(R.id.edit_imageView);
                 itemData.setImagePath(item.getAbsolutePath());
             }
-
+            itemData.setPosition(index);
             dataList.add(itemData);
         }
 

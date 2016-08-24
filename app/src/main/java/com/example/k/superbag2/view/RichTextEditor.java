@@ -48,6 +48,8 @@ public class RichTextEditor extends ScrollView {
 	private int editNormalPadding = 0; //
 	private int disappearingImageIndex = 0;
 
+	private int imageWidth;
+
 	public RichTextEditor(Context context) {
 		this(context, null);
 	}
@@ -111,6 +113,14 @@ public class RichTextEditor extends ScrollView {
 				dip2px(EDIT_FIRST_PADDING_TOP));
 		allLayout.addView(firstEdit, firstEditParam);
 		lastFocusEdit = firstEdit;
+	}
+
+	@Override
+	public void onWindowFocusChanged(boolean hasWindowFocus) {
+		super.onWindowFocusChanged(hasWindowFocus);
+		if (hasWindowFocus){
+			imageWidth = getWidth();
+		}
 	}
 
 	/**
@@ -247,7 +257,7 @@ public class RichTextEditor extends ScrollView {
 	 * @param editStr
 	 *            EditText显示的文字
 	 */
-	private void addEditTextAtIndex(final int index, String editStr) {
+	public void addEditTextAtIndex(final int index, String editStr) {
 		EditText editText2 = createEditText("", getResources()
 				.getDimensionPixelSize(R.dimen.edit_padding_top));
 		editText2.setText(editStr);
@@ -267,7 +277,7 @@ public class RichTextEditor extends ScrollView {
 		DataImageView imageView = (DataImageView) imageLayout
 				.findViewById(R.id.edit_imageView);
 		imageView.setImageBitmap(bmp);
-		imageView.setAbsolutePath(imagePath);
+ 		imageView.setAbsolutePath(imagePath);
 
 		// 调整imageView的高度
 		int imageHeight = getWidth() * bmp.getHeight() / bmp.getWidth();

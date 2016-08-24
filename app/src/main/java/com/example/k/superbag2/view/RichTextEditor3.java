@@ -11,13 +11,11 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.Uri;
 import android.provider.MediaStore;
-import android.text.Layout;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -27,7 +25,6 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.k.superbag2.R;
 import com.example.k.superbag2.bean.DataImageView;
-import com.example.k.superbag2.bean.EditData;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,14 +41,11 @@ public class RichTextEditor3 extends ScrollView {
     private int viewTagIndex = 1; // 新生的view都会打一个tag，对每个view来说，这个tag是唯一的。
     private LinearLayout allLayout; // 这个是所有子view的容器，scrollView内部的唯一一个ViewGroup
     private LayoutInflater inflater;
-    private OnKeyListener keyListener; // 所有EditText的软键盘监听器
-    private OnClickListener btnListener; // 图片右上角红叉按钮监听器
-    private OnFocusChangeListener focusListener; // 所有EditText的焦点监听listener
-//    private EditText lastFocusEdit; // 最近被聚焦的EditText
     private LayoutTransition mTransitioner; // 只在图片View添加或remove时，触发transition动画
     private int editNormalPadding = 0; //
-    private int disappearingImageIndex = 0;
     private Context context;
+
+    private int imageWidth;
 
     private OnImageClickListener onImageClickListener = null;
     public interface OnImageClickListener{
@@ -91,6 +85,14 @@ public class RichTextEditor3 extends ScrollView {
         allLayout.addView(tv, firstEditParam);
     }
 
+    @Override
+    public void onWindowFocusChanged(boolean hasWindowFocus) {
+        super.onWindowFocusChanged(hasWindowFocus);
+        if (hasWindowFocus){
+            imageWidth = getWidth();
+        }
+    }
+
     private TextView createTextView(int paddingTop){
         TextView textView = (TextView) inflater.inflate(R.layout.pre_textview,null);
         textView.setPadding(editNormalPadding, paddingTop, editNormalPadding, 0);
@@ -114,7 +116,7 @@ public class RichTextEditor3 extends ScrollView {
         TextView textView = createTextView(getResources()
                 .getDimensionPixelSize(R.dimen.edit_padding_top));
         textView.setText(editStr);
-        Log.d("插入文字：--",editStr);
+//        Log.d("插入文字：--",editStr);
         // 请注意此处，EditText添加、或删除不触动Transition动画
         allLayout.setLayoutTransition(null);
         allLayout.addView(textView, index);
@@ -136,7 +138,7 @@ public class RichTextEditor3 extends ScrollView {
                 .into(imageView);
         imageView.setAbsolutePath(imagePath);
 
-        Log.d("bitmap高度：  宽度：",bmp.getHeight()+"----"+bmp.getWidth());
+//        Log.d("bitmap高度：  宽度：",bmp.getHeight()+"----"+bmp.getWidth());
         // 调整imageView的高度
 //        int imageHeight = getWidth() * bmp.getHeight() / bmp.getWidth();
 //        Log.d("imageHeight是  ",imageHeight+"");
@@ -145,7 +147,7 @@ public class RichTextEditor3 extends ScrollView {
         imageView.setLayoutParams(lp);
 
         // onActivityResult无法触发动画，此处post处理
-        Log.d("插入图片一次，成功","------------");
+//        Log.d("插入图片一次，成功","------------");
 //        allLayout.postDelayed(new Runnable() {
 //            @Override
 //            public void run() {
@@ -161,7 +163,7 @@ public class RichTextEditor3 extends ScrollView {
      * @param width view的宽度
      */
     public Bitmap getScaledBitmap(String filePath, int width) {
-        Log.d("rich_edit------ ","getScaledBitmap(String filePath, int width)宽度是"+ width);
+//        Log.d("rich_edit------ ","getScaledBitmap(String filePath, int width)宽度是"+ width);
 
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
@@ -181,7 +183,7 @@ public class RichTextEditor3 extends ScrollView {
         if (bitmap == null){
             Log.d("得到的bitmap为空-","");
         }
-        Log.d("bitmap 高度是 ",bitmap.getHeight()+"");
+//        Log.d("bitmap 高度是 ",bitmap.getHeight()+"");
         return bitmap;
     }
 
@@ -192,7 +194,7 @@ public class RichTextEditor3 extends ScrollView {
 
         final int height = options.outHeight;
         final int width = options.outWidth;
-        Log.d("本来的width是--",width+"");
+//        Log.d("本来的width是--",width+"");
 
         int res = 1;
         if (height > reqHeight || width > reqWidth){
@@ -203,7 +205,7 @@ public class RichTextEditor3 extends ScrollView {
                 res *= 2;
             }
         }
-        Log.d("缩放是：  ",res+"");
+//        Log.d("缩放是：  ",res+"");
         return res;
     }
 
@@ -211,7 +213,7 @@ public class RichTextEditor3 extends ScrollView {
      * 根据Uri获取图片文件的绝对路径
      */
     public String getRealFilePath(final Uri uri) {
-        Log.d("rich_edit------ ","getRealFilePath(final Uri uri)");
+//        Log.d("rich_edit------ ","getRealFilePath(final Uri uri)");
 
         if (null == uri) {
             return null;

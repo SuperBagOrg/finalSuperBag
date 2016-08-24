@@ -56,12 +56,6 @@ public class AlarmUtils {
             AlarmManager alarmManager = (AlarmManager)MyApplication.getContext().getSystemService(Context.ALARM_SERVICE);
             alarmManager.set(AlarmManager.RTC_WAKEUP, Long.parseLong(item.getAlarmTime()), pt);
         }
-        //已经提醒过的更改isAlarm。
-//        MemoItem item = new MemoItem();
-//        item.setAlarm(false);
-//        Log.d("clock",":"+"setAlarm receiver edit");
-//
-//        item.updateAll("alarmTime = ?",""+alarmList.get(0).getAlarmTime());
 
         //已提醒的isAlarm设置为false。
         SaveUtils.setAlarmTime(alarmList.get(0).getUpdateTime());

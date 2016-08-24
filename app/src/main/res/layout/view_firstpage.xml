@@ -5,8 +5,9 @@
     android:layout_height="match_parent">
     <com.example.k.superbag2.view.MyScrollview
         android:layout_width="match_parent"
-        android:layout_marginTop="?attr/actionBarSize"
+        android:paddingTop="?attr/actionBarSize"
         android:id="@+id/fp_scroll_view"
+        android:clipToPadding="false"
         android:layout_height="wrap_content">
 
         <LinearLayout
@@ -17,7 +18,6 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-
                 android:layout_height="wrap_content">
 
                 <ImageView
@@ -87,6 +87,12 @@
                         android:text="张照片" />
                 </LinearLayout>
 
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginLeft="96dp"
+                    android:background="@color/new_primary"
+                    android:layout_alignParentBottom="true"/>
             </RelativeLayout>
 
             <com.example.k.superbag2.view.MyRecyclerView

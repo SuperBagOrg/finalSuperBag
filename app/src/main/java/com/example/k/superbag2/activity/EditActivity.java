@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
@@ -48,9 +49,6 @@ public class EditActivity extends BaseActivity implements View.OnClickListener,
         CheckBox.OnCheckedChangeListener {
 
     private Button backBT, saveBT, picBT, weatherBT, feelingsBT;
-    //    private EditText contentET;
-//    private ImageView headIcon;
-//    private TextView oldTime;
     private LinearLayout backLL, saveLL;
     private Button addTagBT;
     private TextView tag1TV, tag2TV, tag3TV;
@@ -58,7 +56,7 @@ public class EditActivity extends BaseActivity implements View.OnClickListener,
     private AlertDialog weatherDialog;
     private CheckBox happyCK, sweetCK, unforgettableCK, calmCK, angryCk, aggrievedCK, sadCK, noFeelingsCK;
     private AlertDialog feelingsDialog;
-    private RichTextEditor contentET;
+    private RichTextEditor2 contentET;
     private TextView editTitle;
 
     private boolean hasSaved = false;
@@ -83,7 +81,8 @@ public class EditActivity extends BaseActivity implements View.OnClickListener,
     private List<CheckBox> feelingsCKList;
     private int feelingsIndex = 0;
     private String oldtime;
-    private int lineNum = 0;
+    private long lineNum = 0;
+    private int record_num;
     private String content;
     private Intent intent;
     private Long creatTime;
@@ -105,7 +104,49 @@ public class EditActivity extends BaseActivity implements View.OnClickListener,
     @Override
     protected void onResume() {
         super.onResume();
+        //在这儿判断
+        intent = getIntent();
+        //若为-1，表示新建
 
+        lineNum = intent.getLongExtra(Constant.EDIT_DONE, -1);
+        Log.d("edit act", lineNum + "");
+        if (lineNum != -1) {
+            //从列表点击进入。需要初始化数据
+            record_num = DataSupport.count(ItemBean.class);
+//            ItemBean item = DataSupport.find(ItemBean.class, record_num - lineNum);
+//            ItemBean item = DataSupport.where("updateTime = ?",""+lineNum).find(ItemBean.class).get(0);
+//            contentET.setText(item.getContent());
+            List<EditData> list_richedit = DataSupport.where("updateTime = ?",""+lineNum).find(EditData.class);
+            ItemBean item = DataSupport.where("updateTime = ?",""+lineNum).find(ItemBean.class).get(0);
+            if (item == null) {
+                return;
+            }
+            for (EditData editData:list_richedit){
+                if (!editData.getImagePath().equals("")){
+                    //设置图片
+                    Bitmap bp = contentET.getScaledBitmap(editData.getImagePath(),0);
+                    contentET.addImageViewAtIndex(editData.getPosition(),bp,editData.getImagePath());
+//                    contentET.insertImage(editData.getImagePath());
+                } else if (!editData.getInputStr().trim().equals("")){
+                    contentET.addEditTextAtIndex(editData.getPosition(),editData.getInputStr());
+                }
+            }
+
+            if (!item.getTag1().equals("")) {
+                tag1TV.setVisibility(View.VISIBLE);
+                tag1TV.setText(item.getTag1());
+            }
+            if (!item.getTag2().equals("")) {
+                tag2TV.setVisibility(View.VISIBLE);
+                tag2TV.setText(item.getTag2());
+            }
+            if (!item.getTag3().equals("")) {
+                tag3TV.setVisibility(View.VISIBLE);
+                tag3TV.setText(item.getTag3());
+            }
+
+            uriList = item.getPicList();
+        }
     }
 
     private void initView() {
@@ -113,9 +154,7 @@ public class EditActivity extends BaseActivity implements View.OnClickListener,
         saveBT = (Button) findViewById(R.id.edit_save);
         picBT = (Button) findViewById(R.id.edit_pic_bt);
         weatherBT = (Button) findViewById(R.id.edit_weather_bt);
-        contentET = (RichTextEditor) findViewById(R.id.edit_et);
-//        headIcon = (ImageView) findViewById(R.id.edit_head_icon);
-//        oldTime = (TextView) findViewById(R.id.edit_time);
+        contentET = (RichTextEditor2) findViewById(R.id.edit_et);
         backLL = (LinearLayout) findViewById(R.id.edit_back_ll);
         saveLL = (LinearLayout) findViewById(R.id.edit_save_ll);
         tag1TV = (TextView) findViewById(R.id.edit_tag1);
@@ -124,11 +163,6 @@ public class EditActivity extends BaseActivity implements View.OnClickListener,
         addTagBT = (Button) findViewById(R.id.add_tag_bt);
         feelingsBT = (Button) findViewById(R.id.edit_feelings_bt);
         editTitle = (TextView)findViewById(R.id.edit_title);
-        //设置头像
-//        Bitmap head = GetImageUtils.getBMFromUri(this, Constant.HEAD_ICON_URI);
-//        if (head != null) {
-//            headIcon.setImageBitmap(head);
-//        }
     }
     private void initListener() {
         backBT.setOnClickListener(this);
@@ -145,40 +179,13 @@ public class EditActivity extends BaseActivity implements View.OnClickListener,
         GetTime gt = new GetTime();
         oldtime = gt.getYear() + "-" + gt.getMonth() + "-" + gt.getDay();
 //        oldTime.setText(oldtime);
+
         editTitle.setText(gt.getMonthEn()+" "+gt.getDay()+" ,  "+gt.getHour()+"."+gt.getMin());
+
         uriList = new ArrayList<>(Arrays.asList("", "", "", ""));
         picIndex = new ArrayList<>(Arrays.asList(-1, -1, -1, -1));
-
-
         //如果是从ListView点击进入活动，则初始化数据;
-        //在这儿判断
-        intent = getIntent();
-        //若为-1，表示新建
-        //获取到创建时间
-        lineNum = intent.getIntExtra(Constant.EDIT_DONE, -1);
-        Log.d("edit act", lineNum + "");
-        if (lineNum != -1) {
-            //从列表点击进入。需要初始化数据
-//            record_num = DataSupport.count(ItemBean.class);
-//            ItemBean item = DataSupport.find(ItemBean.class, record_num - lineNum);
-            //获取到diary信息。加载数据：
-            ItemBean item = DataSupport.where("updateTime = ?",lineNum+"").find(ItemBean.class).get(0);
-//            contentET.setText(item.getContent());
-            if (!item.getTag1().equals("")) {
-                tag1TV.setVisibility(View.VISIBLE);
-                tag1TV.setText(item.getTag1());
-            }
-            if (!item.getTag2().equals("")) {
-                tag2TV.setVisibility(View.VISIBLE);
-                tag2TV.setText(item.getTag2());
-            }
-            if (!item.getTag3().equals("")) {
-                tag3TV.setVisibility(View.VISIBLE);
-                tag3TV.setText(item.getTag3());
-            }
 
-//            uriList = item.getPicList();
-        }
     }
 
     @Override
@@ -215,16 +222,19 @@ public class EditActivity extends BaseActivity implements View.OnClickListener,
                 StringBuilder sb = new StringBuilder();
                 int count = 0;
                 for (EditData save_rich:editDatas){
-                    sb.append(save_rich.getInputStr());
+
                     if (!save_rich.getImagePath().equals("")){
                         uriList.set(count,save_rich.getImagePath());
                         count++;
+                    } else {
+                        sb.append(save_rich.getInputStr());
+                        sb.append("\n");
                     }
                     creatTime = Long.parseLong(new GetTime().getSpecificTime2Second());
                     save_rich.setUpdateTime(creatTime);
                     save_rich.save();
                 }
-
+                sb.delete(sb.lastIndexOf("\n")-1,sb.length());
                 content = sb.toString();
                 if (content.trim().equals("")) {
                     Toast.makeText(EditActivity.this, "内容不能为空呦", Toast.LENGTH_SHORT).show();
@@ -272,7 +282,7 @@ public class EditActivity extends BaseActivity implements View.OnClickListener,
                         //ImageView插入操作
 //                        uriList.set(i, tempPics.get(i));
                         Log.d("edit选取的图片地址是：  ",tempPics.get(i));
-                        insertBitmap(GetImageUtils.getRealFilePath(this, Uri.parse(tempPics.get(i))));
+                        insertBitmap(tempPics.get(i));
                     }
                 }
                 break;
@@ -454,12 +464,7 @@ public class EditActivity extends BaseActivity implements View.OnClickListener,
         newItem.setPic3(uriList.get(2));
         newItem.setPic4(uriList.get(3));
         newItem.setFeelings(feelings);
-        newItem.setImportance(1);
         newItem.setWeather(weather);
-        newItem.setPic1Index(picIndex.get(0));
-        newItem.setPic2Index(picIndex.get(1));
-        newItem.setPic3Index(picIndex.get(2));
-        newItem.setPic4Index(picIndex.get(3));
         newItem.setUpdateTime(creatTime);
         if (whichToSave == -1) {
             newItem.save();

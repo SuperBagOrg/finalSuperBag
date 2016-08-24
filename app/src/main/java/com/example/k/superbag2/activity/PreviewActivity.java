@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.view.Window;
@@ -24,6 +25,7 @@ import com.example.k.superbag2.view.RichTextEditor3;
 
 import org.litepal.crud.DataSupport;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -60,7 +62,8 @@ public class PreviewActivity extends BaseActivity implements View.OnClickListene
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
         if (hasFocus){
-            width = preContent.getMeasuredWidth();
+            width = preContent.getWidth();
+            Log.d("preview获取的宽度是:  ",width+"");
         }
     }
 
@@ -107,6 +110,7 @@ public class PreviewActivity extends BaseActivity implements View.OnClickListene
             case R.id.pre_edit_ll:
                 Intent intent = new Intent(PreviewActivity.this,EditActivity.class);
                 intent.putExtra(Constant.EDIT_DONE,lineNum);
+                Log.d("传递给edit的linenum是：",lineNum+"");
                 startActivity(intent);
                 //跳转后关闭当前活动
                 finish();
@@ -128,12 +132,14 @@ public class PreviewActivity extends BaseActivity implements View.OnClickListene
     private void initData(){
         Intent intent = getIntent();
         //获取到点击条目的创建时间。
-        lineNum = intent.getLongExtra(Constant.LINE_INDEX,-1L);
+        lineNum = intent.getLongExtra(Constant.LINE_INDEX,-1);
+        Log.d("preview获取的linenum是：--",lineNum+"");
 
         if (lineNum != -1){
             //根据创建时间从数据库拿到条目记录
             //拿到RichEdit的结构信息。
             list_richedit = DataSupport.where("updateTime = ?",""+lineNum).find(EditData.class);
+
             item = DataSupport.where("updateTime = ?",""+lineNum).find(ItemBean.class).get(0);
             if (item == null) {
                 return;
