@@ -12,8 +12,9 @@ import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
+import com.example.k.superbag2.MainActivity;
 import com.example.k.superbag2.R;
-import com.example.k.superbag2.activity.PreviewMemoActivity;
+import com.example.k.superbag2.activity.PreviewMemo;
 import com.example.k.superbag2.bean.MemoItem;
 import com.example.k.superbag2.others.Constant;
 import com.example.k.superbag2.utils.AlarmUtils;
@@ -35,7 +36,10 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
-        Intent intent1 = new Intent(context, PreviewMemoActivity.class);
+        Intent intent2 = new Intent("local.broadcast");
+        MainActivity.localBroadcastManager.sendBroadcast(intent);
+        Intent intent1 = new Intent(context, PreviewMemo.class);
+        intent1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent1.putExtra("update_time", item.getUpdateTime());
         PendingIntent pt = PendingIntent.getActivity(context, 0, intent1, 0);
         Notification.Builder builder = new Notification.Builder(context);

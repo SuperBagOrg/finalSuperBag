@@ -2,6 +2,7 @@ package com.example.k.superbag2.utils;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.WindowManager;
 
@@ -22,6 +23,8 @@ public class DialogUtils {
     }
 
     public static void setDialog(Context context,AlertDialog dialog,int up,int down,int anim){
+        Log.d("alarm","setDialog");
+
         WindowManager windowManager = (WindowManager)context.getSystemService(Context.WINDOW_SERVICE);
         int width = windowManager.getDefaultDisplay().getWidth();//得到当前显示设备的宽度，单位是像素
         WindowManager.LayoutParams params = dialog.getWindow().getAttributes();//得到这个dialog界面的参数对象

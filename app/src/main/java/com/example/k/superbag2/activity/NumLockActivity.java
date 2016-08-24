@@ -259,9 +259,14 @@ public class NumLockActivity extends AppCompatActivity {
         cancelBT.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent home = new Intent(Intent.ACTION_MAIN);
-                home.addCategory(Intent.CATEGORY_HOME);
-                startActivity(home);
+                if (intent.getBooleanExtra("set",false)){
+                    finish();
+                }else {
+                    Intent home = new Intent(Intent.ACTION_MAIN);
+                    home.addCategory(Intent.CATEGORY_HOME);
+                    startActivity(home);
+                }
+
             }
         });
         deleteBT.setOnClickListener(new View.OnClickListener() {

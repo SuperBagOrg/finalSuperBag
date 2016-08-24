@@ -44,8 +44,7 @@
         <activity android:name=".activity.RegisterActivity"/>
         <activity android:name=".activity.LoginActivity"/>
         <activity android:name=".activity.AlarmActivity"/>
-        <activity android:name=".activity.PreviewMemoActivity"/>
-
+        <activity android:name=".activity.PreviewMemo"/>
         <receiver android:name=".receiver.AlarmReceiver">
             <intent-filter >
                 <action android:name="com.example.finalSuperBag.setAlarm"/>

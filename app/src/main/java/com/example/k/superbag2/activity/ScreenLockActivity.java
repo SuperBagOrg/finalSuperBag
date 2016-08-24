@@ -91,9 +91,15 @@ public class ScreenLockActivity extends AppCompatActivity {
         cancelBt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent home = new Intent(Intent.ACTION_MAIN);
-                home.addCategory(Intent.CATEGORY_HOME);
-                startActivity(home);
+                Intent intent = getIntent();
+                if (intent.getBooleanExtra("setting",false)){
+                    finish();
+                }else {
+                    Intent home = new Intent(Intent.ACTION_MAIN);
+                    home.addCategory(Intent.CATEGORY_HOME);
+                    startActivity(home);
+                }
+
             }
         });
         final LockView lockView = (LockView) findViewById(R.id.lockView);

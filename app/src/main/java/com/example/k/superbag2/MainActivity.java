@@ -869,9 +869,9 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
             if (intent.getAction().equals("local.broadcast")){
                 initDiaryListView();
             }else if (intent.getAction().equals("dialog.changed")){
-                if (IsReception.isApplicationBroughtToBackground(MyApplication.getContext())){
-//                    previewMemo(null,SaveUtils.getAlarmTime());
-                }
+//                if (IsReception.isApplicationBroughtToBackground(MyApplication.getContext())){
+//                    previewMemo(0,SaveUtils.getAlarmTime());
+//                }
             }
         }
     }

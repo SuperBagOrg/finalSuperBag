@@ -69,8 +69,11 @@ public class GetTime {
         return day+"";
     }
 
-    public int getSec(){
-        return sec;
+    public String getSec(){
+        if (sec < 10){
+            return "0"+sec;
+        }
+        return sec+"";
     }
 
     public String getSpecificTime(){

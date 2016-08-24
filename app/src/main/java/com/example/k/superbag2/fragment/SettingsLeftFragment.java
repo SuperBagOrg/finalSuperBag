@@ -78,10 +78,10 @@ public class SettingsLeftFragment extends Fragment {
             super.handleMessage(msg);
             switch (message.what){
                 case 1:
-                    Toast.makeText(MyApplication.getContext(),"成功上传数据",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MyApplication.getContext(),"数据下载成功，正在加载，请稍候",Toast.LENGTH_SHORT).show();
                     break;
                 case 2:
-                    Toast.makeText(MyApplication.getContext(),"数据下载成功，正在加载，请稍候",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MyApplication.getContext(),"成功上传数据",Toast.LENGTH_SHORT).show();
 
             }
         }
