@@ -4,11 +4,30 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <android.support.v7.widget.RecyclerView
+    <com.example.k.superbag2.view.MemoRecyclerView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="?attr/actionBarSize"
         android:clipToPadding="false"
         android:id="@+id/memo_list_recyclerView">
-    </android.support.v7.widget.RecyclerView>
+    </com.example.k.superbag2.view.MemoRecyclerView>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:gravity="center"
+        android:id="@+id/memo_empty_ll"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:src="@drawable/no_content"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="写点最近重要的事？ "
+            android:textSize="15sp"
+            android:textColor="@color/gray"/>
+    </LinearLayout>
 </LinearLayout>

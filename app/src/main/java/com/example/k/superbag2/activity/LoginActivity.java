@@ -82,6 +82,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                         if (LoginUtils.isRightPass(passwordInput)){
 //                        if (LoginUtils.isRightPass(MD5Utils.GetMD5Code(passwordInput))){
                             LoginUtils.setLoginStatus(true);
+                            Toast.makeText(LoginActivity.this,"登录成功",Toast.LENGTH_SHORT).show();
                             startActivity(new Intent(LoginActivity.this, MainActivity.class));
                             finish();
                         } else {

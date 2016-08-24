@@ -215,10 +215,12 @@ public class SettingsLeftFragment extends Fragment {
                             LoginUtils.setLoginStatus(false);
                             startActivity(new Intent(context, LoginActivity.class));
                             dialog.dismiss();
+                            getActivity().finish();
                         }
                     });
                 }else {
                     startActivity(new Intent(context,LoginActivity.class));
+                    getActivity().finish();
                 }
 
             }

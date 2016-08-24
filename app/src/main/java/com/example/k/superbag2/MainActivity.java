@@ -66,6 +66,7 @@ package com.example.k.superbag2;
         import com.example.k.superbag2.view.DividerItemDecoration;
         import com.example.k.superbag2.view.GridDividerDecoration;
         import com.example.k.superbag2.view.HidingScrollListener;
+        import com.example.k.superbag2.view.MemoRecyclerView;
         import com.example.k.superbag2.view.MyRecyclerView;
         import com.example.k.superbag2.view.MyScrollview;
         import com.flyco.animation.Attention.Tada;
@@ -104,7 +105,7 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
     View diaryView;
 
     //memo
-    private RecyclerView recyclerView;
+    private MemoRecyclerView recyclerView;
     View memoView;
 
     private List<View> viewList = new ArrayList<>();
@@ -289,6 +290,10 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
         itemBeanList = DataSupport.findAll(ItemBean.class);
         Collections.reverse(itemBeanList);//反转列表
         diaryAdapter = new FirstpageAdapter2(MainActivity.this,itemBeanList);
+        //---------
+        LinearLayout emptyll = (LinearLayout) diaryView.findViewById(R.id.empty_ll);
+        fpRecyclerView.setEmptyView(emptyll);
+
         fpRecyclerView.setAdapter(diaryAdapter);
         fpRecyclerView.setFocusable(false);
         fpRecyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -373,9 +378,13 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
     }
 
     private void setMemoView() {
-        recyclerView = (RecyclerView) memoView.findViewById(R.id.memo_list_recyclerView);
+        recyclerView = (MemoRecyclerView) memoView.findViewById(R.id.memo_list_recyclerView);
         //必须设置，设置为StaggeredGridL...即为瀑布流布局
         recyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
+
+        //-----
+        LinearLayout emptyLL = (LinearLayout) memoView.findViewById(R.id.memo_empty_ll);
+        recyclerView.setEmptyView(emptyLL);
 
         final List<MemoItem> memoLists = DataSupport.findAll(MemoItem.class);
         Collections.reverse(memoLists);

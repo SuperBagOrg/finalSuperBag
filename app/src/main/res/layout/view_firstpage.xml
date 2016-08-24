@@ -13,6 +13,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
             android:orientation="vertical">
 
 
@@ -101,6 +102,23 @@
                 android:clipToPadding="false"
                 android:id="@+id/first_page_rv">
             </com.example.k.superbag2.view.MyRecyclerView>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/empty_ll"
+                android:gravity="center"
+                android:orientation="vertical">
+                <ImageView
+                    android:layout_width="120dp"
+                    android:layout_height="120dp"
+                    android:src="@drawable/no_content"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="记下你的珍贵点滴吧！  "
+                    android:textSize="15sp"
+                    android:textColor="@color/gray"/>
+            </LinearLayout>
         </LinearLayout>
 
     </com.example.k.superbag2.view.MyScrollview>
