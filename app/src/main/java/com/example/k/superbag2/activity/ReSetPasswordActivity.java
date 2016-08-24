@@ -135,6 +135,7 @@ public class ReSetPasswordActivity extends BaseActivity implements View.OnClickL
                                                 Log.d("register","successful");
                                                 LoginUtils.setPassword(user.getPassword());
                                                 LoginUtils.setPhoneNumber(user.getName());
+                                                LoginUtils.setLoginStatus(true);
                                                 Toast.makeText(ReSetPasswordActivity.this,"修改成功",
                                                         Toast.LENGTH_SHORT).show();
                                                 Intent intent = new Intent(ReSetPasswordActivity.this, MainActivity.class);

@@ -58,7 +58,8 @@ public class SearchActivity extends BaseActivity {
     private Button bt_back;
     private EditText et_search;
     private Intent get_intent;
-    private String[] type_diary = {"内容","标签","天气","心情"};
+    private String[] type_diary = {"内容","天气","心情"};
+//    private String[] type_diary = {"内容","标签","天气","心情"};
     private String[] type_memo = {"备注","标题"};
     private String[] sort_search = {"时间逆序","时间顺序","内容逆序","内容顺序"};
     private String SORT_TYPE = "updateTime";
@@ -209,15 +210,15 @@ public class SearchActivity extends BaseActivity {
                                 type_from.setText(type_diary[position]);
                                 SORT_CONTENT = "content";
                                 break;
+//                            case 3:
+//                                type_from.setText(type_diary[position]);
+//                                SORT_CONTENT = "tag1 or tag2 or tag3";
+//                                break;
                             case 1:
-                                type_from.setText(type_diary[position]);
-                                SORT_CONTENT = "tag1 or tag2 or tag3";
-                                break;
-                            case 2:
                                 type_from.setText(type_diary[position]);
                                 SORT_CONTENT = "weather";
                                 break;
-                            case 3:
+                            case 2:
                                 type_from.setText(type_diary[position]);
                                 SORT_CONTENT = "feelings";
                                 break;

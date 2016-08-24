@@ -10,6 +10,23 @@ import com.example.k.superbag2.MyApplication;
  * Created by K on 2016/8/1.
  */
 public class SaveUtils {
+    //提醒时间
+    public static long getAlarmTime() {
+        SharedPreferences sp =
+                MyApplication.getContext().getSharedPreferences("alarm",Context.MODE_PRIVATE);
+        Log.d("alarm","get:"+sp.getLong("alarm",0L));
+        return sp.getLong("alarm",0L);
+    }
+    public static void setAlarmTime(Long pass) {
+        SharedPreferences sp =
+                MyApplication.getContext().getSharedPreferences("alarm", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putLong("alarm",pass);
+        editor.apply();
+        Log.d("alarm","set:"+pass);
+
+    }
+
     public static String getPassword() {
         SharedPreferences sp =
                 MyApplication.getContext().getSharedPreferences("lock_password",Context.MODE_PRIVATE);

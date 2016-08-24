@@ -3,33 +3,48 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:background="#ffa9b7b7"
+
+    android:layout_gravity="center_horizontal">
 
     <TextView
+
+        android:layout_weight="0"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="请输入密码"
+        android:text="@string/lock_text"
         android:id="@+id/input_pic_tv"
         android:gravity="center_horizontal"
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="50dp"
         android:textSize="20sp"
         android:padding="10dp"/>
 
-    <com.example.k.superbag2.view.LockView
-        android:id="@+id/lockView"
+    <LinearLayout
+        android:layout_weight="1"
+        android:layout_gravity="center"
         android:layout_width="match_parent"
-        android:layout_height="350dp"
-        android:background="@color/white" />
+        android:layout_height="wrap_content">
+        <com.example.k.superbag2.view.LockView
+            android:background="#00a9b7b7"
+            android:id="@+id/lockView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </LinearLayout>
 
     <Button
+        android:layout_weight="0"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="取消"
+        android:text="@string/lock_cancel"
         android:id="@+id/pic_lock_cancel_bt"
-        android:layout_marginTop="28dp"
-        android:textSize="17sp"
+        android:textSize="20sp"
         android:textColor="@color/light_blue"
         android:layout_gravity="center_horizontal"
         android:background="@null" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_marginBottom="80dp"
+        android:layout_height="wrap_content">
+        </LinearLayout>
 
 </LinearLayout>

@@ -1,88 +1,91 @@
 package com.example.k.superbag2;
 
-import android.app.AlarmManager;
-import android.app.AlertDialog;
-import android.app.DatePickerDialog;
-import android.app.PendingIntent;
-import android.app.TimePickerDialog;
-import android.content.BroadcastReceiver;
-import android.content.ContentValues;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.net.Uri;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.preference.PreferenceManager;
-import android.support.v4.content.LocalBroadcastManager;
-import android.support.v4.view.ViewPager;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.Gravity;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
-import android.view.animation.AccelerateInterpolator;
-import android.view.animation.DecelerateInterpolator;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.DatePicker;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ListAdapter;
-import android.widget.ListView;
-import android.widget.Switch;
-import android.widget.TextView;
-import android.widget.TimePicker;
-import android.widget.Toast;
-import com.bumptech.glide.Glide;
-import com.example.k.superbag2.activity.BaseActivity;
-import com.example.k.superbag2.activity.EditActivity;
-import com.example.k.superbag2.activity.PreviewActivity;
-import com.example.k.superbag2.activity.SearchActivity;
-import com.example.k.superbag2.adapter.FirstpageAdapter2;
-import com.example.k.superbag2.adapter.MainPagerAdapter;
-import com.example.k.superbag2.adapter.MemoRecyclerAdapter;
-import com.example.k.superbag2.bean.ItemBean;
-import com.example.k.superbag2.bean.MemoItem;
-import com.example.k.superbag2.others.Constant;
-import com.example.k.superbag2.utils.AlarmUtils;
-import com.example.k.superbag2.utils.DialogUtils;
-import com.example.k.superbag2.utils.GetImageUtils;
-import com.example.k.superbag2.utils.GetTime;
-import com.example.k.superbag2.view.DividerItemDecoration;
-import com.example.k.superbag2.view.GridDividerDecoration;
-import com.example.k.superbag2.view.HidingScrollListener;
-import com.example.k.superbag2.view.MyRecyclerView;
-import com.example.k.superbag2.view.MyScrollview;
-import com.flyco.animation.Attention.Tada;
-import com.flyco.animation.ZoomExit.ZoomOutExit;
-import com.flyco.dialog.listener.OnBtnClickL;
-import com.flyco.dialog.widget.NormalDialog;
-import com.nineoldandroids.view.ViewHelper;
-import org.litepal.crud.DataSupport;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.List;
-import cn.bmob.v3.Bmob;
+        import android.app.AlarmManager;
+        import android.app.AlertDialog;
+        import android.app.DatePickerDialog;
+        import android.app.PendingIntent;
+        import android.app.TimePickerDialog;
+        import android.content.BroadcastReceiver;
+        import android.content.ContentValues;
+        import android.content.Context;
+        import android.content.DialogInterface;
+        import android.content.Intent;
+        import android.content.IntentFilter;
+        import android.content.SharedPreferences;
+        import android.graphics.Bitmap;
+        import android.graphics.Color;
+        import android.net.Uri;
+        import android.os.Bundle;
+        import android.os.Handler;
+        import android.os.Message;
+        import android.preference.PreferenceManager;
+        import android.support.v4.content.LocalBroadcastManager;
+        import android.support.v4.view.ViewPager;
+        import android.support.v4.widget.DrawerLayout;
+        import android.support.v7.widget.DefaultItemAnimator;
+        import android.support.v7.widget.LinearLayoutManager;
+        import android.support.v7.widget.RecyclerView;
+        import android.support.v7.widget.StaggeredGridLayoutManager;
+        import android.support.v7.widget.Toolbar;
+        import android.util.Log;
+        import android.view.Gravity;
+        import android.view.LayoutInflater;
+        import android.view.Menu;
+        import android.view.MenuItem;
+        import android.view.MotionEvent;
+        import android.view.View;
+        import android.view.ViewGroup;
+        import android.view.Window;
+        import android.view.WindowManager;
+        import android.view.animation.AccelerateInterpolator;
+        import android.view.animation.DecelerateInterpolator;
+        import android.widget.Button;
+        import android.widget.CheckBox;
+        import android.widget.CompoundButton;
+        import android.widget.DatePicker;
+        import android.widget.EditText;
+        import android.widget.ImageView;
+        import android.widget.LinearLayout;
+        import android.widget.ListAdapter;
+        import android.widget.ListView;
+        import android.widget.Switch;
+        import android.widget.TextView;
+        import android.widget.TimePicker;
+        import android.widget.Toast;
+        import com.bumptech.glide.Glide;
+        import com.example.k.superbag2.activity.BaseActivity;
+        import com.example.k.superbag2.activity.EditActivity;
+        import com.example.k.superbag2.activity.PreviewActivity;
+        import com.example.k.superbag2.activity.SearchActivity;
+        import com.example.k.superbag2.adapter.FirstpageAdapter2;
+        import com.example.k.superbag2.adapter.MainPagerAdapter;
+        import com.example.k.superbag2.adapter.MemoRecyclerAdapter;
+        import com.example.k.superbag2.bean.EditData;
+        import com.example.k.superbag2.bean.ItemBean;
+        import com.example.k.superbag2.bean.MemoItem;
+        import com.example.k.superbag2.others.Constant;
+        import com.example.k.superbag2.others.IsReception;
+        import com.example.k.superbag2.utils.AlarmUtils;
+        import com.example.k.superbag2.utils.DialogUtils;
+        import com.example.k.superbag2.utils.GetImageUtils;
+        import com.example.k.superbag2.utils.GetTime;
+        import com.example.k.superbag2.utils.SaveUtils;
+        import com.example.k.superbag2.view.DividerItemDecoration;
+        import com.example.k.superbag2.view.GridDividerDecoration;
+        import com.example.k.superbag2.view.HidingScrollListener;
+        import com.example.k.superbag2.view.MyRecyclerView;
+        import com.example.k.superbag2.view.MyScrollview;
+        import com.flyco.animation.Attention.Tada;
+        import com.flyco.animation.ZoomExit.ZoomOutExit;
+        import com.flyco.dialog.listener.OnBtnClickL;
+        import com.flyco.dialog.widget.NormalDialog;
+        import com.nineoldandroids.view.ViewHelper;
+        import org.litepal.crud.DataSupport;
+        import java.util.ArrayList;
+        import java.util.Calendar;
+        import java.util.Collections;
+        import java.util.List;
+        import cn.bmob.v3.Bmob;
 
 public class MainActivity extends BaseActivity implements ViewPager.OnPageChangeListener
         , View.OnClickListener {
@@ -102,7 +105,7 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
     private MyRecyclerView fpRecyclerView;
     private MyScrollview scrollview;
 
-//    private FirstpageAdapter diaryAdapter;
+    //    private FirstpageAdapter diaryAdapter;
     private FirstpageAdapter2 diaryAdapter;
     private List<ItemBean> itemBeanList;
     View diaryView;
@@ -151,10 +154,17 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
         initLocalReceiver();
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        localBroadcastManager.unregisterReceiver(localReceiver);
+    }
+
     private void initLocalReceiver(){
         localReceiver = new LocalReceiver();
         localBroadcastManager = LocalBroadcastManager.getInstance(MyApplication.getContext());
         intentFilter = new IntentFilter();
+        intentFilter.addAction("dialog.changed");
         intentFilter.addAction("local.broadcast");
         localBroadcastManager.registerReceiver(localReceiver, intentFilter);
     }
@@ -296,8 +306,11 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
         diaryAdapter.setOnItemClickListener(new FirstpageAdapter2.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
+//                Intent intent = new Intent(MainActivity.this, EditActivity.class);
                 Intent intent = new Intent(MainActivity.this, PreviewActivity.class);
+                //进入preViewActivity。携带当前diary的updateTime信息
                 intent.putExtra(Constant.LINE_INDEX, itemBeanList.get(position).getUpdateTime());
+                Log.d("edit"," :"+Constant.LINE_INDEX+itemBeanList.get(position).getUpdateTime());
                 startActivity(intent);
             }
 
@@ -330,6 +343,7 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
                         Log.d("delete","itemBeanList.get(position).getUpdateTime()"+position+" "+itemBeanList.get(position).getDayTime());
                         String target = String.valueOf(itemBeanList.get(position).getUpdateTime());
                         DataSupport.deleteAll(ItemBean.class,"updateTime = ?",target);
+                        DataSupport.deleteAll(EditData.class,"updateTime = ?",target);
                         Toast.makeText(MainActivity.this, "删除成功", Toast.LENGTH_SHORT).show();
                         diaryAdapter.removeData(DataSupport.count(ItemBean.class) - position);
                         setDiaryView();
@@ -581,6 +595,7 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
 
                 if (c == null){
                     alarmTimeShow = alarmTimeTV.getText().toString();
+                    alarmTime = ""+System.currentTimeMillis();
                 }else {
                     alarmTime = c.getTimeInMillis()+"";
                     alarmTimeShow = c.get(Calendar.YEAR)+"-"+ c.get(Calendar.MONTH)+"-"+ c.get(Calendar.DAY_OF_MONTH)+"  "+ c.get(Calendar.HOUR_OF_DAY)+":"+ c.get(Calendar.MINUTE);
@@ -665,11 +680,11 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
                     }
                 }, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), false);
         DatePickerDialog datePicker = new DatePickerDialog(this, 0, new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
-                        c.set(i, i1, i2);
-                    }
-                }, calendar.get(Calendar.YEAR),
+            @Override
+            public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
+                c.set(i, i1, i2);
+            }
+        }, calendar.get(Calendar.YEAR),
                 calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
         timePicker.show();
         datePicker.show();
@@ -844,7 +859,13 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
     class LocalReceiver extends BroadcastReceiver{
         @Override
         public void onReceive(Context context, Intent intent) {
-            initDiaryListView();
+            if (intent.getAction().equals("local.broadcast")){
+                initDiaryListView();
+            }else if (intent.getAction().equals("dialog.changed")){
+                if (IsReception.isApplicationBroughtToBackground(MyApplication.getContext())){
+//                    previewMemo(null,SaveUtils.getAlarmTime());
+                }
+            }
         }
     }
 }

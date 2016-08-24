@@ -84,7 +84,6 @@ public class EditActivity extends BaseActivity implements View.OnClickListener,
     private int feelingsIndex = 0;
     private String oldtime;
     private int lineNum = 0;
-    private int record_num;
     private String content;
     private Intent intent;
     private Long creatTime;
@@ -106,33 +105,7 @@ public class EditActivity extends BaseActivity implements View.OnClickListener,
     @Override
     protected void onResume() {
         super.onResume();
-        //在这儿判断
-        intent = getIntent();
-        //若为-1，表示新建
 
-        lineNum = intent.getIntExtra(Constant.EDIT_DONE, -1);
-        Log.d("edit act", lineNum + "");
-        if (lineNum != -1) {
-            //从列表点击进入。需要初始化数据
-            record_num = DataSupport.count(ItemBean.class);
-            ItemBean item = DataSupport.find(ItemBean.class, record_num - lineNum);
-//            contentET.setText(item.getContent());
-
-            if (!item.getTag1().equals("")) {
-                tag1TV.setVisibility(View.VISIBLE);
-                tag1TV.setText(item.getTag1());
-            }
-            if (!item.getTag2().equals("")) {
-                tag2TV.setVisibility(View.VISIBLE);
-                tag2TV.setText(item.getTag2());
-            }
-            if (!item.getTag3().equals("")) {
-                tag3TV.setVisibility(View.VISIBLE);
-                tag3TV.setText(item.getTag3());
-            }
-
-            uriList = item.getPicList();
-        }
     }
 
     private void initView() {
@@ -172,13 +145,40 @@ public class EditActivity extends BaseActivity implements View.OnClickListener,
         GetTime gt = new GetTime();
         oldtime = gt.getYear() + "-" + gt.getMonth() + "-" + gt.getDay();
 //        oldTime.setText(oldtime);
-
         editTitle.setText(gt.getMonthEn()+" "+gt.getDay()+" ,  "+gt.getHour()+"."+gt.getMin());
-
         uriList = new ArrayList<>(Arrays.asList("", "", "", ""));
         picIndex = new ArrayList<>(Arrays.asList(-1, -1, -1, -1));
-        //如果是从ListView点击进入活动，则初始化数据;
 
+
+        //如果是从ListView点击进入活动，则初始化数据;
+        //在这儿判断
+        intent = getIntent();
+        //若为-1，表示新建
+        //获取到创建时间
+        lineNum = intent.getIntExtra(Constant.EDIT_DONE, -1);
+        Log.d("edit act", lineNum + "");
+        if (lineNum != -1) {
+            //从列表点击进入。需要初始化数据
+//            record_num = DataSupport.count(ItemBean.class);
+//            ItemBean item = DataSupport.find(ItemBean.class, record_num - lineNum);
+            //获取到diary信息。加载数据：
+            ItemBean item = DataSupport.where("updateTime = ?",lineNum+"").find(ItemBean.class).get(0);
+//            contentET.setText(item.getContent());
+            if (!item.getTag1().equals("")) {
+                tag1TV.setVisibility(View.VISIBLE);
+                tag1TV.setText(item.getTag1());
+            }
+            if (!item.getTag2().equals("")) {
+                tag2TV.setVisibility(View.VISIBLE);
+                tag2TV.setText(item.getTag2());
+            }
+            if (!item.getTag3().equals("")) {
+                tag3TV.setVisibility(View.VISIBLE);
+                tag3TV.setText(item.getTag3());
+            }
+
+//            uriList = item.getPicList();
+        }
     }
 
     @Override
@@ -230,6 +230,7 @@ public class EditActivity extends BaseActivity implements View.OnClickListener,
                     Toast.makeText(EditActivity.this, "内容不能为空呦", Toast.LENGTH_SHORT).show();
                 } else {
                     //执行保存操作
+                    //传入lineNum：-1：新建；其他：修改
                     saveData(lineNum);
                     finish();
                     overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
@@ -440,7 +441,7 @@ public class EditActivity extends BaseActivity implements View.OnClickListener,
      * @param whichToSave -1 表示保存
      *                    其他表更新
      */
-    private void saveData(int whichToSave) {
+    private void saveData(long whichToSave) {
         ItemBean newItem = new ItemBean();
         GetTime gt = new GetTime();
         newItem.setTag1(tag1);
@@ -464,7 +465,8 @@ public class EditActivity extends BaseActivity implements View.OnClickListener,
             newItem.save();
             Log.d("新建保存", "");
         } else {
-            newItem.update(record_num - lineNum);
+
+            newItem.updateAll("updateTime = ?",whichToSave+"");
             Log.d("更新操作", "");
         }
 

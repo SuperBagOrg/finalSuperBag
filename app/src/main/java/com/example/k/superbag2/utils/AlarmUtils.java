@@ -64,6 +64,8 @@ public class AlarmUtils {
 //        item.updateAll("alarmTime = ?",""+alarmList.get(0).getAlarmTime());
 
         //已提醒的isAlarm设置为false。
+        SaveUtils.setAlarmTime(alarmList.get(0).getUpdateTime());
+
         ContentValues values = new ContentValues();
         values.put("isAlarm", "0");
         DataSupport.updateAll(MemoItem.class, values, "alarmTime = ?",alarmList.get(0).getAlarmTime());

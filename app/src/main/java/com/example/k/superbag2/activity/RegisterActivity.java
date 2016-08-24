@@ -149,6 +149,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                                             if (e==null){
                                                 LoginUtils.setPassword(user.getPassword());
                                                 LoginUtils.setPhoneNumber(user.getName());
+                                                LoginUtils.setLoginStatus(true);
                                                 Toast.makeText(RegisterActivity.this,"注册成功",
                                                         Toast.LENGTH_SHORT).show();
                                                 Intent intent = new Intent(RegisterActivity.this, MainActivity.class);

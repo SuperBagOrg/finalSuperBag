@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
@@ -71,10 +72,28 @@ public class SettingsLeftFragment extends Fragment {
     private UploadItembean uploadItembean;
     private MemoItem memoItem;
     private ItemBean data;
+    private Handler myHd = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (message.what){
+                case 1:
+                    Toast.makeText(MyApplication.getContext(),"成功上传数据",Toast.LENGTH_SHORT).show();
+                    break;
+                case 2:
+                    Toast.makeText(MyApplication.getContext(),"数据下载成功，正在加载，请稍候",Toast.LENGTH_SHORT).show();
+
+            }
+        }
+    };
+    private Message message;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.sliding_settings, container, false);
         context = getContext();
+        message = new Message();
+
         initView(v);
         initListener();
         return v;
@@ -119,7 +138,14 @@ public class SettingsLeftFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 if (LoginUtils.getLoginStatus()) {
-                    upLoad();
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            upLoad();
+                            message.what = 2;
+                            myHd.sendMessage(message);
+                        }
+                    }).start();
                 }else {
                     Toast.makeText(MyApplication.getContext(),"请先登录！",Toast.LENGTH_SHORT).show();
                 }
@@ -130,7 +156,14 @@ public class SettingsLeftFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 if (LoginUtils.getLoginStatus()){
-                    download();
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            download();
+                            message.what = 1;
+                            myHd.sendMessage(message);
+                        }
+                    }).start();
                     Log.d("download","+download ing+++++++");
 
                 }else {
@@ -331,7 +364,6 @@ public class SettingsLeftFragment extends Fragment {
         GetTime gt = new GetTime();
         String daytime = gt.getSpecificTime().replace("-","").replace(" ","").replace(":","");
         SaveUtils.setUpdateTime(Long.parseLong(daytime));
-        Toast.makeText(MyApplication.getContext(),"成功上传数据。",Toast.LENGTH_SHORT).show();
     }
     /*本地数据与网络数据都按updateTime排序处理。
                    * 例： 本地 1 2 4 5 6
@@ -471,7 +503,7 @@ public class SettingsLeftFragment extends Fragment {
                 }
             }
         });
-        Toast.makeText(MyApplication.getContext(),"下载成功",Toast.LENGTH_SHORT).show();
+
     }
 
     /**

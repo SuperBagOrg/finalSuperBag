@@ -8,6 +8,15 @@ public class EditData extends DataSupport{
     private String inputStr = "";
     private String imagePath = "";
     private long updateTime;
+    private String tag;
+
+    public String getTag() {
+        return tag;
+    }
+
+    public void setTag(String tag) {
+        this.tag = tag;
+    }
 
     //表示存储索引
     private int position;

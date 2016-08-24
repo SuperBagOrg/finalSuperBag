@@ -105,7 +105,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                                         Toast.makeText(LoginActivity.this,"密码错误",Toast.LENGTH_SHORT).show();
                                     }
                                 }else {
-                                    Toast.makeText(LoginActivity.this,"请确保网络畅通",Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(LoginActivity.this,"请确保网络通畅并且当前账号已注册",Toast.LENGTH_SHORT).show();
                                 }
                             }
                         });

@@ -83,6 +83,8 @@ public class ScreenLockActivity extends AppCompatActivity {
 
     private void initView() {
         lockView = (LockView) findViewById(R.id.lockView);
+
+        lockView.getLayoutParams();
         inputTV = (TextView) findViewById(R.id.input_pic_tv);
         cancelBt = (Button) findViewById(R.id.pic_lock_cancel_bt);
         //添加取消按钮，点击回到桌面。

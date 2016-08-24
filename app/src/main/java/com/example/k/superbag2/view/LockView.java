@@ -5,12 +5,15 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
 import com.example.k.superbag2.R;
+import com.example.k.superbag2.utils.ScreenUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,7 +62,9 @@ public class LockView extends View {
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
         init();
+
     }
+
 
     @Override
     protected void onDraw(Canvas canvas) {
@@ -75,6 +80,7 @@ public class LockView extends View {
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mPressPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mErrorPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+
         // 按下状态的画笔
         mPressPaint.setColor(Color.parseColor("#00B7EE"));
         mPressPaint.setStrokeWidth(7);
@@ -83,30 +89,39 @@ public class LockView extends View {
         mErrorPaint.setStrokeWidth(7);
 
         // 加载三种状态图片
-        mNormalBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.lock_point_normal);
-        mPressBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.lock_point_press);
-        mErrorBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.lock_point_error);
-        mPointRadius = mNormalBitmap.getWidth() / 2;
+        Bitmap bNormalBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.lock_point_normal);
+        Bitmap bPressBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.lock_point_press);
+        Bitmap bErrorBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.lock_point_error);
+
+
 
         // 当前视图的大小
         int width = getWidth();
         int height = getHeight();
         // 九宫格点的偏移量
-        int offSet = Math.abs(width - height) / 4;
-//        int offSet = 0;
+        int offSet = Math.abs(width - height) / 2;
         // x、y轴上的偏移量
         int offSetX = 0, offSetY = 0;
         int pointItemWidth = 0; // 每个点所占用方格的宽度
         if (width > height){ // 横屏的时候
             offSetX = offSet;
             offSetY = 0;
-            pointItemWidth = 7*height / 24;
+            pointItemWidth = height / 4;
         }
         if (width < height){ // 竖屏的时候
             offSetX = 0;
             offSetY = offSet;
-            pointItemWidth = width / 6;
+            pointItemWidth = width / 4;
         }
+//        float c = (float) (0.707*pointItemWidth/mNormalBitmap.getWidth());
+        float c = (float) (0.707*pointItemWidth/bNormalBitmap.getWidth());
+        Matrix matrix = new Matrix();
+        matrix.postScale(c,c); //长和宽放大缩小的比例
+        mNormalBitmap = Bitmap.createBitmap(bNormalBitmap,0,0,bNormalBitmap.getWidth(),bNormalBitmap.getHeight(),matrix,true);
+        mPressBitmap = Bitmap.createBitmap(bPressBitmap,0,0,bPressBitmap.getWidth(),bPressBitmap.getHeight(),matrix,true);
+        mErrorBitmap = Bitmap.createBitmap(bErrorBitmap,0,0,bErrorBitmap.getWidth(),bErrorBitmap.getHeight(),matrix,true);
+
+        mPointRadius = mNormalBitmap.getHeight()/2;
 
         // 初始化九个点
         mPoints[0][0] = new Point(offSetX + pointItemWidth, offSetY + pointItemWidth);
@@ -212,6 +227,7 @@ public class LockView extends View {
                             mPoints[i][j].state = Point.STATE_PRESS;
                             mSelectedPoints.add(mPoints[i][j]);
                             mPassPositions.add(i * 3 + j);
+
                         }
                     }
                 }

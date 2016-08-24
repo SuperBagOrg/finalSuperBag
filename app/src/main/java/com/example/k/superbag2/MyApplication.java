@@ -23,6 +23,7 @@ public class MyApplication extends LitePalApplication {
         intentFilter.addAction("android.intent.action.SCREEN_OFF");
         lockBroadReceiver = new LockBroadReceiver();
         this.registerReceiver(lockBroadReceiver, intentFilter);
+
     }
     @Override
     public void onTerminate() {
