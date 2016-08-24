@@ -29,11 +29,7 @@ import com.example.k.superbag2.bean.DataImageView;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * 这是一个富文本编辑器，给外部提供insertImage接口，添加的图片跟当前光标所在位置有关
- *
- * @author xmuSistone
- */
+//预览时用的
 @SuppressLint({"NewApi", "InflateParams"})
 public class RichTextEditor3 extends ScrollView {
     private static final int EDIT_PADDING = 10; // edittext常规padding是10dp
@@ -99,9 +95,6 @@ public class RichTextEditor3 extends ScrollView {
         return textView;
     }
 
-    /**
-     * 生成图片View
-     */
     private RelativeLayout createImageLayout() {
         RelativeLayout layout = (RelativeLayout) inflater.inflate(
                 R.layout.pre_imageview, null);
@@ -123,9 +116,6 @@ public class RichTextEditor3 extends ScrollView {
         allLayout.setLayoutTransition(mTransitioner); // remove之后恢复transition动画
     }
 
-    /**
-     * 在特定位置添加ImageView
-     */
     public void addImageViewAtIndex(final int index, Bitmap bmp,
                                     String imagePath) {
         final RelativeLayout imageLayout = createImageLayout();
@@ -157,11 +147,6 @@ public class RichTextEditor3 extends ScrollView {
         allLayout.addView(imageLayout, index);
     }
 
-    /**
-     * 根据view的宽度，动态缩放bitmap尺寸
-     *
-     * @param width view的宽度
-     */
     public Bitmap getScaledBitmap(String filePath, int width) {
 //        Log.d("rich_edit------ ","getScaledBitmap(String filePath, int width)宽度是"+ width);
 
@@ -209,9 +194,6 @@ public class RichTextEditor3 extends ScrollView {
         return res;
     }
 
-    /**
-     * 根据Uri获取图片文件的绝对路径
-     */
     public String getRealFilePath(final Uri uri) {
 //        Log.d("rich_edit------ ","getRealFilePath(final Uri uri)");
 
@@ -241,9 +223,6 @@ public class RichTextEditor3 extends ScrollView {
         return data;
     }
 
-    /**
-     * 初始化transition动画
-     */
     private void setupLayoutTransitions() {
         mTransitioner = new LayoutTransition();
         allLayout.setLayoutTransition(mTransitioner);
@@ -268,12 +247,6 @@ public class RichTextEditor3 extends ScrollView {
         mTransitioner.setDuration(300);
     }
 
-    /**
-     * dp和pixel转换
-     *
-     * @param dipValue dp值
-     * @return 像素值
-     */
     public int dip2px(float dipValue) {
         float m = getContext().getResources().getDisplayMetrics().density;
         return (int) (dipValue * m + 0.5f);

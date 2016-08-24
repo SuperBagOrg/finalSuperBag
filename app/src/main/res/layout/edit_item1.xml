@@ -6,6 +6,6 @@
     android:cursorVisible="true"
     android:lineSpacingExtra="10dp"
     android:textColor="#444"
+    android:textSize="17sp"
     android:textCursorDrawable="@drawable/cursor_shape" >
-
 </com.example.k.superbag2.view.DeletableEditText>

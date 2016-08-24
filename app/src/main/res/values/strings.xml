@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">SuperBag2</string>
+    <string name="app_name">手记</string>
     <string name="lock_text">请输入密码</string>
     <string name="lock_cancel">取消</string>
 </resources>

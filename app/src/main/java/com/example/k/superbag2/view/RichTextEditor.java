@@ -26,12 +26,6 @@ import com.example.k.superbag2.R;
 import com.example.k.superbag2.bean.DataImageView;
 import com.example.k.superbag2.bean.EditData;
 
-/**
- * 这是一个富文本编辑器，给外部提供insertImage接口，添加的图片跟当前光标所在位置有关
- * 
- * @author xmuSistone
- * 
- */
 @SuppressLint({ "NewApi", "InflateParams" })
 public class RichTextEditor extends ScrollView {
 	private static final int EDIT_PADDING = 10; // edittext常规padding是10dp
@@ -123,12 +117,8 @@ public class RichTextEditor extends ScrollView {
 		}
 	}
 
-	/**
-	 * 处理软键盘backSpace回退事件
-	 * 
-	 * @param editTxt
-	 *            光标所在的文本输入框
-	 */
+
+	//处理软键盘backSpace回退事件
 	private void onBackspacePress(EditText editTxt) {
 		int startSelection = editTxt.getSelectionStart();
 		// 只有在光标已经顶到文本输入框的最前方，在判定是否删除之前的图片，或两个View合并
@@ -161,13 +151,7 @@ public class RichTextEditor extends ScrollView {
 		}
 	}
 
-	/**
-	 * 处理图片叉掉的点击事件
-	 * 
-	 * @param view
-	 *            整个image对应的relativeLayout view
-	 * @type 删除类型 0代表backspace删除 1代表按红叉按钮删除
-	 */
+	//处理图片叉掉的点击事件
 	private void onImageCloseClick(View view) {
 		if (!mTransitioner.isRunning()) {
 			disappearingImageIndex = allLayout.indexOfChild(view);
@@ -175,9 +159,7 @@ public class RichTextEditor extends ScrollView {
 		}
 	}
 
-	/**
-	 * 生成文本输入框
-	 */
+	//生成文本框
 	private EditText createEditText(String hint, int paddingTop) {
 		EditText editText = (EditText) inflater.inflate(R.layout.edit_item1,
 				null);
@@ -189,9 +171,7 @@ public class RichTextEditor extends ScrollView {
 		return editText;
 	}
 
-	/**
-	 * 生成图片View
-	 */
+	//生成图片
 	private RelativeLayout createImageLayout() {
 		RelativeLayout layout = (RelativeLayout) inflater.inflate(
 				R.layout.edit_imageview, null);
@@ -202,19 +182,12 @@ public class RichTextEditor extends ScrollView {
 		return layout;
 	}
 
-	/**
-	 * 根据绝对路径添加view
-	 * 
-	 * @param imagePath
-	 */
+
 	public void insertImage(String imagePath) {
 		Bitmap bmp = getScaledBitmap(imagePath, getWidth());
 		insertImage(bmp, imagePath);
 	}
 
-	/**
-	 * 插入一张图片
-	 */
 	private void insertImage(Bitmap bitmap, String imagePath) {
 		String lastEditStr = lastFocusEdit.getText().toString();
 		int cursorIndex = lastFocusEdit.getSelectionStart();
@@ -240,37 +213,25 @@ public class RichTextEditor extends ScrollView {
 		hideKeyBoard();
 	}
 
-	/**
-	 * 隐藏小键盘
-	 */
 	public void hideKeyBoard() {
 		InputMethodManager imm = (InputMethodManager) getContext()
 				.getSystemService(Context.INPUT_METHOD_SERVICE);
 		imm.hideSoftInputFromWindow(lastFocusEdit.getWindowToken(), 0);
 	}
 
-	/**
-	 * 在特定位置插入EditText
-	 * 
-	 * @param index
-	 *            位置
-	 * @param editStr
-	 *            EditText显示的文字
-	 */
+
+	 //在特定位置插入EditText
 	public void addEditTextAtIndex(final int index, String editStr) {
 		EditText editText2 = createEditText("", getResources()
 				.getDimensionPixelSize(R.dimen.edit_padding_top));
 		editText2.setText(editStr);
 
-		// 请注意此处，EditText添加、或删除不触动Transition动画
 		allLayout.setLayoutTransition(null);
 		allLayout.addView(editText2, index);
 		allLayout.setLayoutTransition(mTransitioner); // remove之后恢复transition动画
 	}
 
-	/**
-	 * 在特定位置添加ImageView
-	 */
+	// 在特定位置添加ImageView
 	private void addImageViewAtIndex(final int index, Bitmap bmp,
 			String imagePath) {
 		final RelativeLayout imageLayout = createImageLayout();
@@ -294,12 +255,6 @@ public class RichTextEditor extends ScrollView {
 		}, 200);
 	}
 
-	/**
-	 * 根据view的宽度，动态缩放bitmap尺寸
-	 * 
-	 * @param width
-	 *            view的宽度
-	 */
 	private Bitmap getScaledBitmap(String filePath, int width) {
 		BitmapFactory.Options options = new BitmapFactory.Options();
 		options.inJustDecodeBounds = true;
@@ -311,9 +266,7 @@ public class RichTextEditor extends ScrollView {
 		return BitmapFactory.decodeFile(filePath, options);
 	}
 
-	/**
-	 * 初始化transition动画
-	 */
+	// 初始化transition动画
 	private void setupLayoutTransitions() {
 		mTransitioner = new LayoutTransition();
 		allLayout.setLayoutTransition(mTransitioner);
@@ -338,9 +291,6 @@ public class RichTextEditor extends ScrollView {
 		mTransitioner.setDuration(300);
 	}
 
-	/**
-	 * 图片删除的时候，如果上下方都是EditText，则合并处理
-	 */
 	private void mergeEditText() {
 		View preView = allLayout.getChildAt(disappearingImageIndex - 1);
 		View nextView = allLayout.getChildAt(disappearingImageIndex);
@@ -367,21 +317,11 @@ public class RichTextEditor extends ScrollView {
 		}
 	}
 
-	/**
-	 * dp和pixel转换
-	 * 
-	 * @param dipValue
-	 *            dp值
-	 * @return 像素值
-	 */
 	public int dip2px(float dipValue) {
 		float m = getContext().getResources().getDisplayMetrics().density;
 		return (int) (dipValue * m + 0.5f);
 	}
 
-	/**
-	 * 对外提供的接口, 生成编辑数据上传
-	 */
 	public List<EditData> getData() {
 		List<EditData> dataList = new ArrayList<EditData>();
 		int num = allLayout.getChildCount();

@@ -1,9 +1,7 @@
 package com.example.k.superbag2;
 
-        import android.app.AlarmManager;
         import android.app.AlertDialog;
         import android.app.DatePickerDialog;
-        import android.app.PendingIntent;
         import android.app.TimePickerDialog;
         import android.content.BroadcastReceiver;
         import android.content.ContentValues;
@@ -12,12 +10,9 @@ package com.example.k.superbag2;
         import android.content.Intent;
         import android.content.IntentFilter;
         import android.content.SharedPreferences;
-        import android.graphics.Bitmap;
         import android.graphics.Color;
         import android.net.Uri;
         import android.os.Bundle;
-        import android.os.Handler;
-        import android.os.Message;
         import android.preference.PreferenceManager;
         import android.support.v4.content.LocalBroadcastManager;
         import android.support.v4.view.ViewPager;
@@ -32,7 +27,6 @@ package com.example.k.superbag2;
         import android.view.LayoutInflater;
         import android.view.Menu;
         import android.view.MenuItem;
-        import android.view.MotionEvent;
         import android.view.View;
         import android.view.ViewGroup;
         import android.view.Window;
@@ -69,7 +63,6 @@ package com.example.k.superbag2;
         import com.example.k.superbag2.utils.DialogUtils;
         import com.example.k.superbag2.utils.GetImageUtils;
         import com.example.k.superbag2.utils.GetTime;
-        import com.example.k.superbag2.utils.SaveUtils;
         import com.example.k.superbag2.view.DividerItemDecoration;
         import com.example.k.superbag2.view.GridDividerDecoration;
         import com.example.k.superbag2.view.HidingScrollListener;
@@ -352,30 +345,30 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
             }
         });
 
-        fpRecyclerView.setOnScrollListener(new HidingScrollListener() {
-            @Override
-            public void onHide() {
-                hideViews();
-                Log.d("隐藏执行","---------");
-            }
+//        fpRecyclerView.setOnScrollListener(new HidingScrollListener() {
+//            @Override
+//            public void onHide() {
+//                hideViews();
+//                Log.d("隐藏执行","---------");
+//            }
+//
+//            @Override
+//            public void onShow() {
+//                showViews();
+//            }
+//        });
 
-            @Override
-            public void onShow() {
-                showViews();
-            }
-        });
-
-        /*scrollview.setOnScrollChangeListener(new View.OnScrollChangeListener() {
+        scrollview.setOnScrollChangeListener(new View.OnScrollChangeListener() {
             @Override
             public void onScrollChange(View view, int i, int i1, int i2, int i3) {
-                if (i3 - i1 > 50){
+                if (i3 - i1 > 30){
                     showViews();
                 }
-                if (i3 - i1 < -50){
+                if (i3 - i1 < -30){
                     hideViews();
                 }
             }
-        });*/
+        });
     }
 
     private void setMemoView() {

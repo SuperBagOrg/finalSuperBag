@@ -33,4 +33,5 @@
 
     <color name="new_primary">#35C4E5</color>
     <color name="orange">#ffa000</color>
+    <color name="slide_back">#4c4c4c</color>
 </resources>

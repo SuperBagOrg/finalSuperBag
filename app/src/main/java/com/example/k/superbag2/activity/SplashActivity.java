@@ -42,13 +42,14 @@ public class SplashActivity extends Activity {
             editor.putBoolean(Constant.FIRST_OPEN,false);
             editor.apply();
         }
-        if (LoginUtils.getLoginStatus()) {
+        handler.sendEmptyMessageDelayed(1, 2500);
+        /*if (LoginUtils.getLoginStatus()) {
             //主界面
             handler.sendEmptyMessageDelayed(1, 2500);
         } else {
             //登录界面
             handler.sendEmptyMessageDelayed(2, 2500);
-        }
+        }*/
     }
 
     class SwitchHandler extends Handler {

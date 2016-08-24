@@ -203,35 +203,24 @@ public class SettingsLeftFragment extends Fragment {
                             .showAnim(new Tada())//
                             .dismissAnim(new ZoomOutExit())//
                             .show();
+
+                    dialog.setOnBtnClickL(new OnBtnClickL() {
+                        @Override
+                        public void onBtnClick() {
+                            dialog.dismiss();
+                        }
+                    }, new OnBtnClickL() {
+                        @Override
+                        public void onBtnClick() {
+                            LoginUtils.setLoginStatus(false);
+                            startActivity(new Intent(context, LoginActivity.class));
+                            dialog.dismiss();
+                        }
+                    });
                 }else {
-                    dialog.isTitleShow(false)//
-                            .bgColor(Color.parseColor("#383838"))//
-                            .cornerRadius(5)//
-                            .content("现在登录?")//
-                            .contentGravity(Gravity.CENTER)//
-                            .contentTextColor(Color.parseColor("#ffffff"))//
-                            .dividerColor(Color.parseColor("#222222"))//
-                            .btnTextSize(15.5f, 15.5f)//
-                            .btnTextColor(Color.parseColor("#ffffff"), Color.parseColor("#ffffff"))//
-                            .btnPressColor(Color.parseColor("#2B2B2B"))//
-                            .widthScale(0.85f)//
-                            .showAnim(new Tada())//
-                            .dismissAnim(new ZoomOutExit())//
-                            .show();
+                    startActivity(new Intent(context,LoginActivity.class));
                 }
-                dialog.setOnBtnClickL(new OnBtnClickL() {
-                    @Override
-                    public void onBtnClick() {
-                        dialog.dismiss();
-                    }
-                }, new OnBtnClickL() {
-                    @Override
-                    public void onBtnClick() {
-                        LoginUtils.setLoginStatus(false);
-                        startActivity(new Intent(context, LoginActivity.class));
-                        dialog.dismiss();
-                    }
-                });
+
             }
         });
     }
@@ -363,6 +352,7 @@ public class SettingsLeftFragment extends Fragment {
         String daytime = gt.getSpecificTime().replace("-","").replace(" ","").replace(":","");
         SaveUtils.setUpdateTime(Long.parseLong(daytime));
     }
+
     /*本地数据与网络数据都按updateTime排序处理。
                    * 例： 本地 1 2 4 5 6
                    *      网络 1 2 3 4 5 6

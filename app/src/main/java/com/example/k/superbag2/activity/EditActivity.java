@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -28,9 +27,7 @@ import com.example.k.superbag2.bean.EditData;
 import com.example.k.superbag2.bean.ItemBean;
 import com.example.k.superbag2.others.Constant;
 import com.example.k.superbag2.utils.DialogUtils;
-import com.example.k.superbag2.utils.GetImageUtils;
 import com.example.k.superbag2.utils.GetTime;
-import com.example.k.superbag2.view.RichTextEditor;
 import com.example.k.superbag2.view.RichTextEditor2;
 
 import org.litepal.crud.DataSupport;
@@ -101,10 +98,42 @@ public class EditActivity extends BaseActivity implements View.OnClickListener,
         initData();
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        //在这儿判断
+    private void initView() {
+        backBT = (Button) findViewById(R.id.edit_back);
+        saveBT = (Button) findViewById(R.id.edit_save);
+        picBT = (Button) findViewById(R.id.edit_pic_bt);
+        weatherBT = (Button) findViewById(R.id.edit_weather_bt);
+        contentET = (RichTextEditor2) findViewById(R.id.edit_et);
+        backLL = (LinearLayout) findViewById(R.id.edit_back_ll);
+        saveLL = (LinearLayout) findViewById(R.id.edit_save_ll);
+        tag1TV = (TextView) findViewById(R.id.edit_tag1);
+        tag2TV = (TextView) findViewById(R.id.edit_tag2);
+        tag3TV = (TextView) findViewById(R.id.edit_tag3);
+        addTagBT = (Button) findViewById(R.id.add_tag_bt);
+        feelingsBT = (Button) findViewById(R.id.edit_feelings_bt);
+        editTitle = (TextView)findViewById(R.id.edit_title);
+    }
+    private void initListener() {
+        backBT.setOnClickListener(this);
+        saveBT.setOnClickListener(this);
+        picBT.setOnClickListener(this);
+        weatherBT.setOnClickListener(this);
+        backLL.setOnClickListener(this);
+        saveLL.setOnClickListener(this);
+        addTagBT.setOnClickListener(this);
+        feelingsBT.setOnClickListener(this);
+    }
+
+    private void initData() {
+        GetTime gt = new GetTime();
+        oldtime = gt.getYear() + "-" + gt.getMonth() + "-" + gt.getDay();
+//        oldTime.setText(oldtime);
+
+        editTitle.setText(gt.getMonthEn()+" "+gt.getDay()+" ,  "+gt.getHour()+"."+gt.getMin());
+
+        uriList = new ArrayList<>(Arrays.asList("", "", "", ""));
+        picIndex = new ArrayList<>(Arrays.asList(-1, -1, -1, -1));
+        //如果是从ListView点击进入活动，则初始化数据;
         intent = getIntent();
         //若为-1，表示新建
 
@@ -147,45 +176,6 @@ public class EditActivity extends BaseActivity implements View.OnClickListener,
 
             uriList = item.getPicList();
         }
-    }
-
-    private void initView() {
-        backBT = (Button) findViewById(R.id.edit_back);
-        saveBT = (Button) findViewById(R.id.edit_save);
-        picBT = (Button) findViewById(R.id.edit_pic_bt);
-        weatherBT = (Button) findViewById(R.id.edit_weather_bt);
-        contentET = (RichTextEditor2) findViewById(R.id.edit_et);
-        backLL = (LinearLayout) findViewById(R.id.edit_back_ll);
-        saveLL = (LinearLayout) findViewById(R.id.edit_save_ll);
-        tag1TV = (TextView) findViewById(R.id.edit_tag1);
-        tag2TV = (TextView) findViewById(R.id.edit_tag2);
-        tag3TV = (TextView) findViewById(R.id.edit_tag3);
-        addTagBT = (Button) findViewById(R.id.add_tag_bt);
-        feelingsBT = (Button) findViewById(R.id.edit_feelings_bt);
-        editTitle = (TextView)findViewById(R.id.edit_title);
-    }
-    private void initListener() {
-        backBT.setOnClickListener(this);
-        saveBT.setOnClickListener(this);
-        picBT.setOnClickListener(this);
-        weatherBT.setOnClickListener(this);
-        backLL.setOnClickListener(this);
-        saveLL.setOnClickListener(this);
-        addTagBT.setOnClickListener(this);
-        feelingsBT.setOnClickListener(this);
-    }
-
-    private void initData() {
-        GetTime gt = new GetTime();
-        oldtime = gt.getYear() + "-" + gt.getMonth() + "-" + gt.getDay();
-//        oldTime.setText(oldtime);
-
-        editTitle.setText(gt.getMonthEn()+" "+gt.getDay()+" ,  "+gt.getHour()+"."+gt.getMin());
-
-        uriList = new ArrayList<>(Arrays.asList("", "", "", ""));
-        picIndex = new ArrayList<>(Arrays.asList(-1, -1, -1, -1));
-        //如果是从ListView点击进入活动，则初始化数据;
-
     }
 
     @Override
@@ -234,7 +224,8 @@ public class EditActivity extends BaseActivity implements View.OnClickListener,
                     save_rich.setUpdateTime(creatTime);
                     save_rich.save();
                 }
-                sb.delete(sb.lastIndexOf("\n")-1,sb.length());
+
+                sb.delete(sb.lastIndexOf("\n"),sb.length());
                 content = sb.toString();
                 if (content.trim().equals("")) {
                     Toast.makeText(EditActivity.this, "内容不能为空呦", Toast.LENGTH_SHORT).show();

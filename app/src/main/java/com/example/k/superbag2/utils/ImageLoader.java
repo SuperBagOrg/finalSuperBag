@@ -19,66 +19,39 @@ import java.util.concurrent.Semaphore;
 
 public class ImageLoader
 {
-	/**
-	 * 图片缓存的核心类
-	 */
 	private LruCache<String, Bitmap> mLruCache;
-	/**
-	 * 线程池
-	 */
+
 	private ExecutorService mThreadPool;
-	/**
-	 * 线程池的线程数量，默认为1
-	 */
+	//线程池的线程数量，默认为1
 	private int mThreadCount = 1;
-	/**
-	 * 队列的调度方式
-	 */
+	//队列的调度方式
 	private Type mType = Type.LIFO;
-	/**
-	 * 任务队列
-	 */
+	//任务队列
 	private LinkedList<Runnable> mTasks;
-	/**
-	 * 轮询的线程
-	 */
+	//轮询的线程
 	private Thread mPoolThread;
 	private Handler mPoolThreadHander;
 
-	/**
-	 * 运行在UI线程的handler，用于给ImageView设置图片
-	 */
+	//运行在UI线程的handler，用于给ImageView设置图片
+
 	private Handler mHandler;
 
-	/**
-	 * 引入一个值为1的信号量，防止mPoolThreadHander未初始化完成
-	 */
+	// 引入一个值为1的信号量，防止mPoolThreadHander未初始化完成
+
 	private volatile Semaphore mSemaphore = new Semaphore(0);
 
-	/**
-	 * 引入一个值为1的信号量，由于线程池内部也有一个阻塞线程，防止加入任务的速度过快，使LIFO效果不明显
-	 */
+	//引入一个值为1的信号量，由于线程池内部也有一个阻塞线程，防止加入任务的速度过快，使LIFO效果不明显
+
 	private volatile Semaphore mPoolSemaphore;
 
 	private static ImageLoader mInstance;
 
-	/**
-	 * 队列的调度方式
-	 * 
-	 * @author zhy
-	 * 
-	 */
+	//队列的调度方式
 	public enum Type
 	{
 		FIFO, LIFO
 	}
 
-
-	/**
-	 * 单例获得该实例对象
-	 * 
-	 * @return
-	 */
 	public static ImageLoader getInstance()
 	{
 
@@ -150,12 +123,6 @@ public class ImageLoader
 
 	}
 
-	/**
-	 * 加载图片
-	 * 
-	 * @param path
-	 * @param imageView
-	 */
 	public void loadImage(final String path, final ImageView imageView)
 	{
 		// set tag
@@ -221,11 +188,7 @@ public class ImageLoader
 
 	}
 	
-	/**
-	 * 添加一个任务
-	 * 
-	 * @param runnable
-	 */
+	//添加一个任务
 	private synchronized void addTask(Runnable runnable)
 	{
 		try
@@ -241,11 +204,7 @@ public class ImageLoader
 		mPoolThreadHander.sendEmptyMessage(0x110);
 	}
 
-	/**
-	 * 取出一个任务
-	 * 
-	 * @return
-	 */
+	//取出一个任务
 	private synchronized Runnable getTask()
 	{
 		if (mType == Type.FIFO)
@@ -257,12 +216,7 @@ public class ImageLoader
 		}
 		return null;
 	}
-	
-	/**
-	 * 单例获得该实例对象
-	 * 
-	 * @return
-	 */
+
 	public static ImageLoader getInstance(int threadCount, Type type)
 	{
 
@@ -280,12 +234,7 @@ public class ImageLoader
 	}
 
 
-	/**
-	 * 根据ImageView获得适当的压缩的宽和高
-	 * 
-	 * @param imageView
-	 * @return
-	 */
+	//根据ImageView获得适当的压缩的宽和高
 	private ImageSize getImageViewWidth(ImageView imageView)
 	{
 		ImageSize imageSize = new ImageSize();
@@ -298,9 +247,7 @@ public class ImageLoader
 		if (width <= 0)
 			width = params.width; // Get layout width parameter
 		if (width <= 0)
-			width = getImageViewFieldValue(imageView, "mMaxWidth"); // Check
-																	// maxWidth
-																	// parameter
+			width = getImageViewFieldValue(imageView, "mMaxWidth");
 		if (width <= 0)
 			width = displayMetrics.widthPixels;
 		int height = params.height == LayoutParams.WRAP_CONTENT ? 0 : imageView
@@ -308,9 +255,7 @@ public class ImageLoader
 		if (height <= 0)
 			height = params.height; // Get layout height parameter
 		if (height <= 0)
-			height = getImageViewFieldValue(imageView, "mMaxHeight"); // Check
-																		// maxHeight
-																		// parameter
+			height = getImageViewFieldValue(imageView, "mMaxHeight");
 		if (height <= 0)
 			height = displayMetrics.heightPixels;
 		imageSize.width = width;

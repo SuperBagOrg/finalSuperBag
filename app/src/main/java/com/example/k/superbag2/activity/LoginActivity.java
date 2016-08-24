@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 import com.example.k.superbag2.MainActivity;
 import com.example.k.superbag2.R;
@@ -29,8 +30,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
     private EditText phoneET,passwordET;
     private Button registerBT,forgetBT,loginBT;
-    private Button noLoginBT;
-
+    private LinearLayout loginBackLL;
+    private Button loginBackBT;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -51,14 +52,16 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         registerBT = (Button)findViewById(R.id.login_register_bt);
         forgetBT = (Button)findViewById(R.id.login_forget_bt);
         loginBT = (Button)findViewById(R.id.login_bt);
-        noLoginBT = (Button)findViewById(R.id.login_no_bt);
+        loginBackLL = (LinearLayout)findViewById(R.id.login_back_ll);
+        loginBackBT = (Button)findViewById(R.id.login_back);
     }
 
     private void initListener(){
         registerBT.setOnClickListener(this);
         forgetBT.setOnClickListener(this);
         loginBT.setOnClickListener(this);
-        noLoginBT.setOnClickListener(this);
+        loginBackLL.setOnClickListener(this);
+        loginBackBT.setOnClickListener(this);
     }
 
     @Override
@@ -111,11 +114,9 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                         });
                     }
                 break;
-            case R.id.login_no_bt:
-                startActivity(new Intent(LoginActivity.this, MainActivity.class));
-                LoginUtils.setLoginStatus(false);
+            case R.id.login_back_ll:
+            case R.id.login_back:
                 finish();
-                break;
         }
     }
 

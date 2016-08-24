@@ -41,7 +41,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         Intent intent1 = new Intent(context, PreviewMemo.class);
         intent1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent1.putExtra("update_time", item.getUpdateTime());
-        PendingIntent pt = PendingIntent.getActivity(context, 0, intent1, 0);
+        PendingIntent pt = PendingIntent.getActivity(context, 0, intent1, PendingIntent.FLAG_UPDATE_CURRENT);
         Notification.Builder builder = new Notification.Builder(context);
 
         //设置震动
