@@ -171,7 +171,7 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 //        toolbar.getBackground().setAlpha(50);
-        toolbar.setTitle("SuperBag");
+        toolbar.setTitle("手记");
         toolbar.setTitleTextColor(getResources().getColor(R.color.white));
         setSupportActionBar(toolbar);
         viewPager = (ViewPager) findViewById(R.id.main_viewPager);
@@ -358,13 +358,14 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
 //            }
 //        });
 
-        scrollview.setOnScrollChangeListener(new View.OnScrollChangeListener() {
+        //解决6.0以下无法使用的问题，暴露接口
+        scrollview.setOnScrollViewListener(new MyScrollview.OnScrollViewListener() {
             @Override
-            public void onScrollChange(View view, int i, int i1, int i2, int i3) {
-                if (i3 - i1 > 30){
+            public void onScrollChanged(MyScrollview scrollView, int x, int y, int oldx, int oldy) {
+                if (oldy - y > 30){
                     showViews();
                 }
-                if (i3 - i1 < -30){
+                if (oldy - y < -30){
                     hideViews();
                 }
             }

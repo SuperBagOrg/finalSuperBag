@@ -7,6 +7,13 @@ import android.view.ViewConfiguration;
 import android.widget.ScrollView;
 
 public class MyScrollview extends ScrollView {
+
+    public interface OnScrollViewListener{
+        void onScrollChanged(MyScrollview scrollView, int x, int y, int oldx, int oldy);
+    }
+
+    private OnScrollViewListener onScrollViewListener = null;
+
     private int downX;
     private int downY;
     private int mTouchSlop;
@@ -27,6 +34,14 @@ public class MyScrollview extends ScrollView {
     }
 
     @Override
+    protected void onScrollChanged(int l, int t, int oldl, int oldt) {
+        super.onScrollChanged(l, t, oldl, oldt);
+        if (onScrollViewListener != null){
+            onScrollViewListener.onScrollChanged(this,l,t,oldl,oldt);
+        }
+    }
+
+    @Override
     public boolean onInterceptTouchEvent(MotionEvent e) {
         int action = e.getAction();
         switch (action) {
@@ -41,5 +56,9 @@ public class MyScrollview extends ScrollView {
                 }
         }
         return super.onInterceptTouchEvent(e);
+    }
+
+    public void setOnScrollViewListener(OnScrollViewListener scrollViewListener){
+        this.onScrollViewListener = scrollViewListener;
     }
 }
