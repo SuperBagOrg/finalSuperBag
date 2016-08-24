@@ -22,6 +22,7 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.example.k.superbag2.MainActivity;
 import com.example.k.superbag2.R;
 import com.example.k.superbag2.bean.MemoItem;
 import com.example.k.superbag2.utils.AlarmUtils;
@@ -50,6 +51,8 @@ public class PreviewMemo extends BaseActivity {
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             if (msg.what == 1){
+                Intent intent = new Intent("dialog.changed");
+                MainActivity.localBroadcastManager.sendBroadcast(intent);
                 finish();
             }
         }

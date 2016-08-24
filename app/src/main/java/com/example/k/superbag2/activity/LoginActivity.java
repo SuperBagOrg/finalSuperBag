@@ -40,7 +40,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
         Bmob.initialize(this, "\n" +
                 "\n" +
-                "f99570680fbe559ad4c18e8dbd01382d");
+                "8021c71fc35906b67dc7a4a0f64ef5da");
         initView();
         initListener();
     }

@@ -50,7 +50,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
 
         initView();
         initListener();
-        BmobSMS.initialize(this,"f99570680fbe559ad4c18e8dbd01382d");
+        BmobSMS.initialize(this,"8021c71fc35906b67dc7a4a0f64ef5da");
     }
 
     private void initView(){

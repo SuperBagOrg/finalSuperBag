@@ -159,9 +159,9 @@ public class SettingsLeftFragment extends Fragment {
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
-                            download();
                             message.what = 1;
                             myHd.sendMessage(message);
+                            download();
                         }
                     }).start();
                     Log.d("download","+download ing+++++++");

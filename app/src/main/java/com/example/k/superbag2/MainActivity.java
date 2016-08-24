@@ -142,9 +142,7 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
 
         Log.d("现在时间是：",System.currentTimeMillis()+"");
         //第一：默认初始化
-        Bmob.initialize(this, "\n" +
-                "\n" +
-                "f99570680fbe559ad4c18e8dbd01382d");
+        Bmob.initialize(this, "8021c71fc35906b67dc7a4a0f64ef5da");
         initView();
         setListener();
         setPager();
@@ -469,6 +467,10 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
         preMemoDialog.setView(preview);
         preMemoDialog.setCancelable(true);
 
+        //避免数据库为空时设置数据
+        if (DataSupport.findAll(MemoItem.class).size() == 0){
+            return;
+        }
         //设置数据
         final MemoItem memoItem = DataSupport.where("updateTime = ?",""+updateTime).find(MemoItem.class).get(0);
         preTitle.setText(memoItem.getTitle());
@@ -868,10 +870,11 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equals("local.broadcast")){
                 initDiaryListView();
+                Toast.makeText(MyApplication.getContext(),"下载完成",Toast.LENGTH_SHORT).show();
             }else if (intent.getAction().equals("dialog.changed")){
-//                if (IsReception.isApplicationBroughtToBackground(MyApplication.getContext())){
-//                    previewMemo(0,SaveUtils.getAlarmTime());
-//                }
+                if (!IsReception.isApplicationBroughtToBackground(MyApplication.getContext())){
+                    initView();
+                }
             }
         }
     }
