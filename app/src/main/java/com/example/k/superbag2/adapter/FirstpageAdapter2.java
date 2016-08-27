@@ -23,8 +23,12 @@ import java.util.List;
 public class FirstpageAdapter2 extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private Context context;
-    private List<ItemBean> itemBeanList;
+    private  List<ItemBean> itemBeanList;
     private LayoutInflater inflater;
+
+    public void setItemBeanList(List<ItemBean> list){
+        itemBeanList = list;
+    }
 
     public FirstpageAdapter2(Context context, List<ItemBean> itemBeen){
         this.context = context;

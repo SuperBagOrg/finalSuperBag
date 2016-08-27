@@ -27,6 +27,7 @@ package com.example.k.superbag2;
         import android.view.LayoutInflater;
         import android.view.Menu;
         import android.view.MenuItem;
+        import android.view.MotionEvent;
         import android.view.View;
         import android.view.ViewGroup;
         import android.view.Window;
@@ -97,7 +98,7 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
     private ListView fPListView;
     //----
     private MyRecyclerView fpRecyclerView;
-    private MyScrollview scrollview;
+    private MyScrollview scrollView;
 
     //    private FirstpageAdapter diaryAdapter;
     private FirstpageAdapter2 diaryAdapter;
@@ -127,6 +128,10 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
     private String[] res;
     private Calendar c;
 
+    //表示读取数据时的目前索引
+    private int currentDataIndex;
+    private ArrayList<ItemBean> currentData = new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -134,13 +139,15 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main);
 
-        Log.d("现在时间是：",System.currentTimeMillis()+"");
         //第一：默认初始化
         Bmob.initialize(this, "8021c71fc35906b67dc7a4a0f64ef5da");
+
+        currentDataIndex = 0;
+
         initView();
         setListener();
         setPager();
-        setDiaryView();
+//        setDiaryView();
         setMemoView();
         initEvents();
         initLocalReceiver();
@@ -171,7 +178,6 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
         toolbar = (Toolbar) findViewById(R.id.toolbar);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-//        toolbar.getBackground().setAlpha(50);
         toolbar.setTitle("手记");
         toolbar.setTitleTextColor(getResources().getColor(R.color.white));
         setSupportActionBar(toolbar);
@@ -234,7 +240,7 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
         fPHeadIconIV = (ImageView) diaryView.findViewById(R.id.top_head_icon);
         fPSummaryTV = (TextView) diaryView.findViewById(R.id.top_summary);
         fpRecyclerView = (MyRecyclerView) diaryView.findViewById(R.id.first_page_rv);
-        scrollview = (MyScrollview) diaryView.findViewById(R.id.fp_scroll_view);
+        scrollView = (MyScrollview) diaryView.findViewById(R.id.fp_scroll_view);
         //日记总览
         allDayTV = (TextView)diaryView.findViewById(R.id.fp_all_day);
         allDiaryTV = (TextView)diaryView.findViewById(R.id.fp_all_diary);
@@ -244,11 +250,14 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
         //添加分割线
         fpRecyclerView.addItemDecoration(new DividerItemDecoration(MainActivity.this,DividerItemDecoration.VERTICAL_LIST));
 
-        initPicAndSummary();
+        fpRecyclerView.setHasFixedSize(true);
+        initPic();
+        initSummary();
+
         initDiaryListView();
     }
 
-    private void initPicAndSummary(){
+    private void initPic(){
         //设置头像背景
         Uri headUri = GetImageUtils.getUri(this, Constant.HEAD_ICON_URI);
         if (!headUri.toString().equals("")){
@@ -266,11 +275,12 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
                     .into(fPBackgroundIV);
         }
 
-//        itemBeanList = new ArrayList<>();
-        itemBeanList = DataSupport.findAll(ItemBean.class);
-        if (itemBeanList.isEmpty()){
+    }
 
-        }
+    private void initSummary(){
+        //一次读取所有，但是只加载10条
+        itemBeanList = DataSupport.findAll(ItemBean.class);
+
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
         String installTime = sp.getString(Constant.INSTALL_TIME,"2016-08-15");
         GetTime gt = new GetTime();
@@ -285,18 +295,39 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
         allPicTV.setText(picNum+"");
     }
 
+    //用于加载需要显示的数据，一次10条
+    private void getCurrentData(List<ItemBean> datas){
+        if ((datas != null) && (currentData != null)) {
+            int goal = currentDataIndex + 10;
+            Log.d("index是   ",currentDataIndex+"");
+            for ( ; (currentDataIndex < datas.size()) && (currentDataIndex < goal); currentDataIndex++) {
+                currentData.add(datas.get(currentDataIndex));
+            }
+            Log.d("currentData的大小是:",currentData.size()+"");
+            Log.d("后面index是：",currentDataIndex+"");
+        } else {
+            Log.d("MainActivity","输入的数据为空");
+        }
+    }
+
     private void initDiaryListView(){
-        itemBeanList = new ArrayList<>();
-        itemBeanList = DataSupport.findAll(ItemBean.class);
-        Collections.reverse(itemBeanList);//反转列表
-        diaryAdapter = new FirstpageAdapter2(MainActivity.this,itemBeanList);
+
+        Collections.reverse(itemBeanList);
+        currentData = new ArrayList<>();
+        currentDataIndex = 0;
+        for (; (currentDataIndex < itemBeanList.size()) && (currentDataIndex < 10); currentDataIndex++){
+            currentData.add(itemBeanList.get(currentDataIndex));
+        }
+        Log.d("currentdata的大小：",currentData.size()+"");
+
+        diaryAdapter = new FirstpageAdapter2(MainActivity.this,currentData);
         //---------
         LinearLayout emptyll = (LinearLayout) diaryView.findViewById(R.id.empty_ll);
         fpRecyclerView.setEmptyView(emptyll);
 
         fpRecyclerView.setAdapter(diaryAdapter);
         fpRecyclerView.setFocusable(false);
-        fpRecyclerView.setItemAnimator(new DefaultItemAnimator());
+//        fpRecyclerView.setItemAnimator(new DefaultItemAnimator());
         diaryAdapter.notifyDataSetChanged();
 
         diaryAdapter.setOnItemClickListener(new FirstpageAdapter2.OnItemClickListener() {
@@ -350,21 +381,9 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
             }
         });
 
-//        fpRecyclerView.setOnScrollListener(new HidingScrollListener() {
-//            @Override
-//            public void onHide() {
-//                hideViews();
-//                Log.d("隐藏执行","---------");
-//            }
-//
-//            @Override
-//            public void onShow() {
-//                showViews();
-//            }
-//        });
-
         //解决6.0以下无法使用的问题，暴露接口
-        scrollview.setOnScrollViewListener(new MyScrollview.OnScrollViewListener() {
+        scrollView.setOnScrollViewListener(new MyScrollview.OnScrollViewListener() {
+            int calCount = 0;
             @Override
             public void onScrollChanged(MyScrollview scrollView, int x, int y, int oldx, int oldy) {
                 if (oldy - y > 30){
@@ -373,8 +392,24 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
                 if (oldy - y < -30){
                     hideViews();
                 }
+
+                //判断是否滑动到底部
+                View child = scrollView.getChildAt(0);
+                if (scrollView.getScrollY() + scrollView.getHeight() >= child.getHeight()){
+                    calCount++;
+                    if (calCount == 1){
+                        Log.d("滑动到底部了-----","-----");
+                        getCurrentData(itemBeanList);
+                        diaryAdapter.setItemBeanList(currentData);
+                        diaryAdapter.notifyDataSetChanged();
+                        Log.d("数量是：",diaryAdapter.getItemCount()+"");
+                    }
+                } else {
+                    calCount = 0;
+                }
             }
         });
+
     }
 
     private void setMemoView() {
@@ -830,15 +865,9 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
 
     @Override
     public void onStart() {
-        initView();
         //动态刷新页面
         setDiaryView();
         super.onStart();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
     }
 
     //毫秒
